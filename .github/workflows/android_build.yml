@@ -29,15 +29,18 @@ jobs:
         restore-keys: |
           ${{ runner.os }}-gradle-
 
+    - name: Ensure Gradle Wrapper
+      run: |
+        mkdir -p gradle/wrapper
+        wget -q https://services.gradle.org/distributions/gradle-8.2-bin.zip -O /tmp/gradle.zip
+        unzip -q /tmp/gradle.zip -d /tmp
+        cp /tmp/gradle-8.2/lib/gradle-wrapper-8.2.jar gradle/wrapper/gradle-wrapper.jar
+
     - name: Generate Gradle wrapper
       run: ./gradlew wrapper
-      env:
-        GRADLE_WRAPPER_JAR: gradle/wrapper/gradle-wrapper.jar
 
     - name: Build with Gradle
       run: ./gradlew assembleRelease
-      env:
-        GRADLE_WRAPPER_JAR: gradle/wrapper/gradle-wrapper.jar
 
     # TODO: Add your signing key and password as secrets in your repository settings
     # - name: Sign APK
