@@ -23,6 +23,9 @@ jobs:
         path: |
           ~/.gradle/caches
           ~/.gradle/wrapper
+          gradle/wrapper/gradle-wrapper.jar
+          gradlew
+          gradlew.bat
           app/build
           app/.gradle
         key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle.kts', '**/gradle/wrapper/gradle-wrapper.properties') }}
