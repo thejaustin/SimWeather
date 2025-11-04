@@ -31,9 +31,13 @@ jobs:
 
     - name: Generate Gradle wrapper
       run: ./gradlew wrapper
+      env:
+        GRADLE_WRAPPER_JAR: gradle/wrapper/gradle-wrapper.jar
 
     - name: Build with Gradle
       run: ./gradlew assembleRelease
+      env:
+        GRADLE_WRAPPER_JAR: gradle/wrapper/gradle-wrapper.jar
 
     # TODO: Add your signing key and password as secrets in your repository settings
     # - name: Sign APK
