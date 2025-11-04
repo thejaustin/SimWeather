@@ -34,8 +34,8 @@ jobs:
         mkdir -p gradle/wrapper
         wget -q https://services.gradle.org/distributions/gradle-8.2-bin.zip -O /tmp/gradle.zip
         unzip -q /tmp/gradle.zip -d /tmp
-        ls -l /tmp
-        cp /tmp/gradle-8.2/lib/gradle-wrapper-8.2.jar gradle/wrapper/gradle-wrapper.jar
+        GRADLE_WRAPPER_JAR_PATH=$(find /tmp/gradle-8.2 -name "gradle-wrapper.jar")
+        cp "${GRADLE_WRAPPER_JAR_PATH}" gradle/wrapper/gradle-wrapper.jar
 
     - name: Generate Gradle wrapper
       run: ./gradlew wrapper
