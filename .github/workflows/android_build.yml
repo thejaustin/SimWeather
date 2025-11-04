@@ -33,10 +33,20 @@ jobs:
       run: ./gradlew wrapper
 
     - name: Build with Gradle
-      run: ./gradlew build
+      run: ./gradlew assembleRelease
 
-    - name: Upload a debug APK
+    # TODO: Add your signing key and password as secrets in your repository settings
+    # - name: Sign APK
+    #   uses: r0adkll/sign-android-release@v1
+    #   with:
+    #     releaseDirectory: app/build/outputs/apk/release
+    #     signingKeyBase64: ${{ secrets.SIGNING_KEY }}
+    #     alias: ${{ secrets.ALIAS }}
+    #     keyStorePassword: ${{ secrets.KEY_STORE_PASSWORD }}
+    #     keyPassword: ${{ secrets.KEY_PASSWORD }}
+
+    - name: Upload a release APK
       uses: actions/upload-artifact@v4
       with:
-        name: app-debug
-        path: app/build/outputs/apk/debug/app-debug.apk
+        name: app-release
+        path: app/build/outputs/apk/release/app-release.apk
