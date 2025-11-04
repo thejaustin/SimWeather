@@ -23,14 +23,14 @@ jobs:
         path: |
           ~/.gradle/caches
           ~/.gradle/wrapper
-          gradle/wrapper/gradle-wrapper.jar
-          gradlew
-          gradlew.bat
           app/build
           app/.gradle
         key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle.kts', '**/gradle/wrapper/gradle-wrapper.properties') }}
         restore-keys: |
           ${{ runner.os }}-gradle-
+
+    - name: Generate Gradle wrapper
+      run: ./gradlew wrapper
 
     - name: Build with Gradle
       run: ./gradlew build
