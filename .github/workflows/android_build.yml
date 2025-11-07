@@ -14,8 +14,11 @@ jobs:
         distribution: 'temurin'
         java-version: '17'
 
+    - name: Make gradlew executable
+      run: chmod +x gradlew
+
     - name: Build with Gradle
-      run: gradle assembleRelease
+      run: ./gradlew assembleRelease
 
     # TODO: Add your signing key and password as secrets in your repository settings
     # - name: Sign APK
