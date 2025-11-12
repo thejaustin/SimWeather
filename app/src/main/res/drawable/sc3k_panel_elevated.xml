@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Outer highlight border -->
+    <item>
+        <shape android:shape="rectangle">
+            <solid android:color="#00FFCC" />
+            <corners android:radius="2dp" />
+        </shape>
+    </item>
+
+    <!-- Middle border -->
+    <item
+        android:left="1dp"
+        android:top="1dp"
+        android:right="1dp"
+        android:bottom="1dp">
+        <shape android:shape="rectangle">
+            <solid android:color="#0A0E27" />
+            <corners android:radius="2dp" />
+        </shape>
+    </item>
+
+    <!-- Top highlight -->
+    <item
+        android:left="2dp"
+        android:top="2dp"
+        android:right="2dp"
+        android:bottom="2dp">
+        <shape android:shape="rectangle">
+            <solid android:color="#1E2749" />
+            <corners android:radius="1dp" />
+        </shape>
+    </item>
+
+    <!-- Main surface -->
+    <item
+        android:left="3dp"
+        android:top="3dp"
+        android:right="3dp"
+        android:bottom="3dp">
+        <shape android:shape="rectangle">
+            <solid android:color="#1A2540" />
+            <corners android:radius="1dp" />
+        </shape>
+    </item>
+</layer-list>

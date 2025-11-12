@@ -7,10 +7,14 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.thejaustin.simweather.R
 import com.thejaustin.simweather.data.model.ForecastDay
+import com.thejaustin.simweather.data.preferences.SettingsPreferences
+import com.thejaustin.simweather.ui.util.UnitConverter
 import java.text.SimpleDateFormat
 import java.util.*
 
-class DailyForecastAdapter : RecyclerView.Adapter<DailyForecastAdapter.DayViewHolder>() {
+class DailyForecastAdapter(
+    private val settings: SettingsPreferences
+) : RecyclerView.Adapter<DailyForecastAdapter.DayViewHolder>() {
 
     private var dailyData: List<ForecastDay> = emptyList()
 
@@ -26,7 +30,7 @@ class DailyForecastAdapter : RecyclerView.Adapter<DailyForecastAdapter.DayViewHo
     }
 
     override fun onBindViewHolder(holder: DayViewHolder, position: Int) {
-        holder.bind(dailyData[position], position)
+        holder.bind(dailyData[position], position, settings.units)
     }
 
     override fun getItemCount() = dailyData.size
@@ -40,7 +44,7 @@ class DailyForecastAdapter : RecyclerView.Adapter<DailyForecastAdapter.DayViewHo
         private val tvRain: TextView = itemView.findViewById(R.id.tvDayRain)
         private val tvWind: TextView = itemView.findViewById(R.id.tvDayWind)
 
-        fun bind(forecastDay: ForecastDay, position: Int) {
+        fun bind(forecastDay: ForecastDay, position: Int, units: SettingsPreferences.Units) {
             val day = forecastDay.day
 
             // Day name
@@ -58,15 +62,15 @@ class DailyForecastAdapter : RecyclerView.Adapter<DailyForecastAdapter.DayViewHo
             // Weather icon
             tvIcon.text = getWeatherEmoji(day.condition.code)
 
-            // Temperatures
-            tvHigh.text = "↑ ${day.maxTempC.toInt()}°"
-            tvLow.text = "↓ ${day.minTempC.toInt()}°"
+            // Temperatures with unit conversion
+            tvHigh.text = "↑ ${UnitConverter.temperature(day.maxTempC, units)}"
+            tvLow.text = "↓ ${UnitConverter.temperature(day.minTempC, units)}"
 
             // Rain chance
             tvRain.text = "💧 ${day.dailyChanceOfRain}%"
 
-            // Wind
-            tvWind.text = "💨 ${day.maxWindKph.toInt()}kph"
+            // Wind with unit conversion
+            tvWind.text = "💨 ${UnitConverter.speed(day.maxWindKph, units)}"
         }
 
         private fun getWeatherEmoji(code: Int): String {

@@ -1,15 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- SimCity Theme Colors -->
+    <!-- SimCity 3000 Theme Colors -->
     <!-- Dark Background Colors (Night City View) -->
     <color name="sim_dark_bg">#0A0E27</color>
     <color name="sim_dark_surface">#141B3D</color>
     <color name="sim_dark_elevated">#1E2749</color>
+    <color name="sim_dark_panel">#1A2540</color>
 
-    <!-- Teal/Cyan UI Colors (Classic SimCity) -->
+    <!-- Teal/Cyan UI Colors (Classic SimCity 3000) -->
     <color name="sim_teal_primary">#00D9FF</color>
     <color name="sim_teal_dark">#0099CC</color>
     <color name="sim_cyan_bright">#00FFCC</color>
+    <color name="sim_cyan_neon">#00FFFF</color>
+
+    <!-- SC3000 Specific Colors -->
+    <color name="sc3k_blue_dark">#0A1428</color>
+    <color name="sc3k_blue_medium">#142846</color>
+    <color name="sc3k_blue_light">#1E3A5F</color>
+    <color name="sc3k_border_highlight">#1A2D4D</color>
+    <color name="sc3k_green_accent">#66FF99</color>
 
     <!-- Accent Colors (Information Display) -->
     <color name="sim_yellow">#FFE600</color>
@@ -21,6 +30,7 @@
     <color name="sim_text_primary">#E8F4F8</color>
     <color name="sim_text_secondary">#99B3C2</color>
     <color name="sim_text_tertiary">#6B8494</color>
+    <color name="sim_text_bright">#FFFFFF</color>
 
     <!-- Standard Colors -->
     <color name="black">#FF000000</color>

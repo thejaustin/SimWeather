@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Outer dark border -->
+    <item>
+        <shape android:shape="rectangle">
+            <solid android:color="#0A0E27" />
+            <corners android:radius="0dp" />
+        </shape>
+    </item>
+
+    <!-- Highlight border (top-left) -->
+    <item
+        android:left="2dp"
+        android:top="2dp">
+        <shape android:shape="rectangle">
+            <solid android:color="#1A2D4D" />
+        </shape>
+    </item>
+
+    <!-- Main panel background -->
+    <item
+        android:left="3dp"
+        android:top="3dp"
+        android:right="2dp"
+        android:bottom="2dp">
+        <shape android:shape="rectangle">
+            <solid android:color="#141B3D" />
+        </shape>
+    </item>
+</layer-list>

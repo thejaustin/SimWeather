@@ -5,6 +5,7 @@ import android.content.pm.PackageManager
 import android.location.Location
 import android.os.Bundle
 import android.view.View
+import android.widget.Button
 import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toast
@@ -25,19 +26,24 @@ import com.thejaustin.simweather.ui.adapter.HourlyForecastAdapter
 import com.thejaustin.simweather.ui.viewmodel.WeatherUiState
 import com.thejaustin.simweather.ui.viewmodel.WeatherViewModel
 import com.thejaustin.simweather.ui.util.ViewAnimations
+import com.thejaustin.simweather.ui.util.UnitConverter
+import com.thejaustin.simweather.ui.dialog.SettingsDialog
+import com.thejaustin.simweather.data.preferences.SettingsPreferences
 import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity() {
 
     private val viewModel: WeatherViewModel by viewModels()
     private lateinit var fusedLocationClient: FusedLocationProviderClient
+    private lateinit var settings: SettingsPreferences
 
     // Adapters
-    private val hourlyAdapter = HourlyForecastAdapter()
-    private val dailyAdapter = DailyForecastAdapter()
+    private lateinit var hourlyAdapter: HourlyForecastAdapter
+    private lateinit var dailyAdapter: DailyForecastAdapter
     private val alertAdapter = AlertAdapter()
 
     // Views
+    private lateinit var btnSettings: Button
     private lateinit var tvLocation: TextView
     private lateinit var tvTemperature: TextView
     private lateinit var tvCondition: TextView
@@ -79,15 +85,24 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        settings = SettingsPreferences.getInstance(this)
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
 
+        initAdapters()
         initViews()
         setupRecyclerViews()
+        setupSettingsButton()
         observeWeatherData()
         requestLocationPermission()
     }
 
+    private fun initAdapters() {
+        hourlyAdapter = HourlyForecastAdapter(settings)
+        dailyAdapter = DailyForecastAdapter(settings)
+    }
+
     private fun initViews() {
+        btnSettings = findViewById(R.id.btnSettings)
         tvLocation = findViewById(R.id.tvLocation)
         tvTemperature = findViewById(R.id.tvTemperature)
         tvCondition = findViewById(R.id.tvCondition)
@@ -103,6 +118,23 @@ class MainActivity : AppCompatActivity() {
         statHumidity = findViewById(R.id.statHumidity)
         statVisibility = findViewById(R.id.statVisibility)
         statUV = findViewById(R.id.statUV)
+    }
+
+    private fun setupSettingsButton() {
+        btnSettings.setOnClickListener {
+            SettingsDialog(this) {
+                // Refresh adapters with new units
+                initAdapters()
+                rvHourly.adapter = hourlyAdapter
+                rvDaily.adapter = dailyAdapter
+                // Refresh the weather display
+                viewModel.uiState.value.let { state ->
+                    if (state is WeatherUiState.Success) {
+                        updateUI(state.weatherData)
+                    }
+                }
+            }.show()
+        }
     }
 
     private fun setupRecyclerViews() {
@@ -144,15 +176,21 @@ class MainActivity : AppCompatActivity() {
         val currentWeatherCard = findViewById<View>(R.id.currentWeatherCard)
         ViewAnimations.slideUp(currentWeatherCard, 150)
 
-        tvTemperature.text = "${weather.current.tempC.toInt()}°"
+        val units = settings.units
+
+        tvTemperature.text = UnitConverter.temperature(weather.current.tempC, units)
         tvCondition.text = weather.current.condition.text
 
-        // Weather stats with animations
-        setStat(statFeelsLike, getString(R.string.feels_like), "${weather.current.feelsLikeC.toInt()}°")
-        setStat(statWind, getString(R.string.wind), "${weather.current.windKph.toInt()} kph ${weather.current.windDir}")
-        setStat(statPressure, getString(R.string.pressure), "${weather.current.pressureMb.toInt()} mb")
+        // Weather stats with animations and unit conversion
+        setStat(statFeelsLike, getString(R.string.feels_like),
+            UnitConverter.temperature(weather.current.feelsLikeC, units))
+        setStat(statWind, getString(R.string.wind),
+            "${UnitConverter.speed(weather.current.windKph, units)} ${weather.current.windDir}")
+        setStat(statPressure, getString(R.string.pressure),
+            UnitConverter.pressure(weather.current.pressureMb, units))
         setStat(statHumidity, getString(R.string.humidity), "${weather.current.humidity}%")
-        setStat(statVisibility, getString(R.string.visibility), "${weather.current.visibilityKm.toInt()} km")
+        setStat(statVisibility, getString(R.string.visibility),
+            UnitConverter.distance(weather.current.visibilityKm, units))
         setStat(statUV, getString(R.string.uv_index), weather.current.uv.toInt().toString())
 
         // Animate forecast sections

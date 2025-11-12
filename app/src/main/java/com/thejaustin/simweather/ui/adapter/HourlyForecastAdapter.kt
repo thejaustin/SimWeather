@@ -7,10 +7,14 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.thejaustin.simweather.R
 import com.thejaustin.simweather.data.model.Hour
+import com.thejaustin.simweather.data.preferences.SettingsPreferences
+import com.thejaustin.simweather.ui.util.UnitConverter
 import java.text.SimpleDateFormat
 import java.util.*
 
-class HourlyForecastAdapter : RecyclerView.Adapter<HourlyForecastAdapter.HourViewHolder>() {
+class HourlyForecastAdapter(
+    private val settings: SettingsPreferences
+) : RecyclerView.Adapter<HourlyForecastAdapter.HourViewHolder>() {
 
     private var hourlyData: List<Hour> = emptyList()
 
@@ -26,7 +30,7 @@ class HourlyForecastAdapter : RecyclerView.Adapter<HourlyForecastAdapter.HourVie
     }
 
     override fun onBindViewHolder(holder: HourViewHolder, position: Int) {
-        holder.bind(hourlyData[position])
+        holder.bind(hourlyData[position], settings.units)
     }
 
     override fun getItemCount() = hourlyData.size
@@ -37,7 +41,7 @@ class HourlyForecastAdapter : RecyclerView.Adapter<HourlyForecastAdapter.HourVie
         private val tvTemp: TextView = itemView.findViewById(R.id.tvHourTemp)
         private val tvRain: TextView = itemView.findViewById(R.id.tvHourRain)
 
-        fun bind(hour: Hour) {
+        fun bind(hour: Hour, units: SettingsPreferences.Units) {
             // Format time
             val timeFormat = SimpleDateFormat("HH:mm", Locale.getDefault())
             val date = Date(hour.timeEpoch * 1000)
@@ -46,8 +50,8 @@ class HourlyForecastAdapter : RecyclerView.Adapter<HourlyForecastAdapter.HourVie
             // Weather icon based on condition
             tvCondition.text = getWeatherEmoji(hour.condition.code, hour.isDay)
 
-            // Temperature
-            tvTemp.text = "${hour.tempC.toInt()}°"
+            // Temperature with unit conversion
+            tvTemp.text = UnitConverter.temperature(hour.tempC, units)
 
             // Rain chance
             tvRain.text = "💧 ${hour.chanceOfRain}%"
