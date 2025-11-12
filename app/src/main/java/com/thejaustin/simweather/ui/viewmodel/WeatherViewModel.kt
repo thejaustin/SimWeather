@@ -6,6 +6,8 @@ import com.thejaustin.simweather.data.model.WeatherResponse
 import com.thejaustin.simweather.data.repository.WeatherRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+
+import com.thejaustin.simweather.data.simulation.WeatherSimulator
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
@@ -18,6 +20,7 @@ sealed class WeatherUiState {
 class WeatherViewModel : ViewModel() {
 
     private val repository = WeatherRepository()
+    private val simulator = WeatherSimulator()
 
     private val _uiState = MutableStateFlow<WeatherUiState>(WeatherUiState.Loading)
     val uiState: StateFlow<WeatherUiState> = _uiState.asStateFlow()
@@ -35,6 +38,21 @@ class WeatherViewModel : ViewModel() {
                     )
                 }
             )
+        }
+    }
+
+    fun fetchSimulatedWeather() {
+        viewModelScope.launch {
+            _uiState.value = WeatherUiState.Loading
+            val currentState = (_uiState.value as? WeatherUiState.Success)?.weatherData
+            if (currentState != null) {
+                val nextState = simulator.simulateNext(currentState)
+                _uiState.value = WeatherUiState.Success(nextState)
+            } else {
+                // If there is no current state, start with a default simulated state
+                val initialState = simulator.simulateNext(WeatherResponse(Location("", "", "", 0.0, 0.0, ""), CurrentWeather(0.0, 0.0, 0, Condition("", "", 0), 0.0, 0, "", 0.0, 0.0, 0, 0, 0.0, 0.0, 0.0, 0.0), Forecast(listOf()), null))
+                _uiState.value = WeatherUiState.Success(initialState)
+            }
         }
     }
 }

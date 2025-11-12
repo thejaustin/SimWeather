@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/sim_dark_bg"
+    android:background="@drawable/sc3k_grass_bg_tiled"
     android:fillViewport="true"
     tools:context=".MainActivity">
 
@@ -55,6 +55,18 @@
             </LinearLayout>
 
             <Button
+                android:id="@+id/btnSimulate"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_gravity="center_vertical"
+                android:layout_marginEnd="8dp"
+                android:background="@drawable/sc3k_button_bg"
+                android:fontFamily="monospace"
+                android:text="▶"
+                android:textColor="@color/sim_cyan_bright"
+                android:textSize="20sp" />
+
+            <Button
                 android:id="@+id/btnSettings"
                 android:layout_width="48dp"
                 android:layout_height="48dp"
@@ -73,7 +85,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="16dp"
-            android:background="@drawable/sc3k_panel_bg"
+            android:background="@drawable/sc3k_concrete_bg_tiled"
             android:orientation="vertical"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -278,6 +290,46 @@
             android:text="Error loading weather"
             android:textColor="@color/sim_red"
             android:textSize="16sp"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <com.thejaustin.simweather.ui.weather_events.WindEffect
+            android:id="@+id/windEffect"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <com.thejaustin.simweather.ui.weather_events.FogEffect
+            android:id="@+id/fogEffect"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <com.thejaustin.simweather.ui.weather_events.SnowEffect
+            android:id="@+id/snowEffect"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <com.thejaustin.simweather.ui.weather_events.RainEffect
+            android:id="@+id/rainEffect"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

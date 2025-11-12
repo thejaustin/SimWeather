@@ -43,6 +43,7 @@ class MainActivity : AppCompatActivity() {
     private val alertAdapter = AlertAdapter()
 
     // Views
+    private lateinit var btnSimulate: Button
     private lateinit var btnSettings: Button
     private lateinit var tvLocation: TextView
     private lateinit var tvTemperature: TextView
@@ -52,6 +53,10 @@ class MainActivity : AppCompatActivity() {
     private lateinit var rvHourly: RecyclerView
     private lateinit var rvDaily: RecyclerView
     private lateinit var rvAlerts: RecyclerView
+    private lateinit var rainEffect: RainEffect
+    private lateinit var snowEffect: SnowEffect
+    private lateinit var fogEffect: FogEffect
+    private lateinit var windEffect: WindEffect
 
     // Weather stats
     private lateinit var statFeelsLike: View
@@ -91,6 +96,7 @@ class MainActivity : AppCompatActivity() {
         initAdapters()
         initViews()
         setupRecyclerViews()
+        setupSimulateButton()
         setupSettingsButton()
         observeWeatherData()
         requestLocationPermission()
@@ -102,6 +108,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun initViews() {
+        btnSimulate = findViewById(R.id.btnSimulate)
         btnSettings = findViewById(R.id.btnSettings)
         tvLocation = findViewById(R.id.tvLocation)
         tvTemperature = findViewById(R.id.tvTemperature)
@@ -111,6 +118,10 @@ class MainActivity : AppCompatActivity() {
         rvHourly = findViewById(R.id.rvHourlyForecast)
         rvDaily = findViewById(R.id.rvDailyForecast)
         rvAlerts = findViewById(R.id.rvAlerts)
+        rainEffect = findViewById(R.id.rainEffect)
+        snowEffect = findViewById(R.id.snowEffect)
+        fogEffect = findViewById(R.id.fogEffect)
+        windEffect = findViewById(R.id.windEffect)
 
         statFeelsLike = findViewById(R.id.statFeelsLike)
         statWind = findViewById(R.id.statWind)
@@ -217,6 +228,34 @@ class MainActivity : AppCompatActivity() {
             alertAdapter.submitList(weather.alerts.alert)
         } else {
             rvAlerts.visibility = View.GONE
+        }
+
+        // Show/hide rain effect
+        if (weather.current.condition.text.contains("rain", ignoreCase = true)) {
+            rainEffect.visibility = View.VISIBLE
+        } else {
+            rainEffect.visibility = View.GONE
+        }
+
+        // Show/hide snow effect
+        if (weather.current.condition.text.contains("snow", ignoreCase = true)) {
+            snowEffect.visibility = View.VISIBLE
+        } else {
+            snowEffect.visibility = View.GONE
+        }
+
+        // Show/hide fog effect
+        if (weather.current.condition.text.contains("fog", ignoreCase = true)) {
+            fogEffect.visibility = View.VISIBLE
+        } else {
+            fogEffect.visibility = View.GONE
+        }
+
+        // Show/hide wind effect
+        if (weather.current.condition.text.contains("wind", ignoreCase = true)) {
+            windEffect.visibility = View.VISIBLE
+        } else {
+            windEffect.visibility = View.GONE
         }
     }
 
