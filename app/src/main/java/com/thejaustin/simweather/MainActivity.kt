@@ -1,5 +1,5 @@
 
-package com.example.simweather
+package com.thejaustin.simweather
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle

@@ -5,11 +5,11 @@ plugins {
 }
 
 android {
-    namespace = "com.example.simweather"
+    namespace = "com.thejaustin.simweather"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.example.simweather"
+        applicationId = "com.thejaustin.simweather"
         minSdk = 24
         targetSdk = 34
         versionCode = 1
