@@ -55,6 +55,18 @@
             </LinearLayout>
 
             <Button
+                android:id="@+id/btnCityPlanning"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_gravity="center_vertical"
+                android:layout_marginEnd="8dp"
+                android:background="@drawable/sc3k_button_bg"
+                android:fontFamily="monospace"
+                android:text="🏙️"
+                android:textColor="@color/sim_cyan_bright"
+                android:textSize="20sp" />
+
+            <Button
                 android:id="@+id/btnSimulate"
                 android:layout_width="48dp"
                 android:layout_height="48dp"
@@ -79,195 +91,14 @@
 
         </LinearLayout>
 
-        <!-- Current Weather Card (SC3000 Panel) -->
         <LinearLayout
-            android:id="@+id/currentWeatherCard"
+            android:id="@+id/weatherCardContainer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="16dp"
-            android:background="@drawable/sc3k_concrete_bg_tiled"
             android:orientation="vertical"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/headerBar">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="20dp">
-
-                <!-- Temperature Display -->
-                <TextView
-                    android:id="@+id/tvTemperature"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:fontFamily="monospace"
-                    android:text="--°"
-                    android:textColor="@color/sim_yellow"
-                    android:textSize="72sp"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:id="@+id/tvCondition"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_marginTop="8dp"
-                    android:fontFamily="monospace"
-                    android:text="Loading..."
-                    android:textColor="@color/sim_text_primary"
-                    android:textSize="18sp" />
-
-                <!-- Weather Stats Grid -->
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="24dp"
-                    android:orientation="horizontal"
-                    android:weightSum="2">
-
-                    <!-- Left Column -->
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:orientation="vertical">
-
-                        <include
-                            layout="@layout/item_weather_stat"
-                            android:id="@+id/statFeelsLike"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content" />
-
-                        <include
-                            layout="@layout/item_weather_stat"
-                            android:id="@+id/statWind"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="12dp" />
-
-                        <include
-                            layout="@layout/item_weather_stat"
-                            android:id="@+id/statPressure"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="12dp" />
-
-                    </LinearLayout>
-
-                    <!-- Right Column -->
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:orientation="vertical">
-
-                        <include
-                            layout="@layout/item_weather_stat"
-                            android:id="@+id/statHumidity"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content" />
-
-                        <include
-                            layout="@layout/item_weather_stat"
-                            android:id="@+id/statVisibility"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="12dp" />
-
-                        <include
-                            layout="@layout/item_weather_stat"
-                            android:id="@+id/statUV"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="12dp" />
-
-                    </LinearLayout>
-
-                </LinearLayout>
-
-            </LinearLayout>
-
-        </LinearLayout>
-
-        <!-- Hourly Forecast Section -->
-        <TextView
-            android:id="@+id/tvHourlyTitle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="8dp"
-            android:fontFamily="monospace"
-            android:text="HOURLY FORECAST"
-            android:textColor="@color/sim_cyan_bright"
-            android:textSize="16sp"
-            android:textStyle="bold"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/currentWeatherCard" />
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rvHourlyForecast"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:clipToPadding="false"
-            android:orientation="horizontal"
-            android:paddingStart="16dp"
-            android:paddingEnd="16dp"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tvHourlyTitle"
-            tools:listitem="@layout/item_hourly_forecast" />
-
-        <!-- 7-Day Forecast Section -->
-        <TextView
-            android:id="@+id/tvDailyTitle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="16dp"
-            android:fontFamily="monospace"
-            android:text="7-DAY FORECAST"
-            android:textColor="@color/sim_cyan_bright"
-            android:textSize="16sp"
-            android:textStyle="bold"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/rvHourlyForecast" />
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rvDailyForecast"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:layout_marginStart="16dp"
-            android:layout_marginEnd="16dp"
-            android:nestedScrollingEnabled="false"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tvDailyTitle"
-            tools:listitem="@layout/item_daily_forecast" />
-
-        <!-- Weather Alerts Section -->
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rvAlerts"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:layout_marginStart="16dp"
-            android:layout_marginEnd="16dp"
-            android:layout_marginBottom="16dp"
-            android:nestedScrollingEnabled="false"
-            android:visibility="gone"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/rvDailyForecast"
-            tools:listitem="@layout/item_alert" />
+            app:layout_constraintTop_toBottomOf="@id/headerBar" />
 
         <!-- Loading Indicator -->
         <ProgressBar

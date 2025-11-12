@@ -1,6 +1,7 @@
 package com.thejaustin.simweather
 
 import android.Manifest
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.location.Location
 import android.os.Bundle
@@ -43,6 +44,7 @@ class MainActivity : AppCompatActivity() {
     private val alertAdapter = AlertAdapter()
 
     // Views
+    private lateinit var btnCityPlanning: Button
     private lateinit var btnSimulate: Button
     private lateinit var btnSettings: Button
     private lateinit var tvLocation: TextView
@@ -95,11 +97,36 @@ class MainActivity : AppCompatActivity() {
 
         initAdapters()
         initViews()
+        setupWeatherCards()
         setupRecyclerViews()
+        setupCityPlanningButton()
         setupSimulateButton()
         setupSettingsButton()
         observeWeatherData()
         requestLocationPermission()
+    }
+
+    private fun setupWeatherCards() {
+        val sharedPreferences = getSharedPreferences("SimWeather", MODE_PRIVATE)
+        val layout = sharedPreferences.getString("layout", "Current Weather,Hourly Forecast,Daily Forecast,Weather Alerts")
+        val weatherCards = layout?.split(",") ?: listOf("Current Weather", "Hourly Forecast", "Daily Forecast", "Weather Alerts")
+
+        val container = findViewById<LinearLayout>(R.id.weatherCardContainer)
+        container.removeAllViews()
+
+        for (cardName in weatherCards) {
+            val layoutId = when (cardName) {
+                "Current Weather" -> R.layout.item_current_weather
+                "Hourly Forecast" -> R.layout.item_hourly_forecast_section
+                "Daily Forecast" -> R.layout.item_daily_forecast_section
+                "Weather Alerts" -> R.layout.item_alerts_section
+                else -> 0
+            }
+            if (layoutId != 0) {
+                val view = layoutInflater.inflate(layoutId, container, false)
+                container.addView(view)
+            }
+        }
     }
 
     private fun initAdapters() {
@@ -108,6 +135,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun initViews() {
+        btnCityPlanning = findViewById(R.id.btnCityPlanning)
         btnSimulate = findViewById(R.id.btnSimulate)
         btnSettings = findViewById(R.id.btnSettings)
         tvLocation = findViewById(R.id.tvLocation)
@@ -129,6 +157,19 @@ class MainActivity : AppCompatActivity() {
         statHumidity = findViewById(R.id.statHumidity)
         statVisibility = findViewById(R.id.statVisibility)
         statUV = findViewById(R.id.statUV)
+    }
+
+    private fun setupCityPlanningButton() {
+        btnCityPlanning.setOnClickListener {
+            val intent = Intent(this, CityPlanningActivity::class.java)
+            startActivity(intent)
+        }
+    }
+
+    private fun setupSimulateButton() {
+        btnSimulate.setOnClickListener {
+            viewModel.fetchSimulatedWeather()
+        }
     }
 
     private fun setupSettingsButton() {
