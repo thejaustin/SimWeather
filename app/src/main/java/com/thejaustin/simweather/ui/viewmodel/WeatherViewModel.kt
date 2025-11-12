@@ -2,12 +2,11 @@ package com.thejaustin.simweather.ui.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.thejaustin.simweather.data.model.WeatherResponse
+import com.thejaustin.simweather.data.model.*
 import com.thejaustin.simweather.data.repository.WeatherRepository
+import com.thejaustin.simweather.data.simulation.WeatherSimulator
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-
-import com.thejaustin.simweather.data.simulation.WeatherSimulator
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
@@ -50,7 +49,7 @@ class WeatherViewModel : ViewModel() {
                 _uiState.value = WeatherUiState.Success(nextState)
             } else {
                 // If there is no current state, start with a default simulated state
-                val initialState = simulator.simulateNext(WeatherResponse(Location("", "", "", 0.0, 0.0, ""), CurrentWeather(0.0, 0.0, 0, Condition("", "", 0), 0.0, 0, "", 0.0, 0.0, 0, 0, 0.0, 0.0, 0.0, 0.0), Forecast(listOf()), null))
+                val initialState = simulator.simulateNext(WeatherResponse(Location("", "", "", 0.0, 0.0, ""), CurrentWeather(0.0, 0.0, 0, Condition("", "", 0), 0.0, 0, "", 0.0, 0.0, 0, 0, 0.0, 0.0, 0.0, 0.0, null, null), Forecast(listOf()), null))
                 _uiState.value = WeatherUiState.Success(initialState)
             }
         }

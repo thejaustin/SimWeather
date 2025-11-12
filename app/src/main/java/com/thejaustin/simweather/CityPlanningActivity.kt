@@ -40,11 +40,19 @@ class CityPlanningActivity : AppCompatActivity() {
                 return true
             }
 
-            override fun onPause() {
+            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+                // No swipe action needed
+            }
+        })
+
+        itemTouchHelper.attachToRecyclerView(rvCityPlanning)
+    }
+
+    override fun onPause() {
         super.onPause()
         val sharedPreferences = getSharedPreferences("SimWeather", MODE_PRIVATE)
         val editor = sharedPreferences.edit()
         editor.putString("layout", adapter.getWeatherCards().joinToString(","))
         editor.apply()
     }
-
+}

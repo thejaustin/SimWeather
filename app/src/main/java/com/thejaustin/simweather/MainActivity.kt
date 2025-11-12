@@ -7,6 +7,7 @@ import android.location.Location
 import android.os.Bundle
 import android.view.View
 import android.widget.Button
+import android.widget.LinearLayout
 import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toast
@@ -24,12 +25,17 @@ import com.thejaustin.simweather.data.model.WeatherResponse
 import com.thejaustin.simweather.ui.adapter.AlertAdapter
 import com.thejaustin.simweather.ui.adapter.DailyForecastAdapter
 import com.thejaustin.simweather.ui.adapter.HourlyForecastAdapter
+import com.thejaustin.simweather.ui.dialog.SettingsDialog
+import com.thejaustin.simweather.ui.util.ClothingAdvisor
+import com.thejaustin.simweather.ui.util.UnitConverter
+import com.thejaustin.simweather.ui.util.ViewAnimations
 import com.thejaustin.simweather.ui.viewmodel.WeatherUiState
 import com.thejaustin.simweather.ui.viewmodel.WeatherViewModel
-import com.thejaustin.simweather.ui.util.ViewAnimations
-import com.thejaustin.simweather.ui.util.UnitConverter
-import com.thejaustin.simweather.ui.dialog.SettingsDialog
 import com.thejaustin.simweather.data.preferences.SettingsPreferences
+import com.thejaustin.simweather.ui.weather_events.FogEffect
+import com.thejaustin.simweather.ui.weather_events.RainEffect
+import com.thejaustin.simweather.ui.weather_events.SnowEffect
+import com.thejaustin.simweather.ui.weather_events.WindEffect
 import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity() {
@@ -48,25 +54,13 @@ class MainActivity : AppCompatActivity() {
     private lateinit var btnSimulate: Button
     private lateinit var btnSettings: Button
     private lateinit var tvLocation: TextView
-    private lateinit var tvTemperature: TextView
-    private lateinit var tvCondition: TextView
     private lateinit var progressBar: ProgressBar
     private lateinit var tvError: TextView
-    private lateinit var rvHourly: RecyclerView
-    private lateinit var rvDaily: RecyclerView
-    private lateinit var rvAlerts: RecyclerView
     private lateinit var rainEffect: RainEffect
     private lateinit var snowEffect: SnowEffect
     private lateinit var fogEffect: FogEffect
     private lateinit var windEffect: WindEffect
-
-    // Weather stats
-    private lateinit var statFeelsLike: View
-    private lateinit var statWind: View
-    private lateinit var statPressure: View
-    private lateinit var statHumidity: View
-    private lateinit var statVisibility: View
-    private lateinit var statUV: View
+    private lateinit var weatherCardContainer: LinearLayout
 
     // Weather API Key - Get yours from https://www.weatherapi.com/
     private val API_KEY by lazy { getString(R.string.weather_api_key) }
@@ -98,7 +92,6 @@ class MainActivity : AppCompatActivity() {
         initAdapters()
         initViews()
         setupWeatherCards()
-        setupRecyclerViews()
         setupCityPlanningButton()
         setupSimulateButton()
         setupSettingsButton()
@@ -108,11 +101,10 @@ class MainActivity : AppCompatActivity() {
 
     private fun setupWeatherCards() {
         val sharedPreferences = getSharedPreferences("SimWeather", MODE_PRIVATE)
-        val layout = sharedPreferences.getString("layout", "Current Weather,Hourly Forecast,Daily Forecast,Weather Alerts")
-        val weatherCards = layout?.split(",") ?: listOf("Current Weather", "Hourly Forecast", "Daily Forecast", "Weather Alerts")
+        val layout = sharedPreferences.getString("layout", "Current Weather,Hourly Forecast,Daily Forecast,Weather Alerts,Clothing Advisor,Pollen")
+        val weatherCards = layout?.split(",") ?: listOf("Current Weather", "Hourly Forecast", "Daily Forecast", "Weather Alerts", "Clothing Advisor", "Pollen")
 
-        val container = findViewById<LinearLayout>(R.id.weatherCardContainer)
-        container.removeAllViews()
+        weatherCardContainer.removeAllViews()
 
         for (cardName in weatherCards) {
             val layoutId = when (cardName) {
@@ -125,10 +117,12 @@ class MainActivity : AppCompatActivity() {
                 else -> 0
             }
             if (layoutId != 0) {
-                val view = layoutInflater.inflate(layoutId, container, false)
-                container.addView(view)
+                val view = layoutInflater.inflate(layoutId, weatherCardContainer, false)
+                weatherCardContainer.addView(view)
             }
         }
+        // Re-initialize views that are now part of the dynamic cards
+        initCardViews()
     }
 
     private fun initAdapters() {
@@ -141,24 +135,24 @@ class MainActivity : AppCompatActivity() {
         btnSimulate = findViewById(R.id.btnSimulate)
         btnSettings = findViewById(R.id.btnSettings)
         tvLocation = findViewById(R.id.tvLocation)
-        tvTemperature = findViewById(R.id.tvTemperature)
-        tvCondition = findViewById(R.id.tvCondition)
         progressBar = findViewById(R.id.progressBar)
         tvError = findViewById(R.id.tvError)
-        rvHourly = findViewById(R.id.rvHourlyForecast)
-        rvDaily = findViewById(R.id.rvDailyForecast)
-        rvAlerts = findViewById(R.id.rvAlerts)
         rainEffect = findViewById(R.id.rainEffect)
         snowEffect = findViewById(R.id.snowEffect)
         fogEffect = findViewById(R.id.fogEffect)
         windEffect = findViewById(R.id.windEffect)
+        weatherCardContainer = findViewById(R.id.weatherCardContainer)
+    }
 
-        statFeelsLike = findViewById(R.id.statFeelsLike)
-        statWind = findViewById(R.id.statWind)
-        statPressure = findViewById(R.id.statPressure)
-        statHumidity = findViewById(R.id.statHumidity)
-        statVisibility = findViewById(R.id.statVisibility)
-        statUV = findViewById(R.id.statUV)
+    private fun initCardViews() {
+        // This function is called after the cards are inflated and added to the container
+        val rvHourly = weatherCardContainer.findViewById<RecyclerView>(R.id.rvHourlyForecast)
+        val rvDaily = weatherCardContainer.findViewById<RecyclerView>(R.id.rvDailyForecast)
+        val rvAlerts = weatherCardContainer.findViewById<RecyclerView>(R.id.rvAlerts)
+
+        rvHourly?.adapter = hourlyAdapter
+        rvDaily?.adapter = dailyAdapter
+        rvAlerts?.adapter = alertAdapter
     }
 
     private fun setupCityPlanningButton() {
@@ -179,8 +173,8 @@ class MainActivity : AppCompatActivity() {
             SettingsDialog(this) {
                 // Refresh adapters with new units
                 initAdapters()
-                rvHourly.adapter = hourlyAdapter
-                rvDaily.adapter = dailyAdapter
+                // Re-setup cards and adapters
+                setupWeatherCards()
                 // Refresh the weather display
                 viewModel.uiState.value.let { state ->
                     if (state is WeatherUiState.Success) {
@@ -189,12 +183,6 @@ class MainActivity : AppCompatActivity() {
                 }
             }.show()
         }
-    }
-
-    private fun setupRecyclerViews() {
-        rvHourly.adapter = hourlyAdapter
-        rvDaily.adapter = dailyAdapter
-        rvAlerts.adapter = alertAdapter
     }
 
     private fun observeWeatherData() {
@@ -226,51 +214,35 @@ class MainActivity : AppCompatActivity() {
         ViewAnimations.fadeIn(tvLocation, 100)
         tvLocation.text = "${weather.location.name}, ${weather.location.region}"
 
-        // Animate current weather with staggered delays
-        val currentWeatherCard = findViewById<View>(R.id.currentWeatherCard)
-        ViewAnimations.slideUp(currentWeatherCard, 150)
-
         val units = settings.units
 
-        tvTemperature.text = UnitConverter.temperature(weather.current.tempC, units)
-        tvCondition.text = weather.current.condition.text
+        // Update current weather card
+        weatherCardContainer.findViewById<TextView>(R.id.tvTemperature)?.text = UnitConverter.temperature(weather.current.tempC, units)
+        weatherCardContainer.findViewById<TextView>(R.id.tvCondition)?.text = weather.current.condition.text
 
         // Weather stats with animations and unit conversion
-        setStat(statFeelsLike, getString(R.string.feels_like),
-            UnitConverter.temperature(weather.current.feelsLikeC, units))
-        setStat(statWind, getString(R.string.wind),
-            "${UnitConverter.speed(weather.current.windKph, units)} ${weather.current.windDir}")
-        setStat(statPressure, getString(R.string.pressure),
-            UnitConverter.pressure(weather.current.pressureMb, units))
-        setStat(statHumidity, getString(R.string.humidity), "${weather.current.humidity}%")
-        setStat(statVisibility, getString(R.string.visibility),
-            UnitConverter.distance(weather.current.visibilityKm, units))
-        setStat(statUV, getString(R.string.uv_index), weather.current.uv.toInt().toString())
-
-        // Animate forecast sections
-        findViewById<View>(R.id.tvHourlyTitle)?.let { ViewAnimations.fadeIn(it, 250) }
-        rvHourly.let { ViewAnimations.slideInRight(it, 300) }
+        weatherCardContainer.findViewById<View>(R.id.statFeelsLike)?.let { setStat(it, getString(R.string.feels_like), UnitConverter.temperature(weather.current.feelsLikeC, units)) }
+        weatherCardContainer.findViewById<View>(R.id.statWind)?.let { setStat(it, getString(R.string.wind), "${UnitConverter.speed(weather.current.windKph, units)} ${weather.current.windDir}") }
+        weatherCardContainer.findViewById<View>(R.id.statPressure)?.let { setStat(it, getString(R.string.pressure), UnitConverter.pressure(weather.current.pressureMb, units)) }
+        weatherCardContainer.findViewById<View>(R.id.statHumidity)?.let { setStat(it, getString(R.string.humidity), "${weather.current.humidity}%") }
+        weatherCardContainer.findViewById<View>(R.id.statVisibility)?.let { setStat(it, getString(R.string.visibility), UnitConverter.distance(weather.current.visibilityKm, units)) }
+        weatherCardContainer.findViewById<View>(R.id.statUV)?.let { setStat(it, getString(R.string.uv_index), weather.current.uv.toInt().toString()) }
 
         // Hourly forecast (next 24 hours)
-        val next24Hours = weather.forecast.forecastDays
-            .flatMap { it.hour }
-            .take(24)
+        val next24Hours = weather.forecast.forecastDays.flatMap { it.hour }.take(24)
         hourlyAdapter.submitList(next24Hours)
-
-        // Animate daily forecast
-        findViewById<View>(R.id.tvDailyTitle)?.let { ViewAnimations.fadeIn(it, 350) }
-        rvDaily.let { ViewAnimations.slideInRight(it, 400) }
 
         // Daily forecast
         dailyAdapter.submitList(weather.forecast.forecastDays)
 
         // Alerts with animation
+        val rvAlerts = weatherCardContainer.findViewById<RecyclerView>(R.id.rvAlerts)
         if (weather.alerts != null && weather.alerts.alert.isNotEmpty()) {
-            rvAlerts.visibility = View.VISIBLE
-            ViewAnimations.slideUp(rvAlerts, 450)
+            rvAlerts?.visibility = View.VISIBLE
+            rvAlerts?.let { ViewAnimations.slideUp(it, 450) }
             alertAdapter.submitList(weather.alerts.alert)
         } else {
-            rvAlerts.visibility = View.GONE
+            rvAlerts?.visibility = View.GONE
         }
 
         // Show/hide rain effect
@@ -303,17 +275,17 @@ class MainActivity : AppCompatActivity() {
 
         // Air Quality
         weather.current.airQuality?.let {
-            findViewById<TextView>(R.id.tvAqiValue).text = it.usEpaIndex.toString()
+            weatherCardContainer.findViewById<TextView>(R.id.tvAqiValue)?.text = it.usEpaIndex.toString()
         }
 
         // Clothing Advisor
-        findViewById<TextView>(R.id.tvClothingAdvice)?.text = ClothingAdvisor.getClothingAdvice(weather.current)
+        weatherCardContainer.findViewById<TextView>(R.id.tvClothingAdvice)?.text = ClothingAdvisor.getClothingAdvice(weather.current)
 
         // Pollen
         weather.current.pollen?.let {
-            findViewById<TextView>(R.id.tvGrassPollen).text = it.grassPollen.toString()
-            findViewById<TextView>(R.id.tvTreePollen).text = it.treePollen.toString()
-            findViewById<TextView>(R.id.tvWeedPollen).text = it.weedPollen.toString()
+            weatherCardContainer.findViewById<TextView>(R.id.tvGrassPollen)?.text = it.grassPollen.toString()
+            weatherCardContainer.findViewById<TextView>(R.id.tvTreePollen)?.text = it.treePollen.toString()
+            weatherCardContainer.findViewById<TextView>(R.id.tvWeedPollen)?.text = it.weedPollen.toString()
         }
     }
 
