@@ -9,7 +9,7 @@ class WeatherRepository {
 
     suspend fun getWeatherForecast(apiKey: String, location: String): Result<WeatherResponse> {
         return try {
-            val response = api.getForecast(apiKey, location, days = 7, alerts = "yes")
+            val response = api.getForecast(apiKey, location, days = 7, aqi = "yes", pollen = "yes", alerts = "yes")
             Result.success(response)
         } catch (e: Exception) {
             Result.failure(e)

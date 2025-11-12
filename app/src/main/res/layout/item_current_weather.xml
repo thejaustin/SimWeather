@@ -104,6 +104,8 @@
 
         </LinearLayout>
 
+        <include layout="@layout/item_air_quality" />
+
     </LinearLayout>
 
 </LinearLayout>

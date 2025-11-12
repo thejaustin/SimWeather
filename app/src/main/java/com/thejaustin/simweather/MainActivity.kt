@@ -120,6 +120,8 @@ class MainActivity : AppCompatActivity() {
                 "Hourly Forecast" -> R.layout.item_hourly_forecast_section
                 "Daily Forecast" -> R.layout.item_daily_forecast_section
                 "Weather Alerts" -> R.layout.item_alerts_section
+                "Clothing Advisor" -> R.layout.item_clothing_advisor_section
+                "Pollen" -> R.layout.item_pollen_section
                 else -> 0
             }
             if (layoutId != 0) {
@@ -297,6 +299,21 @@ class MainActivity : AppCompatActivity() {
             windEffect.visibility = View.VISIBLE
         } else {
             windEffect.visibility = View.GONE
+        }
+
+        // Air Quality
+        weather.current.airQuality?.let {
+            findViewById<TextView>(R.id.tvAqiValue).text = it.usEpaIndex.toString()
+        }
+
+        // Clothing Advisor
+        findViewById<TextView>(R.id.tvClothingAdvice)?.text = ClothingAdvisor.getClothingAdvice(weather.current)
+
+        // Pollen
+        weather.current.pollen?.let {
+            findViewById<TextView>(R.id.tvGrassPollen).text = it.grassPollen.toString()
+            findViewById<TextView>(R.id.tvTreePollen).text = it.treePollen.toString()
+            findViewById<TextView>(R.id.tvWeedPollen).text = it.weedPollen.toString()
         }
     }
 

@@ -20,8 +20,8 @@ class CityPlanningActivity : AppCompatActivity() {
         rvCityPlanning.layoutManager = LinearLayoutManager(this)
 
         val sharedPreferences = getSharedPreferences("SimWeather", MODE_PRIVATE)
-        val layout = sharedPreferences.getString("layout", "Current Weather,Hourly Forecast,Daily Forecast,Weather Alerts")
-        val weatherCards = layout?.split(",")?.toMutableList() ?: mutableListOf("Current Weather", "Hourly Forecast", "Daily Forecast", "Weather Alerts")
+        val layout = sharedPreferences.getString("layout", "Current Weather,Hourly Forecast,Daily Forecast,Weather Alerts,Clothing Advisor,Pollen")
+        val weatherCards = layout?.split(",")?.toMutableList() ?: mutableListOf("Current Weather", "Hourly Forecast", "Daily Forecast", "Weather Alerts", "Clothing Advisor", "Pollen")
 
         adapter = CityPlanningAdapter(weatherCards)
         rvCityPlanning.adapter = adapter

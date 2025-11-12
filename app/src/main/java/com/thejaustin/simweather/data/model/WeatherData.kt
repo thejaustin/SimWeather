@@ -45,7 +45,31 @@ data class CurrentWeather(
     val feelsLikeF: Double,
     @SerializedName("vis_km")
     val visibilityKm: Double,
-    val uv: Double
+    val uv: Double,
+    @SerializedName("air_quality")
+    val airQuality: AirQuality?,
+    val pollen: Pollen?
+)
+
+data class AirQuality(
+    val co: Double,
+    val no2: Double,
+    val o3: Double,
+    val so2: Double,
+    @SerializedName("pm2_5")
+    val pm2_5: Double,
+    val pm10: Double,
+    @SerializedName("us-epa-index")
+    val usEpaIndex: Int
+)
+
+data class Pollen(
+    @SerializedName("grass_pollen")
+    val grassPollen: Int,
+    @SerializedName("tree_pollen")
+    val treePollen: Int,
+    @SerializedName("weed_pollen")
+    val weedPollen: Int
 )
 
 data class Condition(
