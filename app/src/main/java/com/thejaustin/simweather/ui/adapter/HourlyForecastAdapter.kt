@@ -1,0 +1,68 @@
+package com.thejaustin.simweather.ui.adapter
+
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.widget.TextView
+import androidx.recyclerview.widget.RecyclerView
+import com.thejaustin.simweather.R
+import com.thejaustin.simweather.data.model.Hour
+import java.text.SimpleDateFormat
+import java.util.*
+
+class HourlyForecastAdapter : RecyclerView.Adapter<HourlyForecastAdapter.HourViewHolder>() {
+
+    private var hourlyData: List<Hour> = emptyList()
+
+    fun submitList(hours: List<Hour>) {
+        hourlyData = hours
+        notifyDataSetChanged()
+    }
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): HourViewHolder {
+        val view = LayoutInflater.from(parent.context)
+            .inflate(R.layout.item_hourly_forecast, parent, false)
+        return HourViewHolder(view)
+    }
+
+    override fun onBindViewHolder(holder: HourViewHolder, position: Int) {
+        holder.bind(hourlyData[position])
+    }
+
+    override fun getItemCount() = hourlyData.size
+
+    class HourViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        private val tvTime: TextView = itemView.findViewById(R.id.tvHourTime)
+        private val tvCondition: TextView = itemView.findViewById(R.id.tvHourCondition)
+        private val tvTemp: TextView = itemView.findViewById(R.id.tvHourTemp)
+        private val tvRain: TextView = itemView.findViewById(R.id.tvHourRain)
+
+        fun bind(hour: Hour) {
+            // Format time
+            val timeFormat = SimpleDateFormat("HH:mm", Locale.getDefault())
+            val date = Date(hour.timeEpoch * 1000)
+            tvTime.text = timeFormat.format(date)
+
+            // Weather icon based on condition
+            tvCondition.text = getWeatherEmoji(hour.condition.code, hour.isDay)
+
+            // Temperature
+            tvTemp.text = "${hour.tempC.toInt()}°"
+
+            // Rain chance
+            tvRain.text = "💧 ${hour.chanceOfRain}%"
+        }
+
+        private fun getWeatherEmoji(code: Int, isDay: Int): String {
+            return when {
+                code == 1000 -> if (isDay == 1) "☀" else "🌙" // Clear
+                code in 1003..1009 -> "☁" // Cloudy
+                code in 1063..1072 || code in 1150..1201 -> "🌧" // Rain
+                code in 1210..1225 || code in 1237..1264 -> "❄" // Snow
+                code in 1273..1282 -> "⛈" // Thunderstorm
+                code in 1135..1147 -> "🌫" // Fog
+                else -> if (isDay == 1) "☀" else "🌙"
+            }
+        }
+    }
+}

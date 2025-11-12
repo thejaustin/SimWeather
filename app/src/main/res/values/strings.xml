@@ -1,3 +1,26 @@
 <resources>
     <string name="app_name">SimWeather</string>
+
+    <!-- API Configuration -->
+    <!-- Get your free API key from: https://www.weatherapi.com/ -->
+    <string name="weather_api_key">YOUR_API_KEY_HERE</string>
+
+    <!-- UI Strings -->
+    <string name="loading_weather">Loading weather data...</string>
+    <string name="loading_location">Loading location...</string>
+    <string name="error_loading_weather">Error loading weather</string>
+    <string name="permission_required">Location permission required for local weather</string>
+
+    <!-- Weather Labels -->
+    <string name="feels_like">FEELS LIKE</string>
+    <string name="wind">WIND</string>
+    <string name="pressure">PRESSURE</string>
+    <string name="humidity">HUMIDITY</string>
+    <string name="visibility">VISIBILITY</string>
+    <string name="uv_index">UV INDEX</string>
+
+    <!-- Forecast Headers -->
+    <string name="hourly_forecast">HOURLY FORECAST</string>
+    <string name="daily_forecast">7-DAY FORECAST</string>
+    <string name="weather_alerts">WEATHER ALERTS</string>
 </resources>

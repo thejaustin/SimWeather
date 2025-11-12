@@ -1,10 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="purple_200">#FFBB86FC</color>
-    <color name="purple_500">#FF6200EE</color>
-    <color name="purple_700">#FF3700B3</color>
-    <color name="teal_200">#FF03DAC5</color>
-    <color name="teal_700">#FF018786</color>
+    <!-- SimCity Theme Colors -->
+    <!-- Dark Background Colors (Night City View) -->
+    <color name="sim_dark_bg">#0A0E27</color>
+    <color name="sim_dark_surface">#141B3D</color>
+    <color name="sim_dark_elevated">#1E2749</color>
+
+    <!-- Teal/Cyan UI Colors (Classic SimCity) -->
+    <color name="sim_teal_primary">#00D9FF</color>
+    <color name="sim_teal_dark">#0099CC</color>
+    <color name="sim_cyan_bright">#00FFCC</color>
+
+    <!-- Accent Colors (Information Display) -->
+    <color name="sim_yellow">#FFE600</color>
+    <color name="sim_green">#00FF66</color>
+    <color name="sim_orange">#FF9900</color>
+    <color name="sim_red">#FF3333</color>
+
+    <!-- Text Colors -->
+    <color name="sim_text_primary">#E8F4F8</color>
+    <color name="sim_text_secondary">#99B3C2</color>
+    <color name="sim_text_tertiary">#6B8494</color>
+
+    <!-- Standard Colors -->
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
 </resources>

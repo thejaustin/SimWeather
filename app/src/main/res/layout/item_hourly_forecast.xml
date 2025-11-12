@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="100dp"
+    android:layout_height="wrap_content"
+    android:layout_marginEnd="12dp"
+    app:cardBackgroundColor="@color/sim_dark_elevated"
+    app:cardCornerRadius="8dp"
+    app:cardElevation="2dp"
+    app:strokeColor="@color/sim_teal_dark"
+    app:strokeWidth="1dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <TextView
+            android:id="@+id/tvHourTime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="monospace"
+            android:text="12:00"
+            android:textColor="@color/sim_text_secondary"
+            android:textSize="12sp" />
+
+        <TextView
+            android:id="@+id/tvHourCondition"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:fontFamily="monospace"
+            android:text="☀"
+            android:textColor="@color/sim_yellow"
+            android:textSize="28sp" />
+
+        <TextView
+            android:id="@+id/tvHourTemp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:fontFamily="monospace"
+            android:text="72°"
+            android:textColor="@color/sim_teal_primary"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/tvHourRain"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:fontFamily="monospace"
+            android:text="💧 0%"
+            android:textColor="@color/sim_cyan_bright"
+            android:textSize="10sp" />
+
+    </LinearLayout>
+
+</com.google.android.material.card.MaterialCardView>

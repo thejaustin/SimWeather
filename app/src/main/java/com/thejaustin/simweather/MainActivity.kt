@@ -1,12 +1,238 @@
-
 package com.thejaustin.simweather
 
-import androidx.appcompat.app.AppCompatActivity
+import android.Manifest
+import android.content.pm.PackageManager
+import android.location.Location
 import android.os.Bundle
+import android.view.View
+import android.widget.ProgressBar
+import android.widget.TextView
+import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.activity.viewModels
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
+import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.RecyclerView
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationServices
+import com.google.android.gms.location.Priority
+import com.google.android.gms.tasks.CancellationTokenSource
+import com.thejaustin.simweather.data.model.WeatherResponse
+import com.thejaustin.simweather.ui.adapter.AlertAdapter
+import com.thejaustin.simweather.ui.adapter.DailyForecastAdapter
+import com.thejaustin.simweather.ui.adapter.HourlyForecastAdapter
+import com.thejaustin.simweather.ui.viewmodel.WeatherUiState
+import com.thejaustin.simweather.ui.viewmodel.WeatherViewModel
+import com.thejaustin.simweather.ui.util.ViewAnimations
+import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity() {
+
+    private val viewModel: WeatherViewModel by viewModels()
+    private lateinit var fusedLocationClient: FusedLocationProviderClient
+
+    // Adapters
+    private val hourlyAdapter = HourlyForecastAdapter()
+    private val dailyAdapter = DailyForecastAdapter()
+    private val alertAdapter = AlertAdapter()
+
+    // Views
+    private lateinit var tvLocation: TextView
+    private lateinit var tvTemperature: TextView
+    private lateinit var tvCondition: TextView
+    private lateinit var progressBar: ProgressBar
+    private lateinit var tvError: TextView
+    private lateinit var rvHourly: RecyclerView
+    private lateinit var rvDaily: RecyclerView
+    private lateinit var rvAlerts: RecyclerView
+
+    // Weather stats
+    private lateinit var statFeelsLike: View
+    private lateinit var statWind: View
+    private lateinit var statPressure: View
+    private lateinit var statHumidity: View
+    private lateinit var statVisibility: View
+    private lateinit var statUV: View
+
+    // Weather API Key - Get yours from https://www.weatherapi.com/
+    private val API_KEY by lazy { getString(R.string.weather_api_key) }
+
+    private val locationPermissionRequest = registerForActivityResult(
+        ActivityResultContracts.RequestMultiplePermissions()
+    ) { permissions ->
+        when {
+            permissions[Manifest.permission.ACCESS_FINE_LOCATION] == true -> {
+                fetchCurrentLocation()
+            }
+            permissions[Manifest.permission.ACCESS_COARSE_LOCATION] == true -> {
+                fetchCurrentLocation()
+            }
+            else -> {
+                // Use default location
+                viewModel.fetchWeather(API_KEY, "New York")
+            }
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
+
+        initViews()
+        setupRecyclerViews()
+        observeWeatherData()
+        requestLocationPermission()
+    }
+
+    private fun initViews() {
+        tvLocation = findViewById(R.id.tvLocation)
+        tvTemperature = findViewById(R.id.tvTemperature)
+        tvCondition = findViewById(R.id.tvCondition)
+        progressBar = findViewById(R.id.progressBar)
+        tvError = findViewById(R.id.tvError)
+        rvHourly = findViewById(R.id.rvHourlyForecast)
+        rvDaily = findViewById(R.id.rvDailyForecast)
+        rvAlerts = findViewById(R.id.rvAlerts)
+
+        statFeelsLike = findViewById(R.id.statFeelsLike)
+        statWind = findViewById(R.id.statWind)
+        statPressure = findViewById(R.id.statPressure)
+        statHumidity = findViewById(R.id.statHumidity)
+        statVisibility = findViewById(R.id.statVisibility)
+        statUV = findViewById(R.id.statUV)
+    }
+
+    private fun setupRecyclerViews() {
+        rvHourly.adapter = hourlyAdapter
+        rvDaily.adapter = dailyAdapter
+        rvAlerts.adapter = alertAdapter
+    }
+
+    private fun observeWeatherData() {
+        lifecycleScope.launch {
+            viewModel.uiState.collect { state ->
+                when (state) {
+                    is WeatherUiState.Loading -> {
+                        progressBar.visibility = View.VISIBLE
+                        tvError.visibility = View.GONE
+                    }
+                    is WeatherUiState.Success -> {
+                        progressBar.visibility = View.GONE
+                        tvError.visibility = View.GONE
+                        updateUI(state.weatherData)
+                    }
+                    is WeatherUiState.Error -> {
+                        progressBar.visibility = View.GONE
+                        tvError.visibility = View.VISIBLE
+                        tvError.text = "Error: ${state.message}"
+                        Toast.makeText(this@MainActivity, state.message, Toast.LENGTH_LONG).show()
+                    }
+                }
+            }
+        }
+    }
+
+    private fun updateUI(weather: WeatherResponse) {
+        // Animate location
+        ViewAnimations.fadeIn(tvLocation, 100)
+        tvLocation.text = "${weather.location.name}, ${weather.location.region}"
+
+        // Animate current weather with staggered delays
+        val currentWeatherCard = findViewById<View>(R.id.currentWeatherCard)
+        ViewAnimations.slideUp(currentWeatherCard, 150)
+
+        tvTemperature.text = "${weather.current.tempC.toInt()}°"
+        tvCondition.text = weather.current.condition.text
+
+        // Weather stats with animations
+        setStat(statFeelsLike, getString(R.string.feels_like), "${weather.current.feelsLikeC.toInt()}°")
+        setStat(statWind, getString(R.string.wind), "${weather.current.windKph.toInt()} kph ${weather.current.windDir}")
+        setStat(statPressure, getString(R.string.pressure), "${weather.current.pressureMb.toInt()} mb")
+        setStat(statHumidity, getString(R.string.humidity), "${weather.current.humidity}%")
+        setStat(statVisibility, getString(R.string.visibility), "${weather.current.visibilityKm.toInt()} km")
+        setStat(statUV, getString(R.string.uv_index), weather.current.uv.toInt().toString())
+
+        // Animate forecast sections
+        findViewById<View>(R.id.tvHourlyTitle)?.let { ViewAnimations.fadeIn(it, 250) }
+        rvHourly.let { ViewAnimations.slideInRight(it, 300) }
+
+        // Hourly forecast (next 24 hours)
+        val next24Hours = weather.forecast.forecastDays
+            .flatMap { it.hour }
+            .take(24)
+        hourlyAdapter.submitList(next24Hours)
+
+        // Animate daily forecast
+        findViewById<View>(R.id.tvDailyTitle)?.let { ViewAnimations.fadeIn(it, 350) }
+        rvDaily.let { ViewAnimations.slideInRight(it, 400) }
+
+        // Daily forecast
+        dailyAdapter.submitList(weather.forecast.forecastDays)
+
+        // Alerts with animation
+        if (weather.alerts != null && weather.alerts.alert.isNotEmpty()) {
+            rvAlerts.visibility = View.VISIBLE
+            ViewAnimations.slideUp(rvAlerts, 450)
+            alertAdapter.submitList(weather.alerts.alert)
+        } else {
+            rvAlerts.visibility = View.GONE
+        }
+    }
+
+    private fun setStat(view: View, label: String, value: String) {
+        view.findViewById<TextView>(R.id.tvStatLabel).text = label
+        view.findViewById<TextView>(R.id.tvStatValue).text = value
+    }
+
+    private fun requestLocationPermission() {
+        when {
+            ContextCompat.checkSelfPermission(
+                this,
+                Manifest.permission.ACCESS_FINE_LOCATION
+            ) == PackageManager.PERMISSION_GRANTED -> {
+                fetchCurrentLocation()
+            }
+            else -> {
+                locationPermissionRequest.launch(
+                    arrayOf(
+                        Manifest.permission.ACCESS_FINE_LOCATION,
+                        Manifest.permission.ACCESS_COARSE_LOCATION
+                    )
+                )
+            }
+        }
+    }
+
+    private fun fetchCurrentLocation() {
+        if (ContextCompat.checkSelfPermission(
+                this,
+                Manifest.permission.ACCESS_FINE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            viewModel.fetchWeather(API_KEY, "New York")
+            return
+        }
+
+        try {
+            val cancellationTokenSource = CancellationTokenSource()
+            fusedLocationClient.getCurrentLocation(
+                Priority.PRIORITY_HIGH_ACCURACY,
+                cancellationTokenSource.token
+            ).addOnSuccessListener { location: Location? ->
+                if (location != null) {
+                    val locationString = "${location.latitude},${location.longitude}"
+                    viewModel.fetchWeather(API_KEY, locationString)
+                } else {
+                    viewModel.fetchWeather(API_KEY, "New York")
+                }
+            }.addOnFailureListener {
+                viewModel.fetchWeather(API_KEY, "New York")
+            }
+        } catch (e: Exception) {
+            viewModel.fetchWeather(API_KEY, "New York")
+        }
     }
 }
