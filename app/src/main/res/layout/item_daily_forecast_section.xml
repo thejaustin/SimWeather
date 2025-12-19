@@ -13,7 +13,7 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
         android:fontFamily="monospace"
-        android:text="7-DAY FORECAST"
+        android:text="@string/daily_forecast_header"
         android:textColor="@color/sim_cyan_bright"
         android:textSize="16sp"
         android:textStyle="bold" />

@@ -12,7 +12,7 @@
         android:fontFamily="monospace"
         android:paddingStart="16dp"
         android:paddingTop="16dp"
-        android:text="POLLEN COUNT"
+        android:text="@string/pollen_count_header"
         android:textColor="@color/sim_teal_primary"
         android:textSize="14sp"
         android:textStyle="bold" />

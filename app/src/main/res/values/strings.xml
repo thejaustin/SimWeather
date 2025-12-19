@@ -90,4 +90,14 @@
     <string name="section_clothing_advisor">CLOTHING ADVISOR</string>
     <string name="section_pollen">POLLEN COUNT</string>
     <string name="placeholder_temp_example">72\u00B0</string>
+
+    <string name="current_weather_temp_placeholder">--\u00B0</string>
+    <string name="current_weather_loading_placeholder">Loading...</string>
+    <string name="hourly_forecast_header">HOURLY FORECAST</string>
+    <string name="daily_forecast_header">7-DAY FORECAST</string>
+    <string name="air_quality_header">AIR QUALITY</string>
+    <string name="epa_index_label">US - EPA Index</string>
+    <string name="air_quality_value_placeholder">--</string>
+    <string name="clothing_advisor_header">CLOTHING ADVISOR</string>
+    <string name="pollen_count_header">POLLEN COUNT</string>
 </resources>

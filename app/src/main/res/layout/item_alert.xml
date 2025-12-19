@@ -22,7 +22,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFamily="monospace"
-                android:text="⚠"
+                android:text="@string/icon_warning"
                 android:textColor="@color/sim_red"
                 android:textSize="24sp" />
 
@@ -37,7 +37,7 @@
                 android:paddingTop="2dp"
                 android:paddingEnd="8dp"
                 android:paddingBottom="2dp"
-                android:text="SEVERE"
+                android:text="@string/label_severe"
                 android:textColor="@color/sim_dark_bg"
                 android:textSize="10sp"
                 android:textStyle="bold" />
@@ -50,7 +50,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"
             android:fontFamily="monospace"
-            android:text="Severe Thunderstorm Warning"
+            android:text="@string/alert_title_placeholder"
             android:textColor="@color/sim_text_primary"
             android:textSize="14sp"
             android:textStyle="bold" />
@@ -61,7 +61,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:fontFamily="monospace"
-            android:text="Alert description goes here..."
+            android:text="@string/alert_desc_placeholder"
             android:textColor="@color/sim_text_secondary"
             android:textSize="12sp" />
 
@@ -71,7 +71,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:fontFamily="monospace"
-            android:text="Effective: Now - Expires: 11:00 PM"
+            android:text="@string/alert_time_placeholder"
             android:textColor="@color/sim_text_tertiary"
             android:textSize="10sp" />
 

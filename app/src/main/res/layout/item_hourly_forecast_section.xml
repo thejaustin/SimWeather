@@ -13,7 +13,7 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="8dp"
         android:fontFamily="monospace"
-        android:text="HOURLY FORECAST"
+        android:text="@string/hourly_forecast_header"
         android:textColor="@color/sim_cyan_bright"
         android:textSize="16sp"
         android:textStyle="bold" />
