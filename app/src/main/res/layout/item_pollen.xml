@@ -15,7 +15,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:fontFamily="monospace"
-            android:text="Grass"
+            android:text="@string/label_grass"
             android:textColor="@color/sim_text_secondary"
             android:textSize="12sp" />
 
@@ -24,7 +24,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="monospace"
-            android:text="--"
+            android:text="@string/placeholder_dash"
             android:textColor="@color/sim_text_primary"
             android:textSize="12sp"
             android:textStyle="bold" />
@@ -42,7 +42,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:fontFamily="monospace"
-            android:text="Tree"
+            android:text="@string/label_tree"
             android:textColor="@color/sim_text_secondary"
             android:textSize="12sp" />
 
@@ -51,7 +51,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="monospace"
-            android:text="--"
+            android:text="@string/placeholder_dash"
             android:textColor="@color/sim_text_primary"
             android:textSize="12sp"
             android:textStyle="bold" />
@@ -69,7 +69,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:fontFamily="monospace"
-            android:text="Weed"
+            android:text="@string/label_weed"
             android:textColor="@color/sim_text_secondary"
             android:textSize="12sp" />
 
@@ -78,7 +78,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="monospace"
-            android:text="--"
+            android:text="@string/placeholder_dash"
             android:textColor="@color/sim_text_primary"
             android:textSize="12sp"
             android:textStyle="bold" />

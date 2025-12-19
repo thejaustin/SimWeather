@@ -60,4 +60,31 @@
     <string name="clothing_advice_placeholder">Clothing advice will be shown here.</string>
     <string name="icon_info">\u2139\uFE0F</string>
     <string name="weather_card_placeholder">Weather Card</string>
+
+    <!-- Layout Placeholders & Icons -->
+    <string name="city_planning_title_text">\uD83C\uDFD7\uFE0F CITY PLANNING</string>
+    <string name="city_planning_subtitle_text">Drag to reorder zones</string>
+    <string name="icon_warning">\u26A0\uFE0F</string>
+    <string name="icon_sun">\u2600\uFE0F</string>
+    <string name="label_monday">MONDAY</string>
+    <string name="label_sunny">Sunny</string>
+    <string name="label_severe">SEVERE</string>
+    <string name="label_air_quality">AIR QUALITY</string>
+    <string name="label_epa_index">US - EPA Index</string>
+    <string name="label_pollen_count">POLLEN COUNT</string>
+    <string name="label_grass">Grass</string>
+    <string name="label_tree">Tree</string>
+    <string name="label_weed">Weed</string>
+    <string name="label_label">LABEL</string>
+    <string name="placeholder_temp">--\u00B0</string>
+    <string name="placeholder_temp_high">\u2191 85\u00B0</string>
+    <string name="placeholder_temp_low">\u2193 68\u00B0</string>
+    <string name="placeholder_precip">\uD83D\uDCA7 0%</string>
+    <string name="placeholder_wind">\uD83D\uDCA8 12mph</string>
+    <string name="placeholder_time">12:00</string>
+    <string name="placeholder_dash">--</string>
+    <string name="alert_title_placeholder">Severe Thunderstorm Warning</string>
+    <string name="alert_desc_placeholder">Alert description goes here...</string>
+    <string name="alert_time_placeholder">Effective: Now - Expires: 11:00 PM</string>
+    <string name="unit_percent_placeholder">\uD83D\uDCA7 10%</string>
 </resources>
