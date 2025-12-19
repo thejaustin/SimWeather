@@ -35,12 +35,22 @@ class SettingsPreferences(context: Context) {
         get() = prefs.getInt(KEY_SIM_SPEED, 50)
         set(value) = prefs.edit().putInt(KEY_SIM_SPEED, value).apply()
 
+    var gameHudEnabled: Boolean
+        get() = prefs.getBoolean(KEY_GAME_HUD, true)
+        set(value) = prefs.edit().putBoolean(KEY_GAME_HUD, value).apply()
+
+    var showRealTime: Boolean
+        get() = prefs.getBoolean(KEY_REAL_TIME, false)
+        set(value) = prefs.edit().putBoolean(KEY_REAL_TIME, value).apply()
+
     companion object {
         private const val PREFS_NAME = "simweather_prefs"
         private const val KEY_UNITS = "units"
         private const val KEY_DISASTERS = "disasters"
         private const val KEY_SOUND = "sound"
         private const val KEY_SIM_SPEED = "sim_speed"
+        private const val KEY_GAME_HUD = "game_hud"
+        private const val KEY_REAL_TIME = "real_time"
 
         @Volatile
         private var instance: SettingsPreferences? = null

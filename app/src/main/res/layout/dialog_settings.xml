@@ -159,6 +159,50 @@
             android:progressTint="@color/sim_cyan_bright"
             android:thumbTint="@color/sim_cyan_bright" />
 
+        <!-- Interface Section -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:fontFamily="monospace"
+            android:text="INTERFACE"
+            android:textColor="@color/sim_teal_primary"
+            android:textSize="14sp"
+            android:textStyle="bold" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="12dp"
+            android:background="@color/sc3k_border_highlight" />
+
+        <!-- Game HUD Toggle -->
+        <Switch
+            android:id="@+id/swGameHud"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:fontFamily="monospace"
+            android:text="Game HUD (Funds, Ticker)"
+            android:textColor="@color/sim_text_primary"
+            android:textSize="14sp"
+            android:thumbTint="@color/sim_cyan_bright"
+            android:trackTint="@color/sim_teal_primary" />
+
+        <!-- Real Time Toggle -->
+        <Switch
+            android:id="@+id/swRealTime"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:fontFamily="monospace"
+            android:text="Show Exact Date/Time"
+            android:textColor="@color/sim_text_primary"
+            android:textSize="14sp"
+            android:thumbTint="@color/sim_cyan_bright"
+            android:trackTint="@color/sim_teal_primary" />
+
         <!-- Info Box -->
         <LinearLayout
             android:layout_width="match_parent"

@@ -195,25 +195,38 @@ class MainActivity : AppCompatActivity() {
         ViewAnimations.fadeIn(tvLocation, 100)
         tvLocation.text = "${weather.location.name}, ${weather.location.region}"
 
-        // Update Header Info
-        val randomFunds = (10000..50000).random()
-        tvFunds.text = "§ $randomFunds"
+        // Update Header Info based on settings
+        if (settings.gameHudEnabled) {
+            tvFunds.visibility = View.VISIBLE
+            tickerBar.visibility = View.VISIBLE
+            
+            val randomFunds = (10000..50000).random()
+            tvFunds.text = "§ $randomFunds"
+            updateTicker(weather)
+        } else {
+            tvFunds.visibility = View.GONE
+            tickerBar.visibility = View.GONE
+        }
         
-        // Parse date for display (simple split for now, could be better formatted)
+        // Date Display
         try {
-            val dateParts = weather.location.localtime.split(" ")[0].split("-")
-            // YYYY-MM-DD -> Dec 2025
-            val months = listOf("", "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec")
-            if (dateParts.size == 3) {
-                val monthIndex = dateParts[1].toInt()
-                val year = dateParts[0]
-                tvDate.text = "${months[monthIndex]} $year"
+            if (settings.showRealTime) {
+                // Parse and reformat if possible, or just use raw string for now if format matches "yyyy-MM-dd HH:mm"
+                // Ideally use SimpleDateFormat, but for simplicity here:
+                tvDate.text = weather.location.localtime
+            } else {
+                val dateParts = weather.location.localtime.split(" ")[0].split("-")
+                // YYYY-MM-DD -> Dec 2025
+                val months = listOf("", "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec")
+                if (dateParts.size == 3) {
+                    val monthIndex = dateParts[1].toInt()
+                    val year = dateParts[0]
+                    tvDate.text = "${months[monthIndex]} $year"
+                }
             }
         } catch (e: Exception) {
             tvDate.text = "Jan 2000"
         }
-
-        updateTicker(weather)
 
         val units = settings.units
 

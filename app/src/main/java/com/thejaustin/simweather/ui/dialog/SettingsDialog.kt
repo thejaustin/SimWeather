@@ -23,6 +23,8 @@ class SettingsDialog(
     private lateinit var swDisasters: Switch
     private lateinit var swSound: Switch
     private lateinit var sbSimSpeed: SeekBar
+    private lateinit var swGameHud: Switch
+    private lateinit var swRealTime: Switch
     private lateinit var btnCancel: Button
     private lateinit var btnApply: Button
 
@@ -47,6 +49,8 @@ class SettingsDialog(
         swDisasters = findViewById(R.id.swDisasters)
         swSound = findViewById(R.id.swSound)
         sbSimSpeed = findViewById(R.id.sbSimSpeed)
+        swGameHud = findViewById(R.id.swGameHud)
+        swRealTime = findViewById(R.id.swRealTime)
         btnCancel = findViewById(R.id.btnCancel)
         btnApply = findViewById(R.id.btnApply)
     }
@@ -59,6 +63,8 @@ class SettingsDialog(
         swDisasters.isChecked = settings.disastersEnabled
         swSound.isChecked = settings.soundEnabled
         sbSimSpeed.progress = settings.simulationSpeed
+        swGameHud.isChecked = settings.gameHudEnabled
+        swRealTime.isChecked = settings.showRealTime
     }
 
     private fun setupListeners() {
@@ -81,5 +87,7 @@ class SettingsDialog(
         settings.disastersEnabled = swDisasters.isChecked
         settings.soundEnabled = swSound.isChecked
         settings.simulationSpeed = sbSimSpeed.progress
+        settings.gameHudEnabled = swGameHud.isChecked
+        settings.showRealTime = swRealTime.isChecked
     }
 }
