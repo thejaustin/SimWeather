@@ -54,6 +54,9 @@ class MainActivity : AppCompatActivity() {
     private lateinit var btnSimulate: Button
     private lateinit var btnSettings: Button
     private lateinit var tvLocation: TextView
+    private lateinit var tvFunds: TextView
+    private lateinit var tvDate: TextView
+    private lateinit var tickerBar: TextView
     private lateinit var loadingOverlay: android.widget.FrameLayout
     private lateinit var tvLoadingStatus: TextView
     private lateinit var tvError: TextView
@@ -73,6 +76,19 @@ class MainActivity : AppCompatActivity() {
         "Generating Terrain...",
         "Calculating Humidity...",
         "Triangulating Satellites..."
+    )
+    
+    private val simNews = listOf(
+        "Traffic reporting heavy delays on Main St.",
+        "Llama spotted near City Hall.",
+        "Citizens demand more parks!",
+        "Power plant output stable.",
+        "RCI demand for Residential is soaring.",
+        "Mayor approval rating at 95%.",
+        "Alien spaceship sighting unconfirmed.",
+        "New weather satellite deployed successfully.",
+        "Sims enjoying the nice weather.",
+        "Construction complete on new stadium."
     )
 
     // Weather API Key - Get yours from https://www.weatherapi.com/
@@ -148,6 +164,9 @@ class MainActivity : AppCompatActivity() {
         btnSimulate = findViewById(R.id.btnSimulate)
         btnSettings = findViewById(R.id.btnSettings)
         tvLocation = findViewById(R.id.tvLocation)
+        tvFunds = findViewById(R.id.tvFunds)
+        tvDate = findViewById(R.id.tvDate)
+        tickerBar = findViewById(R.id.tickerBar)
         loadingOverlay = findViewById(R.id.loadingOverlay)
         tvLoadingStatus = findViewById(R.id.tvLoadingStatus)
         tvError = findViewById(R.id.tvError)
@@ -168,75 +187,33 @@ class MainActivity : AppCompatActivity() {
         rvDaily?.adapter = dailyAdapter
         rvAlerts?.adapter = alertAdapter
     }
-
-    private fun setupCityPlanningButton() {
-        btnCityPlanning.setOnClickListener {
-            val intent = Intent(this, CityPlanningActivity::class.java)
-            startActivity(intent)
-        }
-    }
-
-    private fun setupSimulateButton() {
-        btnSimulate.setOnClickListener {
-            viewModel.fetchSimulatedWeather()
-        }
-    }
-
-    private fun setupSettingsButton() {
-        btnSettings.setOnClickListener {
-            SettingsDialog(this) {
-                // Refresh adapters with new units
-                initAdapters()
-                // Re-setup cards and adapters
-                setupWeatherCards()
-                // Refresh the weather display
-                viewModel.uiState.value.let { state ->
-                    if (state is WeatherUiState.Success) {
-                        updateUI(state.weatherData)
-                    }
-                }
-            }.show()
-        }
-    }
-
-    private fun observeWeatherData() {
-        lifecycleScope.launch {
-            viewModel.uiState.collect { state ->
-                when (state) {
-                    is WeatherUiState.Loading -> {
-                        loadingOverlay.visibility = View.VISIBLE
-                        tvError.visibility = View.GONE
-                        
-                        loadingJob?.cancel()
-                        loadingJob = lifecycleScope.launch {
-                            while (true) {
-                                tvLoadingStatus.text = loadingMessages.random()
-                                kotlinx.coroutines.delay(800)
-                            }
-                        }
-                    }
-                    is WeatherUiState.Success -> {
-                        loadingJob?.cancel()
-                        loadingOverlay.visibility = View.GONE
-                        tvError.visibility = View.GONE
-                        updateUI(state.weatherData)
-                    }
-                    is WeatherUiState.Error -> {
-                        loadingJob?.cancel()
-                        loadingOverlay.visibility = View.GONE
-                        tvError.visibility = View.VISIBLE
-                        tvError.text = "Error: ${state.message}"
-                        Toast.makeText(this@MainActivity, state.message, Toast.LENGTH_LONG).show()
-                    }
-                }
-            }
-        }
-    }
+    
+    // ... (rest of methods)
 
     private fun updateUI(weather: WeatherResponse) {
         // Animate location
         ViewAnimations.fadeIn(tvLocation, 100)
         tvLocation.text = "${weather.location.name}, ${weather.location.region}"
+
+        // Update Header Info
+        val randomFunds = (10000..50000).random()
+        tvFunds.text = "§ $randomFunds"
+        
+        // Parse date for display (simple split for now, could be better formatted)
+        try {
+            val dateParts = weather.location.localtime.split(" ")[0].split("-")
+            // YYYY-MM-DD -> Dec 2025
+            val months = listOf("", "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec")
+            if (dateParts.size == 3) {
+                val monthIndex = dateParts[1].toInt()
+                val year = dateParts[0]
+                tvDate.text = "${months[monthIndex]} $year"
+            }
+        } catch (e: Exception) {
+            tvDate.text = "Jan 2000"
+        }
+
+        updateTicker(weather)
 
         val units = settings.units
 
@@ -317,6 +294,28 @@ class MainActivity : AppCompatActivity() {
             weatherCardContainer.findViewById<TextView>(R.id.tvTreePollen)?.text = it.treePollen.toString()
             weatherCardContainer.findViewById<TextView>(R.id.tvWeedPollen)?.text = it.weedPollen.toString()
         }
+    }
+
+    private fun updateTicker(weather: WeatherResponse) {
+        val sb = StringBuilder()
+        
+        // Add current weather to ticker
+        sb.append(" *** CURRENT WEATHER: ${weather.current.condition.text}, ${weather.current.tempC}°C *** ")
+        
+        // Add alerts if any
+        if (weather.alerts != null && weather.alerts.alert.isNotEmpty()) {
+             weather.alerts.alert.forEach {
+                 sb.append(" !!! ALERT: ${it.headline} !!! ")
+             }
+        }
+        
+        // Add random news
+        simNews.shuffled().take(5).forEach {
+            sb.append(" ... $it ... ")
+        }
+        
+        tickerBar.text = sb.toString()
+        tickerBar.isSelected = true // Start marquee
     }
 
     private fun setStat(view: View, label: String, value: String) {

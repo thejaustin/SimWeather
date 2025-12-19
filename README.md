@@ -28,6 +28,15 @@ Toggle visual weather effects in the Gameplay Settings:
 
 ## Releases
 
+### v1.2.0 - The City Life Update
+*Released: December 2025*
+
+Bringing life to your city simulation:
+- **News Ticker**: A scrolling marquee at the bottom displaying weather alerts, traffic reports, and city news.
+- **Heads-Up Display (HUD)**: Track your "Funds" (Simoleons) and the current Date in the header.
+- **Advisor Avatars**: The Clothing Advisor now features a pixel-art avatar for that authentic advice column feel.
+- **Refined UI**: Improved button states and layouts.
+
 ### v1.1.0 - The Mayor's Update
 *Released: December 2025*
 
