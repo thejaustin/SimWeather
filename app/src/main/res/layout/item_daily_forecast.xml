@@ -24,7 +24,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFamily="monospace"
-                android:text="MONDAY"
+                android:text="@string/label_monday"
                 android:textColor="@color/sim_text_primary"
                 android:textSize="14sp"
                 android:textStyle="bold" />
@@ -35,7 +35,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="2dp"
                 android:fontFamily="monospace"
-                android:text="Sunny"
+                android:text="@string/label_sunny"
                 android:textColor="@color/sim_text_secondary"
                 android:textSize="11sp" />
 
@@ -47,7 +47,7 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="16dp"
             android:fontFamily="monospace"
-            android:text="☀"
+            android:text="@string/icon_sun"
             android:textColor="@color/sim_yellow"
             android:textSize="32sp" />
 
@@ -61,7 +61,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFamily="monospace"
-                android:text="↑ 85°"
+                android:text="@string/placeholder_temp_high"
                 android:textColor="@color/sim_orange"
                 android:textSize="16sp"
                 android:textStyle="bold" />
@@ -72,7 +72,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="2dp"
                 android:fontFamily="monospace"
-                android:text="↓ 68°"
+                android:text="@string/placeholder_temp_low"
                 android:textColor="@color/sim_cyan_bright"
                 android:textSize="16sp"
                 android:textStyle="bold" />
@@ -90,7 +90,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFamily="monospace"
-                android:text="💧 10%"
+                android:text="@string/unit_percent_placeholder"
                 android:textColor="@color/sim_text_secondary"
                 android:textSize="11sp" />
 
@@ -100,7 +100,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="2dp"
                 android:fontFamily="monospace"
-                android:text="💨 12mph"
+                android:text="@string/placeholder_wind"
                 android:textColor="@color/sim_text_secondary"
                 android:textSize="11sp" />
 

@@ -7,23 +7,23 @@
 
     <TextView
         android:id="@+id/tvStatLabel"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:fontFamily="monospace"
-        android:text="LABEL"
-        android:textColor="@color/sim_text_tertiary"
-        android:textSize="11sp"
-        android:textStyle="bold" />
+        android:gravity="center"
+        android:text="@string/label_label"
+        android:textColor="@color/sim_text_secondary"
+        android:textSize="10sp" />
 
     <TextView
         android:id="@+id/tvStatValue"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="2dp"
         android:fontFamily="monospace"
-        android:text="--"
-        android:textColor="@color/sim_teal_primary"
-        android:textSize="16sp"
+        android:gravity="center"
+        android:text="@string/placeholder_dash"
+        android:textColor="@color/sim_cyan_bright"
+        android:textSize="14sp"
         android:textStyle="bold" />
 
 </LinearLayout>
