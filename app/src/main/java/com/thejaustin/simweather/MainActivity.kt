@@ -213,9 +213,9 @@ class MainActivity : AppCompatActivity() {
             if (settings.showRealTime) {
                 // Parse and reformat if possible, or just use raw string for now if format matches "yyyy-MM-dd HH:mm"
                 // Ideally use SimpleDateFormat, but for simplicity here:
-                tvDate.text = weather.location.localtime
+                tvDate.text = weather.location.localTime
             } else {
-                val dateParts = weather.location.localtime.split(" ")[0].split("-")
+                val dateParts = weather.location.localTime.split(" ")[0].split("-")
                 // YYYY-MM-DD -> Dec 2025
                 val months = listOf("", "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec")
                 if (dateParts.size == 3) {
