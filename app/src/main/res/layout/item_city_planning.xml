@@ -14,7 +14,7 @@
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:fontFamily="monospace"
-        android:text="Weather Card"
+        android:text="@string/weather_card_placeholder"
         android:textColor="@color/sim_text_primary"
         android:textSize="16sp"
         android:textStyle="bold" />
@@ -23,7 +23,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:fontFamily="monospace"
-        android:text="☰"
+        android:text="@string/icon_drag"
         android:textColor="@color/sim_cyan_bright"
         android:textSize="24sp" />
 

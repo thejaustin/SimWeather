@@ -58,4 +58,6 @@
     <string name="icon_shirt">\uD83D\uDC55</string>
     <string name="icon_drag">\u2630</string>
     <string name="clothing_advice_placeholder">Clothing advice will be shown here.</string>
+    <string name="icon_info">\u2139\uFE0F</string>
+    <string name="weather_card_placeholder">Weather Card</string>
 </resources>

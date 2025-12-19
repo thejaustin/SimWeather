@@ -24,7 +24,7 @@
         android:layout_marginStart="12dp"
         android:layout_weight="1"
         android:fontFamily="monospace"
-        android:text="Clothing advice will be shown here."
+        android:text="@string/clothing_advice_placeholder"
         android:textColor="@color/sim_text_secondary"
         android:textSize="11sp" />
 
