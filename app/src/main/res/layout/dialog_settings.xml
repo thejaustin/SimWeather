@@ -95,6 +95,70 @@
 
         </RadioGroup>
 
+        <!-- Gameplay Section -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:fontFamily="monospace"
+            android:text="GAMEPLAY SETTINGS"
+            android:textColor="@color/sim_teal_primary"
+            android:textSize="14sp"
+            android:textStyle="bold" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="12dp"
+            android:background="@color/sc3k_border_highlight" />
+
+        <!-- Disasters Toggle -->
+        <Switch
+            android:id="@+id/swDisasters"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:fontFamily="monospace"
+            android:text="Enable Disasters (Effects)"
+            android:textColor="@color/sim_text_primary"
+            android:textSize="14sp"
+            android:thumbTint="@color/sim_cyan_bright"
+            android:trackTint="@color/sim_teal_primary" />
+
+        <!-- Sound Toggle -->
+        <Switch
+            android:id="@+id/swSound"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:fontFamily="monospace"
+            android:text="Sound Effects"
+            android:textColor="@color/sim_text_primary"
+            android:textSize="14sp"
+            android:thumbTint="@color/sim_cyan_bright"
+            android:trackTint="@color/sim_teal_primary" />
+
+        <!-- Sim Speed -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="4dp"
+            android:fontFamily="monospace"
+            android:text="Simulation Speed"
+            android:textColor="@color/sim_text_primary"
+            android:textSize="14sp" />
+
+        <SeekBar
+            android:id="@+id/sbSimSpeed"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="12dp"
+            android:max="100"
+            android:progress="50"
+            android:progressTint="@color/sim_cyan_bright"
+            android:thumbTint="@color/sim_cyan_bright" />
+
         <!-- Info Box -->
         <LinearLayout
             android:layout_width="match_parent"

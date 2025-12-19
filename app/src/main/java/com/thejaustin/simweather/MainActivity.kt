@@ -54,13 +54,26 @@ class MainActivity : AppCompatActivity() {
     private lateinit var btnSimulate: Button
     private lateinit var btnSettings: Button
     private lateinit var tvLocation: TextView
-    private lateinit var progressBar: ProgressBar
+    private lateinit var loadingOverlay: android.widget.FrameLayout
+    private lateinit var tvLoadingStatus: TextView
     private lateinit var tvError: TextView
     private lateinit var rainEffect: RainEffect
     private lateinit var snowEffect: SnowEffect
     private lateinit var fogEffect: FogEffect
     private lateinit var windEffect: WindEffect
     private lateinit var weatherCardContainer: LinearLayout
+
+    private var loadingJob: kotlinx.coroutines.Job? = null
+    private val loadingMessages = listOf(
+        "Reticulating Splines...",
+        "Adjusting Ozone Levels...",
+        "Calibrating Wind Sensors...",
+        "Downloading Cloud Patterns...",
+        "Simulating Traffic...",
+        "Generating Terrain...",
+        "Calculating Humidity...",
+        "Triangulating Satellites..."
+    )
 
     // Weather API Key - Get yours from https://www.weatherapi.com/
     private val API_KEY by lazy { getString(R.string.weather_api_key) }
@@ -135,7 +148,8 @@ class MainActivity : AppCompatActivity() {
         btnSimulate = findViewById(R.id.btnSimulate)
         btnSettings = findViewById(R.id.btnSettings)
         tvLocation = findViewById(R.id.tvLocation)
-        progressBar = findViewById(R.id.progressBar)
+        loadingOverlay = findViewById(R.id.loadingOverlay)
+        tvLoadingStatus = findViewById(R.id.tvLoadingStatus)
         tvError = findViewById(R.id.tvError)
         rainEffect = findViewById(R.id.rainEffect)
         snowEffect = findViewById(R.id.snowEffect)
@@ -190,16 +204,26 @@ class MainActivity : AppCompatActivity() {
             viewModel.uiState.collect { state ->
                 when (state) {
                     is WeatherUiState.Loading -> {
-                        progressBar.visibility = View.VISIBLE
+                        loadingOverlay.visibility = View.VISIBLE
                         tvError.visibility = View.GONE
+                        
+                        loadingJob?.cancel()
+                        loadingJob = lifecycleScope.launch {
+                            while (true) {
+                                tvLoadingStatus.text = loadingMessages.random()
+                                kotlinx.coroutines.delay(800)
+                            }
+                        }
                     }
                     is WeatherUiState.Success -> {
-                        progressBar.visibility = View.GONE
+                        loadingJob?.cancel()
+                        loadingOverlay.visibility = View.GONE
                         tvError.visibility = View.GONE
                         updateUI(state.weatherData)
                     }
                     is WeatherUiState.Error -> {
-                        progressBar.visibility = View.GONE
+                        loadingJob?.cancel()
+                        loadingOverlay.visibility = View.GONE
                         tvError.visibility = View.VISIBLE
                         tvError.text = "Error: ${state.message}"
                         Toast.makeText(this@MainActivity, state.message, Toast.LENGTH_LONG).show()
@@ -217,7 +241,13 @@ class MainActivity : AppCompatActivity() {
         val units = settings.units
 
         // Update current weather card
-        weatherCardContainer.findViewById<TextView>(R.id.tvTemperature)?.text = UnitConverter.temperature(weather.current.tempC, units)
+        val currentCard = weatherCardContainer.findViewById<View>(R.id.currentWeatherCard)
+        currentCard?.let { ViewAnimations.animateWeatherCard(it) }
+
+        val tvTemp = weatherCardContainer.findViewById<TextView>(R.id.tvTemperature)
+        tvTemp?.text = UnitConverter.temperature(weather.current.tempC, units)
+        tvTemp?.let { ViewAnimations.popUp(it, 200) }
+
         weatherCardContainer.findViewById<TextView>(R.id.tvCondition)?.text = weather.current.condition.text
 
         // Weather stats with animations and unit conversion
@@ -246,28 +276,28 @@ class MainActivity : AppCompatActivity() {
         }
 
         // Show/hide rain effect
-        if (weather.current.condition.text.contains("rain", ignoreCase = true)) {
+        if (settings.disastersEnabled && weather.current.condition.text.contains("rain", ignoreCase = true)) {
             rainEffect.visibility = View.VISIBLE
         } else {
             rainEffect.visibility = View.GONE
         }
 
         // Show/hide snow effect
-        if (weather.current.condition.text.contains("snow", ignoreCase = true)) {
+        if (settings.disastersEnabled && weather.current.condition.text.contains("snow", ignoreCase = true)) {
             snowEffect.visibility = View.VISIBLE
         } else {
             snowEffect.visibility = View.GONE
         }
 
         // Show/hide fog effect
-        if (weather.current.condition.text.contains("fog", ignoreCase = true)) {
+        if (settings.disastersEnabled && weather.current.condition.text.contains("fog", ignoreCase = true)) {
             fogEffect.visibility = View.VISIBLE
         } else {
             fogEffect.visibility = View.GONE
         }
 
         // Show/hide wind effect
-        if (weather.current.condition.text.contains("wind", ignoreCase = true)) {
+        if (settings.disastersEnabled && weather.current.condition.text.contains("wind", ignoreCase = true)) {
             windEffect.visibility = View.VISIBLE
         } else {
             windEffect.visibility = View.GONE

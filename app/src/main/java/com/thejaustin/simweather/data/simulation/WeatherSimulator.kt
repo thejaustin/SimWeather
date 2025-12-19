@@ -1,6 +1,7 @@
 package com.thejaustin.simweather.data.simulation
 
 import com.thejaustin.simweather.data.model.*
+import kotlin.random.Random
 
 /**
  * A class to simulate weather changes over time.
@@ -31,7 +32,21 @@ class WeatherSimulator {
         alerts = Alerts(listOf(Alert("Blizzard warning", "Severe", "High", "Immediate", "Entire region", "Met", "Observed", "Blizzard", "Seek shelter immediately", "2025-11-12 22:00", "2025-11-13 06:00", "Blizzard conditions with heavy snow and strong winds.", "Seek shelter immediately. Avoid travel.")))
     )
 
-    private val weatherStates = listOf(sunnyWeather, rainyWeather, snowyWeather)
+    private val foggyWeather = WeatherResponse(
+        location = Location("SimCity", "California", "USA", 34.05, -118.24, "2025-11-13 06:00"),
+        current = CurrentWeather(10.0, 50.0, 0, Condition("Fog", "//cdn.weatherapi.com/weather/64x64/day/248.png", 1135), 2.0, 0, "N", 1015.0, 0.0, 98, 0, 10.0, 50.0, 0.2, 0.1, null, null),
+        forecast = Forecast(listOf()),
+        alerts = Alerts(listOf(Alert("Dense Fog Advisory", "Moderate", "Moderate", "Expected", "Highways", "Met", "Likely", "Dense Fog", "Drive with caution", "2025-11-13 06:00", "2025-11-13 10:00", "Visibility less than 1/4 mile in dense fog.", "Slow down, use your headlights, and leave plenty of distance ahead of you.")))
+    )
+
+    private val windyWeather = WeatherResponse(
+        location = Location("SimCity", "California", "USA", 34.05, -118.24, "2025-11-13 15:00"),
+        current = CurrentWeather(20.0, 68.0, 1, Condition("Windy", "//cdn.weatherapi.com/weather/64x64/day/113.png", 1000), 45.0, 270, "W", 1005.0, 0.0, 30, 0, 18.0, 64.0, 10.0, 10.0, null, null),
+        forecast = Forecast(listOf()),
+        alerts = Alerts(listOf(Alert("High Wind Warning", "Severe", "High", "Expected", "Coastal Areas", "Met", "Likely", "High Winds", "Secure loose objects", "2025-11-13 15:00", "2025-11-13 22:00", "Northwest winds 30 to 45 mph with gusts up to 60 mph.", "Damaging winds will blow down trees and power lines. Widespread power outages are expected.")))
+    )
+
+    private val weatherStates = listOf(sunnyWeather, rainyWeather, snowyWeather, foggyWeather, windyWeather)
 
     /**
      * Simulates the next weather state based on the current weather.
@@ -40,6 +55,19 @@ class WeatherSimulator {
      * @return The simulated next weather data.
      */
     fun simulateNext(currentWeather: WeatherResponse): WeatherResponse {
-        return weatherStates.random()
+        val nextState = weatherStates.random()
+        
+        // Add some randomization to temperature to make it feel more "simulated"
+        val tempVariation = Random.nextDouble(-2.0, 2.0)
+        val newTempC = nextState.current.tempC + tempVariation
+        val newTempF = (newTempC * 9/5) + 32
+        
+        // Create a copy with modified values
+        val modifiedCurrent = nextState.current.copy(
+            tempC = (newTempC * 10).toInt() / 10.0, // Round to 1 decimal
+            tempF = (newTempF * 10).toInt() / 10.0
+        )
+        
+        return nextState.copy(current = modifiedCurrent)
     }
 }

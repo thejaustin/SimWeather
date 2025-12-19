@@ -1,34 +1,84 @@
 package com.thejaustin.simweather.ui.util
 
 import android.view.View
-import android.view.animation.AnimationUtils
-import com.thejaustin.simweather.R
+import android.view.animation.DecelerateInterpolator
+import android.view.animation.OvershootInterpolator
 
 object ViewAnimations {
 
     fun fadeIn(view: View, delay: Long = 0) {
-        val animation = AnimationUtils.loadAnimation(view.context, R.anim.fade_in)
-        animation.startOffset = delay
-        view.startAnimation(animation)
+        view.alpha = 0f
+        view.visibility = View.VISIBLE
+        view.animate()
+            .alpha(1f)
+            .setDuration(300)
+            .setStartDelay(delay)
+            .setInterpolator(DecelerateInterpolator())
+            .start()
     }
 
     fun slideUp(view: View, delay: Long = 0) {
-        val animation = AnimationUtils.loadAnimation(view.context, R.anim.slide_up)
-        animation.startOffset = delay
-        view.startAnimation(animation)
+        view.translationY = 100f
+        view.alpha = 0f
+        view.visibility = View.VISIBLE
+        view.animate()
+            .translationY(0f)
+            .alpha(1f)
+            .setDuration(400)
+            .setStartDelay(delay)
+            .setInterpolator(DecelerateInterpolator())
+            .start()
     }
 
     fun slideInRight(view: View, delay: Long = 0) {
-        val animation = AnimationUtils.loadAnimation(view.context, R.anim.slide_in_right)
-        animation.startOffset = delay
-        view.startAnimation(animation)
+        view.translationX = 100f
+        view.alpha = 0f
+        view.visibility = View.VISIBLE
+        view.animate()
+            .translationX(0f)
+            .alpha(1f)
+            .setDuration(300)
+            .setStartDelay(delay)
+            .setInterpolator(DecelerateInterpolator())
+            .start()
     }
 
     fun animateWeatherCard(view: View) {
-        slideUp(view, 100)
+        view.scaleX = 0.9f
+        view.scaleY = 0.9f
+        view.alpha = 0f
+        view.animate()
+            .scaleX(1f)
+            .scaleY(1f)
+            .alpha(1f)
+            .setDuration(300)
+            .setInterpolator(OvershootInterpolator())
+            .start()
     }
 
     fun animateForecastItem(view: View, position: Int) {
-        slideInRight(view, position * 50L)
+        view.translationY = 50f
+        view.alpha = 0f
+        view.animate()
+            .translationY(0f)
+            .alpha(1f)
+            .setDuration(300)
+            .setStartDelay(position * 30L)
+            .setInterpolator(DecelerateInterpolator())
+            .start()
+    }
+    
+    // SimCity specific pop-up animation
+    fun popUp(view: View, delay: Long = 0) {
+        view.scaleX = 0f
+        view.scaleY = 0f
+        view.visibility = View.VISIBLE
+        view.animate()
+            .scaleX(1f)
+            .scaleY(1f)
+            .setDuration(400)
+            .setStartDelay(delay)
+            .setInterpolator(OvershootInterpolator(1.5f)) // Bouncy pop
+            .start()
     }
 }
