@@ -23,4 +23,39 @@
     <string name="hourly_forecast">HOURLY FORECAST</string>
     <string name="daily_forecast">7-DAY FORECAST</string>
     <string name="weather_alerts">WEATHER ALERTS</string>
+
+    <!-- SimCity Theme Strings -->
+    <string name="app_title_full">\u25B6 SIM WEATHER 3000</string>
+    <string name="loading">Loading...</string>
+    <string name="funds_placeholder">\u00A7 20,451</string>
+    <string name="date_placeholder">Dec 2025</string>
+    <string name="icon_city">\uD83C\uDFD9\uFE0F</string>
+    <string name="icon_play">\u25B6</string>
+    <string name="icon_settings">\u2699</string>
+    <string name="ticker_default">Welcome to SimWeather 3000... Reticulating Splines... Electricity usage spiking...</string>
+    <string name="loading_status_default">Reticulating Splines...</string>
+    
+    <!-- Settings Dialog -->
+    <string name="settings_title">\u2699 SETTINGS</string>
+    <string name="settings_subtitle">Configure SimWeather</string>
+    <string name="section_units">MEASUREMENT UNITS</string>
+    <string name="unit_metric">METRIC (\u00B0C, km/h, mm)</string>
+    <string name="unit_imperial">IMPERIAL (\u00B0F, mph, in)</string>
+    <string name="unit_info">Weather will refresh automatically when units are changed</string>
+    <string name="section_gameplay">GAMEPLAY SETTINGS</string>
+    <string name="toggle_disasters">Enable Disasters (Effects)</string>
+    <string name="toggle_sound">Sound Effects</string>
+    <string name="label_sim_speed">Simulation Speed</string>
+    <string name="section_interface">INTERFACE</string>
+    <string name="toggle_hud">Game HUD (Funds, Ticker)</string>
+    <string name="toggle_realtime">Show Exact Date/Time</string>
+    <string name="btn_cancel">CANCEL</string>
+    <string name="btn_apply">APPLY</string>
+
+    <!-- City Planning -->
+    <string name="city_planning_title">\uD83C\uDFD7\uFE0F CITY PLANNING</string>
+    <string name="city_planning_subtitle">Drag to reorder zones</string>
+    <string name="icon_shirt">\uD83D\uDC55</string>
+    <string name="icon_drag">\u2630</string>
+    <string name="clothing_advice_placeholder">Clothing advice will be shown here.</string>
 </resources>
