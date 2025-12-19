@@ -26,7 +26,20 @@ Toggle visual weather effects in the Gameplay Settings:
 - Fog 🌫️
 - Wind 💨
 
+### 🕹️ Gameplay & Interface Settings
+Customize your experience:
+- **Disasters**: Toggle weather effects.
+- **Simulation Speed**: Adjust the speed of the simulation.
+- **Game HUD**: Show/Hide the "Funds" and "News Ticker" for a cleaner look.
+- **Real-Time Clock**: Switch between game-style date (Dec 2025) and exact local time.
+
 ## Releases
+
+### v1.3.0 - The Gameplay Update
+*Released: December 2025*
+
+- **Interface Toggles**: Added settings to toggle the Game HUD (Funds/Ticker) and Real-Time clock.
+- **Bug Fixes**: Improved stability and layout rendering.
 
 ### v1.2.0 - The City Life Update
 *Released: December 2025*
