@@ -19,11 +19,7 @@ class WindEffect(context: Context, attrs: AttributeSet? = null) : View(context, 
         strokeWidth = 2f
     }
 
-    init {
-        for (i in 0..50) {
-            windLines.add(WindLine(Random.nextInt(0, width), Random.nextInt(0, height)))
-        }
-    }
+    // windLines will be initialized in onSizeChanged when view has proper dimensions
 
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
@@ -32,7 +28,7 @@ class WindEffect(context: Context, attrs: AttributeSet? = null) : View(context, 
             canvas.drawLine(windLine.x.toFloat(), windLine.y.toFloat(), (windLine.x + 50).toFloat(), windLine.y.toFloat(), paint)
             if (windLine.x > width) {
                 windLine.x = -50
-                windLine.y = Random.nextInt(0, height)
+                windLine.y = if (height > 0) Random.nextInt(0, height) else 0
             }
         }
         invalidate() // Redraw the view
@@ -41,8 +37,10 @@ class WindEffect(context: Context, attrs: AttributeSet? = null) : View(context, 
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
         super.onSizeChanged(w, h, oldw, oldh)
         windLines.clear()
-        for (i in 0..50) {
-            windLines.add(WindLine(Random.nextInt(0, w), Random.nextInt(0, h)))
+        if (w > 0 && h > 0) {
+            for (i in 0..50) {
+                windLines.add(WindLine(Random.nextInt(0, w), Random.nextInt(0, h)))
+            }
         }
     }
 
