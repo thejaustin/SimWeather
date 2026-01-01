@@ -36,10 +36,10 @@ class HourlyForecastAdapter(
     override fun getItemCount() = hourlyData.size
 
     class HourViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        private val tvTime: TextView = itemView.findViewById(R.id.tvHourTime)
-        private val tvCondition: TextView = itemView.findViewById(R.id.tvHourCondition)
-        private val tvTemp: TextView = itemView.findViewById(R.id.tvHourTemp)
-        private val tvRain: TextView = itemView.findViewById(R.id.tvHourRain)
+        private val tvTime: TextView = itemView.findViewById(R.id.tvHour)
+        private val tvCondition: TextView = itemView.findViewById(R.id.tvConditionIcon)
+        private val tvTemp: TextView = itemView.findViewById(R.id.tvTemp)
+        private val tvRain: TextView = itemView.findViewById(R.id.tvPrecipChance)
 
         fun bind(hour: Hour, units: SettingsPreferences.Units) {
             // Format time

@@ -187,7 +187,71 @@ class MainActivity : AppCompatActivity() {
         rvDaily?.adapter = dailyAdapter
         rvAlerts?.adapter = alertAdapter
     }
-    
+
+    private fun setupCityPlanningButton() {
+        btnCityPlanning.setOnClickListener {
+            val intent = Intent(this, CityPlanningActivity::class.java)
+            startActivity(intent)
+        }
+    }
+
+    private fun setupSimulateButton() {
+        btnSimulate.setOnClickListener {
+            viewModel.fetchSimulatedWeather()
+        }
+    }
+
+    private fun setupSettingsButton() {
+        btnSettings.setOnClickListener {
+            SettingsDialog(this) {
+                // Refresh adapters with new units
+                initAdapters()
+                // Re-setup cards and adapters
+                setupWeatherCards()
+                // Refresh the weather display
+                viewModel.uiState.value.let { state ->
+                    if (state is WeatherUiState.Success) {
+                        updateUI(state.weatherData)
+                    }
+                }
+            }.show()
+        }
+    }
+
+    private fun observeWeatherData() {
+        lifecycleScope.launch {
+            viewModel.uiState.collect { state ->
+                when (state) {
+                    is WeatherUiState.Loading -> {
+                        loadingOverlay.visibility = View.VISIBLE
+                        tvError.visibility = View.GONE
+
+                        loadingJob?.cancel()
+                        loadingJob = lifecycleScope.launch {
+                            while (true) {
+                                tvLoadingStatus.text = loadingMessages.random()
+                                kotlinx.coroutines.delay(800)
+                            }
+                        }
+                    }
+                    is WeatherUiState.Success -> {
+                        loadingJob?.cancel()
+                        loadingOverlay.visibility = View.GONE
+                        tvError.visibility = View.GONE
+                        updateUI(state.weatherData)
+                    }
+                    is WeatherUiState.Error -> {
+                        loadingJob?.cancel()
+                        loadingOverlay.visibility = View.GONE
+                        tvError.visibility = View.VISIBLE
+                        tvError.text = "Error: ${state.message}"
+                        Toast.makeText(this@MainActivity, state.message, Toast.LENGTH_LONG).show()
+                    }
+                }
+            }
+        }
+    }
+
     // ... (rest of methods)
 
     private fun updateUI(weather: WeatherResponse) {
