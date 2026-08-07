@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/sc3k_concrete_bg_tiled"
+    android:orientation="vertical"
+    android:padding="0dp">
+
+    <!-- Header -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/sc3k_header_bg"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="monospace"
+            android:text="MAP SEARCH"
+            android:textColor="@color/sim_cyan_bright"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:fontFamily="monospace"
+            android:text="Select target city or enter custom query"
+            android:textColor="@color/sim_text_secondary"
+            android:textSize="12sp" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="20dp">
+
+        <EditText
+            android:id="@+id/etCitySearch"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:background="@drawable/sc3k_brick_bg_tiled"
+            android:fontFamily="monospace"
+            android:hint="Enter city name (e.g. Tokyo)"
+            android:inputType="text"
+            android:padding="12dp"
+            android:textColor="@color/sim_text_primary"
+            android:textColorHint="@color/sim_text_secondary"
+            android:textSize="14sp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:fontFamily="monospace"
+            android:text="PRESET METROPOLISES"
+            android:textColor="@color/sim_teal_primary"
+            android:textSize="14sp"
+            android:textStyle="bold" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="6dp"
+            android:layout_marginBottom="12dp"
+            android:background="@color/sc3k_border_highlight" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/btnCityTokyo"
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:layout_marginEnd="4dp"
+                android:layout_weight="1"
+                android:background="@drawable/sc3k_button_bg"
+                android:fontFamily="monospace"
+                android:text="Tokyo"
+                android:textColor="@color/sim_text_primary"
+                android:textSize="12sp" />
+
+            <Button
+                android:id="@+id/btnCityLondon"
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:layout_marginStart="4dp"
+                android:layout_marginEnd="4dp"
+                android:layout_weight="1"
+                android:background="@drawable/sc3k_button_bg"
+                android:fontFamily="monospace"
+                android:text="London"
+                android:textColor="@color/sim_text_primary"
+                android:textSize="12sp" />
+
+            <Button
+                android:id="@+id/btnCityNY"
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:layout_marginStart="4dp"
+                android:layout_weight="1"
+                android:background="@drawable/sc3k_button_bg"
+                android:fontFamily="monospace"
+                android:text="New York"
+                android:textColor="@color/sim_text_primary"
+                android:textSize="12sp" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/btnCityParis"
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:layout_marginEnd="4dp"
+                android:layout_weight="1"
+                android:background="@drawable/sc3k_button_bg"
+                android:fontFamily="monospace"
+                android:text="Paris"
+                android:textColor="@color/sim_text_primary"
+                android:textSize="12sp" />
+
+            <Button
+                android:id="@+id/btnCitySydney"
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:layout_marginStart="4dp"
+                android:layout_marginEnd="4dp"
+                android:layout_weight="1"
+                android:background="@drawable/sc3k_button_bg"
+                android:fontFamily="monospace"
+                android:text="Sydney"
+                android:textColor="@color/sim_text_primary"
+                android:textSize="12sp" />
+
+            <Button
+                android:id="@+id/btnCitySimCity"
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:layout_marginStart="4dp"
+                android:layout_weight="1"
+                android:background="@drawable/sc3k_button_bg"
+                android:fontFamily="monospace"
+                android:text="SimCity"
+                android:textColor="@color/sim_cyan_bright"
+                android:textSize="12sp"
+                android:textStyle="bold" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="16dp">
+
+        <Button
+            android:id="@+id/btnSearchCancel"
+            android:layout_width="0dp"
+            android:layout_height="48dp"
+            android:layout_marginEnd="8dp"
+            android:layout_weight="1"
+            android:background="@drawable/sc3k_button_bg"
+            android:fontFamily="monospace"
+            android:text="CANCEL"
+            android:textColor="@color/sim_text_primary"
+            android:textSize="14sp"
+            android:textStyle="bold" />
+
+        <Button
+            android:id="@+id/btnSearchSubmit"
+            android:layout_width="0dp"
+            android:layout_height="48dp"
+            android:layout_marginStart="8dp"
+            android:layout_weight="1"
+            android:background="@drawable/sc3k_button_bg"
+            android:fontFamily="monospace"
+            android:text="SEARCH"
+            android:textColor="@color/sim_cyan_bright"
+            android:textSize="14sp"
+            android:textStyle="bold" />
+
+    </LinearLayout>
+
+</LinearLayout>

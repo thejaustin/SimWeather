@@ -8,7 +8,6 @@ import android.os.Bundle
 import android.view.View
 import android.widget.Button
 import android.widget.LinearLayout
-import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
@@ -22,17 +21,22 @@ import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.Priority
 import com.google.android.gms.tasks.CancellationTokenSource
 import com.thejaustin.simweather.data.model.WeatherResponse
+import com.thejaustin.simweather.data.preferences.SettingsPreferences
 import com.thejaustin.simweather.ui.adapter.AlertAdapter
 import com.thejaustin.simweather.ui.adapter.DailyForecastAdapter
 import com.thejaustin.simweather.ui.adapter.HourlyForecastAdapter
+import com.thejaustin.simweather.ui.dialog.LocationSearchDialog
 import com.thejaustin.simweather.ui.dialog.SettingsDialog
-import com.thejaustin.simweather.ui.util.ClothingAdvisor
+import com.thejaustin.simweather.ui.util.SimAdvisorManager
+import com.thejaustin.simweather.ui.util.SoundManager
 import com.thejaustin.simweather.ui.util.UnitConverter
 import com.thejaustin.simweather.ui.util.ViewAnimations
+import com.thejaustin.simweather.ui.view.RciDemandView
 import com.thejaustin.simweather.ui.viewmodel.WeatherUiState
 import com.thejaustin.simweather.ui.viewmodel.WeatherViewModel
-import com.thejaustin.simweather.data.preferences.SettingsPreferences
 import com.thejaustin.simweather.ui.weather_events.FogEffect
+import com.thejaustin.simweather.ui.weather_events.LightningEffect
+import com.thejaustin.simweather.ui.weather_events.MeteorEffect
 import com.thejaustin.simweather.ui.weather_events.RainEffect
 import com.thejaustin.simweather.ui.weather_events.SnowEffect
 import com.thejaustin.simweather.ui.weather_events.WindEffect
@@ -43,6 +47,7 @@ class MainActivity : AppCompatActivity() {
     private val viewModel: WeatherViewModel by viewModels()
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private lateinit var settings: SettingsPreferences
+    private lateinit var soundManager: SoundManager
 
     // Adapters
     private lateinit var hourlyAdapter: HourlyForecastAdapter
@@ -64,7 +69,12 @@ class MainActivity : AppCompatActivity() {
     private lateinit var snowEffect: SnowEffect
     private lateinit var fogEffect: FogEffect
     private lateinit var windEffect: WindEffect
+    private lateinit var lightningEffect: LightningEffect
+    private lateinit var meteorEffect: MeteorEffect
     private lateinit var weatherCardContainer: LinearLayout
+
+    private var selectedAdvisorIndex = 0 // 0: Fin, 1: Env, 2: Safe, 3: Tra, 4: Hlth
+    private var cachedWeather: WeatherResponse? = null
 
     private var loadingJob: kotlinx.coroutines.Job? = null
     private val loadingMessages = listOf(
@@ -77,7 +87,7 @@ class MainActivity : AppCompatActivity() {
         "Calculating Humidity...",
         "Triangulating Satellites..."
     )
-    
+
     private val simNews = listOf(
         "Traffic reporting heavy delays on Main St.",
         "Llama spotted near City Hall.",
@@ -91,23 +101,15 @@ class MainActivity : AppCompatActivity() {
         "Construction complete on new stadium."
     )
 
-    // Weather API Key - Get yours from https://www.weatherapi.com/
     private val API_KEY by lazy { getString(R.string.weather_api_key) }
 
     private val locationPermissionRequest = registerForActivityResult(
         ActivityResultContracts.RequestMultiplePermissions()
     ) { permissions ->
         when {
-            permissions[Manifest.permission.ACCESS_FINE_LOCATION] == true -> {
-                fetchCurrentLocation()
-            }
-            permissions[Manifest.permission.ACCESS_COARSE_LOCATION] == true -> {
-                fetchCurrentLocation()
-            }
-            else -> {
-                // Use default location
-                viewModel.fetchWeather(API_KEY, "New York")
-            }
+            permissions[Manifest.permission.ACCESS_FINE_LOCATION] == true -> fetchCurrentLocation()
+            permissions[Manifest.permission.ACCESS_COARSE_LOCATION] == true -> fetchCurrentLocation()
+            else -> viewModel.fetchWeather(API_KEY, "New York")
         }
     }
 
@@ -116,6 +118,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         settings = SettingsPreferences.getInstance(this)
+        soundManager = SoundManager.getInstance(this)
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
 
         initAdapters()
@@ -124,6 +127,7 @@ class MainActivity : AppCompatActivity() {
         setupCityPlanningButton()
         setupSimulateButton()
         setupSettingsButton()
+        setupLocationSearch()
         observeWeatherData()
         requestLocationPermission()
     }
@@ -150,7 +154,6 @@ class MainActivity : AppCompatActivity() {
                 weatherCardContainer.addView(view)
             }
         }
-        // Re-initialize views that are now part of the dynamic cards
         initCardViews()
     }
 
@@ -174,11 +177,12 @@ class MainActivity : AppCompatActivity() {
         snowEffect = findViewById(R.id.snowEffect)
         fogEffect = findViewById(R.id.fogEffect)
         windEffect = findViewById(R.id.windEffect)
+        lightningEffect = findViewById(R.id.lightningEffect)
+        meteorEffect = findViewById(R.id.meteorEffect)
         weatherCardContainer = findViewById(R.id.weatherCardContainer)
     }
 
     private fun initCardViews() {
-        // This function is called after the cards are inflated and added to the container
         val rvHourly = weatherCardContainer.findViewById<RecyclerView>(R.id.rvHourlyForecast)
         val rvDaily = weatherCardContainer.findViewById<RecyclerView>(R.id.rvDailyForecast)
         val rvAlerts = weatherCardContainer.findViewById<RecyclerView>(R.id.rvAlerts)
@@ -186,10 +190,23 @@ class MainActivity : AppCompatActivity() {
         rvHourly?.adapter = hourlyAdapter
         rvDaily?.adapter = dailyAdapter
         rvAlerts?.adapter = alertAdapter
+
+        setupAdvisorTabs()
+    }
+
+    private fun setupLocationSearch() {
+        tvLocation.setOnClickListener {
+            soundManager.playClick()
+            LocationSearchDialog(this) { selectedCity ->
+                soundManager.playSplineReticulate()
+                viewModel.fetchWeather(API_KEY, selectedCity)
+            }.show()
+        }
     }
 
     private fun setupCityPlanningButton() {
         btnCityPlanning.setOnClickListener {
+            soundManager.playClick()
             val intent = Intent(this, CityPlanningActivity::class.java)
             startActivity(intent)
         }
@@ -197,24 +214,40 @@ class MainActivity : AppCompatActivity() {
 
     private fun setupSimulateButton() {
         btnSimulate.setOnClickListener {
+            soundManager.playSplineReticulate()
             viewModel.fetchSimulatedWeather()
         }
     }
 
     private fun setupSettingsButton() {
         btnSettings.setOnClickListener {
+            soundManager.playClick()
             SettingsDialog(this) {
-                // Refresh adapters with new units
                 initAdapters()
-                // Re-setup cards and adapters
                 setupWeatherCards()
-                // Refresh the weather display
                 viewModel.uiState.value.let { state ->
                     if (state is WeatherUiState.Success) {
                         updateUI(state.weatherData)
                     }
                 }
             }.show()
+        }
+    }
+
+    private fun setupAdvisorTabs() {
+        val btnFin = weatherCardContainer.findViewById<Button>(R.id.btnAdvFin) ?: return
+        val btnEnv = weatherCardContainer.findViewById<Button>(R.id.btnAdvEnv)
+        val btnSafe = weatherCardContainer.findViewById<Button>(R.id.btnAdvSafe)
+        val btnTra = weatherCardContainer.findViewById<Button>(R.id.btnAdvTra)
+        val btnHlth = weatherCardContainer.findViewById<Button>(R.id.btnAdvHlth)
+
+        val buttons = listOf(btnFin, btnEnv, btnSafe, btnTra, btnHlth)
+        buttons.forEachIndexed { index, button ->
+            button?.setOnClickListener {
+                soundManager.playClick()
+                selectedAdvisorIndex = index
+                cachedWeather?.let { updateAdvisorDisplay(it) }
+            }
         }
     }
 
@@ -225,7 +258,6 @@ class MainActivity : AppCompatActivity() {
                     is WeatherUiState.Loading -> {
                         loadingOverlay.visibility = View.VISIBLE
                         tvError.visibility = View.GONE
-
                         loadingJob?.cancel()
                         loadingJob = lifecycleScope.launch {
                             while (true) {
@@ -238,6 +270,7 @@ class MainActivity : AppCompatActivity() {
                         loadingJob?.cancel()
                         loadingOverlay.visibility = View.GONE
                         tvError.visibility = View.GONE
+                        cachedWeather = state.weatherData
                         updateUI(state.weatherData)
                     }
                     is WeatherUiState.Error -> {
@@ -252,18 +285,13 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    // ... (rest of methods)
-
     private fun updateUI(weather: WeatherResponse) {
-        // Animate location
         ViewAnimations.fadeIn(tvLocation, 100)
-        tvLocation.text = "${weather.location.name}, ${weather.location.region}"
+        tvLocation.text = "${weather.location.name}, ${weather.location.region} (Tap to change)"
 
-        // Update Header Info based on settings
         if (settings.gameHudEnabled) {
             tvFunds.visibility = View.VISIBLE
             tickerBar.visibility = View.VISIBLE
-            
             val randomFunds = (10000..50000).random()
             tvFunds.text = "§ $randomFunds"
             updateTicker(weather)
@@ -271,16 +299,12 @@ class MainActivity : AppCompatActivity() {
             tvFunds.visibility = View.GONE
             tickerBar.visibility = View.GONE
         }
-        
-        // Date Display
+
         try {
             if (settings.showRealTime) {
-                // Parse and reformat if possible, or just use raw string for now if format matches "yyyy-MM-dd HH:mm"
-                // Ideally use SimpleDateFormat, but for simplicity here:
                 tvDate.text = weather.location.localTime
             } else {
                 val dateParts = weather.location.localTime.split(" ")[0].split("-")
-                // YYYY-MM-DD -> Dec 2025
                 val months = listOf("", "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec")
                 if (dateParts.size == 3) {
                     val monthIndex = dateParts[1].toInt()
@@ -288,13 +312,11 @@ class MainActivity : AppCompatActivity() {
                     tvDate.text = "${months[monthIndex]} $year"
                 }
             }
-        } catch (e: Exception) {
+        } catch (_: Exception) {
             tvDate.text = "Jan 2000"
         }
 
         val units = settings.units
-
-        // Update current weather card
         val currentCard = weatherCardContainer.findViewById<View>(R.id.currentWeatherCard)
         currentCard?.let { ViewAnimations.animateWeatherCard(it) }
 
@@ -304,7 +326,6 @@ class MainActivity : AppCompatActivity() {
 
         weatherCardContainer.findViewById<TextView>(R.id.tvCondition)?.text = weather.current.condition.text
 
-        // Weather stats with animations and unit conversion
         weatherCardContainer.findViewById<View>(R.id.statFeelsLike)?.let { setStat(it, getString(R.string.feels_like), UnitConverter.temperature(weather.current.feelsLikeC, units)) }
         weatherCardContainer.findViewById<View>(R.id.statWind)?.let { setStat(it, getString(R.string.wind), "${UnitConverter.speed(weather.current.windKph, units)} ${weather.current.windDir}") }
         weatherCardContainer.findViewById<View>(R.id.statPressure)?.let { setStat(it, getString(R.string.pressure), UnitConverter.pressure(weather.current.pressureMb, units)) }
@@ -312,60 +333,34 @@ class MainActivity : AppCompatActivity() {
         weatherCardContainer.findViewById<View>(R.id.statVisibility)?.let { setStat(it, getString(R.string.visibility), UnitConverter.distance(weather.current.visibilityKm, units)) }
         weatherCardContainer.findViewById<View>(R.id.statUV)?.let { setStat(it, getString(R.string.uv_index), weather.current.uv.toInt().toString()) }
 
-        // Hourly forecast (next 24 hours)
         val next24Hours = weather.forecast.forecastDays.flatMap { it.hour }.take(24)
         hourlyAdapter.submitList(next24Hours)
-
-        // Daily forecast
         dailyAdapter.submitList(weather.forecast.forecastDays)
 
-        // Alerts with animation
         val rvAlerts = weatherCardContainer.findViewById<RecyclerView>(R.id.rvAlerts)
         if (weather.alerts != null && weather.alerts.alert.isNotEmpty()) {
             rvAlerts?.visibility = View.VISIBLE
             rvAlerts?.let { ViewAnimations.slideUp(it, 450) }
             alertAdapter.submitList(weather.alerts.alert)
+            soundManager.playAlert()
         } else {
             rvAlerts?.visibility = View.GONE
         }
 
-        // Show/hide rain effect
-        if (settings.disastersEnabled && weather.current.condition.text.contains("rain", ignoreCase = true)) {
-            rainEffect.visibility = View.VISIBLE
-        } else {
-            rainEffect.visibility = View.GONE
-        }
+        val condText = weather.current.condition.text.lowercase()
+        rainEffect.visibility = if (settings.disastersEnabled && condText.contains("rain")) View.VISIBLE else View.GONE
+        snowEffect.visibility = if (settings.disastersEnabled && condText.contains("snow")) View.VISIBLE else View.GONE
+        fogEffect.visibility = if (settings.disastersEnabled && condText.contains("fog")) View.VISIBLE else View.GONE
+        windEffect.visibility = if (settings.disastersEnabled && (condText.contains("wind") || weather.current.windKph > 35)) View.VISIBLE else View.GONE
+        lightningEffect.visibility = if (settings.disastersEnabled && (condText.contains("thunder") || condText.contains("storm"))) View.VISIBLE else View.GONE
+        meteorEffect.visibility = if (settings.disastersEnabled && condText.contains("meteor")) View.VISIBLE else View.GONE
 
-        // Show/hide snow effect
-        if (settings.disastersEnabled && weather.current.condition.text.contains("snow", ignoreCase = true)) {
-            snowEffect.visibility = View.VISIBLE
-        } else {
-            snowEffect.visibility = View.GONE
-        }
-
-        // Show/hide fog effect
-        if (settings.disastersEnabled && weather.current.condition.text.contains("fog", ignoreCase = true)) {
-            fogEffect.visibility = View.VISIBLE
-        } else {
-            fogEffect.visibility = View.GONE
-        }
-
-        // Show/hide wind effect
-        if (settings.disastersEnabled && weather.current.condition.text.contains("wind", ignoreCase = true)) {
-            windEffect.visibility = View.VISIBLE
-        } else {
-            windEffect.visibility = View.GONE
-        }
-
-        // Air Quality
         weather.current.airQuality?.let {
             weatherCardContainer.findViewById<TextView>(R.id.tvAqiValue)?.text = it.usEpaIndex.toString()
         }
 
-        // Clothing Advisor
-        weatherCardContainer.findViewById<TextView>(R.id.tvClothingAdvice)?.text = ClothingAdvisor.getClothingAdvice(weather.current)
+        updateAdvisorDisplay(weather)
 
-        // Pollen
         weather.current.pollen?.let {
             weatherCardContainer.findViewById<TextView>(R.id.tvGrassPollen)?.text = it.grassPollen.toString()
             weatherCardContainer.findViewById<TextView>(R.id.tvTreePollen)?.text = it.treePollen.toString()
@@ -373,26 +368,44 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    private fun updateAdvisorDisplay(weather: WeatherResponse) {
+        val tvAdvisorTitle = weatherCardContainer.findViewById<TextView>(R.id.tvAdvisorTitle) ?: return
+        val tvAdviceText = weatherCardContainer.findViewById<TextView>(R.id.tvClothingAdvice) ?: return
+        val rciGauge = weatherCardContainer.findViewById<RciDemandView>(R.id.rciDemandGauge)
+
+        val opinion = when (selectedAdvisorIndex) {
+            0 -> SimAdvisorManager.getFinancialAdvice(weather.current)
+            1 -> SimAdvisorManager.getEnvironmentalAdvice(weather.current)
+            2 -> SimAdvisorManager.getSafetyAdvice(weather)
+            3 -> SimAdvisorManager.getTransportationAdvice(weather.current)
+            else -> SimAdvisorManager.getHealthAdvice(weather.current)
+        }
+
+        tvAdvisorTitle.text = opinion.advisorName
+        tvAdviceText.text = "${opinion.title}: ${opinion.advice}"
+
+        // Calculate weather impact on RCI demand
+        val temp = weather.current.tempC
+        val rDemand = if (temp in 18.0..26.0) 0.9f else 0.3f
+        val cDemand = if (weather.current.condition.text.lowercase().contains("rain")) 0.2f else 0.7f
+        val iDemand = if (temp < 10 || temp > 30) 0.8f else 0.4f
+
+        rciGauge?.updateDemand(rDemand, cDemand, iDemand)
+    }
+
     private fun updateTicker(weather: WeatherResponse) {
         val sb = StringBuilder()
-        
-        // Add current weather to ticker
         sb.append(" *** CURRENT WEATHER: ${weather.current.condition.text}, ${weather.current.tempC}°C *** ")
-        
-        // Add alerts if any
         if (weather.alerts != null && weather.alerts.alert.isNotEmpty()) {
-             weather.alerts.alert.forEach {
-                 sb.append(" !!! ALERT: ${it.headline} !!! ")
-             }
+            weather.alerts.alert.forEach {
+                sb.append(" !!! ALERT: ${it.headline} !!! ")
+            }
         }
-        
-        // Add random news
         simNews.shuffled().take(5).forEach {
             sb.append(" ... $it ... ")
         }
-        
         tickerBar.text = sb.toString()
-        tickerBar.isSelected = true // Start marquee
+        tickerBar.isSelected = true
     }
 
     private fun setStat(view: View, label: String, value: String) {
@@ -405,17 +418,13 @@ class MainActivity : AppCompatActivity() {
             ContextCompat.checkSelfPermission(
                 this,
                 Manifest.permission.ACCESS_FINE_LOCATION
-            ) == PackageManager.PERMISSION_GRANTED -> {
-                fetchCurrentLocation()
-            }
-            else -> {
-                locationPermissionRequest.launch(
-                    arrayOf(
-                        Manifest.permission.ACCESS_FINE_LOCATION,
-                        Manifest.permission.ACCESS_COARSE_LOCATION
-                    )
+            ) == PackageManager.PERMISSION_GRANTED -> fetchCurrentLocation()
+            else -> locationPermissionRequest.launch(
+                arrayOf(
+                    Manifest.permission.ACCESS_FINE_LOCATION,
+                    Manifest.permission.ACCESS_COARSE_LOCATION
                 )
-            }
+            )
         }
     }
 
@@ -444,7 +453,7 @@ class MainActivity : AppCompatActivity() {
             }.addOnFailureListener {
                 viewModel.fetchWeather(API_KEY, "New York")
             }
-        } catch (e: Exception) {
+        } catch (_: Exception) {
             viewModel.fetchWeather(API_KEY, "New York")
         }
     }

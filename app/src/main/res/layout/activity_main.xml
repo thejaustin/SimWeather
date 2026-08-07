@@ -243,5 +243,25 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/headerBar" />
 
+    <com.thejaustin.simweather.ui.weather_events.LightningEffect
+        android:id="@+id/lightningEffect"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toTopOf="@id/tickerBar"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/headerBar" />
+
+    <com.thejaustin.simweather.ui.weather_events.MeteorEffect
+        android:id="@+id/meteorEffect"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toTopOf="@id/tickerBar"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/headerBar" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
 
