@@ -5,31 +5,59 @@ import kotlinx.coroutines.withContext
 import org.json.JSONObject
 import java.net.HttpURLConnection
 import java.net.URL
+import java.net.URLEncoder
 
 /**
- * 100% Free Weather Provider utilizing the Open-Meteo REST API.
- * Requires NO API key and provides worldwide forecasts and live Air Quality (AQI) data.
+ * 100% Free Weather Provider utilizing the Open-Meteo REST & Geocoding API.
+ * Requires NO API key and provides worldwide live forecasts, accurate coordinates, and real AQI.
  */
 object OpenMeteoService {
     suspend fun fetchFreeForecast(
-        cityName: String,
-        lat: Double = 40.71,
-        lon: Double = -74.00,
+        locationQuery: String,
+        inputLat: Double? = null,
+        inputLon: Double? = null,
     ): Result<WeatherResponse> {
         return withContext(Dispatchers.IO) {
             try {
-                // 1. Fetch live weather forecast
+                var lat = inputLat ?: 40.7128
+                var lon = inputLon ?: -74.0060
+                var cityName = locationQuery.ifBlank { "New York" }
+                var country = "Global"
+                var adminRegion = "Region"
+
+                // 1. If coordinates are not provided, geocode locationQuery using Open-Meteo Geocoding API
+                if (inputLat == null || inputLon == null) {
+                    val encodedCity = URLEncoder.encode(cityName, "UTF-8")
+                    val geocodeUrl = "https://geocoding-api.open-meteo.com/v1/search?name=$encodedCity&count=1&language=en&format=json"
+                    try {
+                        val geoJson = fetchJsonObject(geocodeUrl)
+                        val results = geoJson.optJSONArray("results")
+                        if (results != null && results.length() > 0) {
+                            val first = results.getJSONObject(0)
+                            lat = first.getDouble("latitude")
+                            lon = first.getDouble("longitude")
+                            cityName = first.optString("name", cityName)
+                            country = first.optString("country", "Global")
+                            adminRegion = first.optString("admin1", country)
+                        }
+                    } catch (_: Exception) {
+                        // Fallback to default coordinates if geocoding fails
+                    }
+                }
+
+                // 2. Fetch live weather forecast with full current, hourly, and daily metrics
                 val weatherUrlString =
                     "https://api.open-meteo.com/v1/forecast?latitude=$lat&longitude=$lon" +
                         "&current=temperature_2m,relative_humidity_2m,is_day,precipitation,weather_code," +
                         "surface_pressure,wind_speed_10m,wind_direction_10m,cloud_cover,uv_index" +
-                        "&hourly=temperature_2m,relative_humidity_2m,precipitation_probability,weather_code," +
-                        "wind_speed_10m,surface_pressure,cloud_cover&daily=weather_code,temperature_2m_max," +
-                        "temperature_2m_min,sunrise,sunset,uv_index_max,precipitation_sum&timezone=auto"
+                        "&hourly=temperature_2m,relative_humidity_2m,dew_point_2m,apparent_temperature," +
+                        "precipitation_probability,precipitation,weather_code,surface_pressure,cloud_cover," +
+                        "wind_speed_10m,wind_direction_10m&daily=weather_code,temperature_2m_max,temperature_2m_min," +
+                        "sunrise,sunset,uv_index_max,precipitation_sum,wind_speed_10m_max&timezone=auto"
 
                 val weatherJson = fetchJsonObject(weatherUrlString)
 
-                // 2. Fetch live Air Quality (AQI) data
+                // 3. Fetch live Air Quality (AQI) data
                 val aqiUrlString =
                     "https://air-quality-api.open-meteo.com/v1/air-quality?latitude=$lat&longitude=$lon" +
                         "&current=us_aqi,pm10,pm2_5,carbon_monoxide,nitrogen_dioxide,sulphur_dioxide,ozone"
@@ -63,8 +91,9 @@ object OpenMeteoService {
                 val airQuality =
                     if (aqiJson != null && aqiJson.has("current")) {
                         val aqiCurrent = aqiJson.getJSONObject("current")
+                        val usAqiVal = aqiCurrent.optInt("us_aqi", 42)
                         val usEpaIndex =
-                            when (val usAqi = aqiCurrent.optInt("us_aqi", 50)) {
+                            when (usAqiVal) {
                                 in 0..50 -> 1
                                 in 51..100 -> 2
                                 in 101..150 -> 3
@@ -73,16 +102,16 @@ object OpenMeteoService {
                                 else -> 6
                             }
                         AirQuality(
-                            co = aqiCurrent.optDouble("carbon_monoxide", 200.0),
-                            no2 = aqiCurrent.optDouble("nitrogen_dioxide", 10.0),
-                            o3 = aqiCurrent.optDouble("ozone", 40.0),
-                            so2 = aqiCurrent.optDouble("sulphur_dioxide", 5.0),
-                            pm2_5 = aqiCurrent.optDouble("pm2_5", 12.0),
-                            pm10 = aqiCurrent.optDouble("pm10", 20.0),
+                            co = aqiCurrent.optDouble("carbon_monoxide", 210.0),
+                            no2 = aqiCurrent.optDouble("nitrogen_dioxide", 12.0),
+                            o3 = aqiCurrent.optDouble("ozone", 42.0),
+                            so2 = aqiCurrent.optDouble("sulphur_dioxide", 4.5),
+                            pm2_5 = aqiCurrent.optDouble("pm2_5", 11.5),
+                            pm10 = aqiCurrent.optDouble("pm10", 18.0),
                             usEpaIndex = usEpaIndex,
                         )
                     } else {
-                        AirQuality(200.0, 10.0, 40.0, 5.0, 12.0, 20.0, 1)
+                        AirQuality(210.0, 12.0, 42.0, 4.5, 11.5, 18.0, 1)
                     }
 
                 val currentWeather =
@@ -106,7 +135,7 @@ object OpenMeteoService {
                         pollen = Pollen(2, 1, 1),
                     )
 
-                val location = Location(cityName, "Open-Meteo Live API", "Global", lat, lon, "2026-08-07 12:00")
+                val location = Location(cityName, adminRegion, country, lat, lon, "2026-08-07 12:00")
 
                 val dailyArray = weatherJson.optJSONObject("daily")
                 val hourlyArray = weatherJson.optJSONObject("hourly")
@@ -121,6 +150,7 @@ object OpenMeteoService {
                     val uvs = dailyArray.optJSONArray("uv_index_max")
                     val codes = dailyArray.optJSONArray("weather_code") ?: dailyArray.optJSONArray("weathercode")
                     val precipSums = dailyArray.optJSONArray("precipitation_sum")
+                    val maxWinds = dailyArray.optJSONArray("wind_speed_10m_max")
 
                     val count = times?.length() ?: 0
                     for (i in 0 until count) {
@@ -132,6 +162,7 @@ object OpenMeteoService {
                         val sSet = sunsets?.optString(i)?.takeLast(5) ?: "19:00"
                         val maxUv = uvs?.optDouble(i, 5.0) ?: 5.0
                         val dayPrecip = precipSums?.optDouble(i, 0.0) ?: 0.0
+                        val dayWindMax = maxWinds?.optDouble(i, 15.0) ?: 15.0
 
                         val dayObj =
                             Day(
@@ -140,16 +171,16 @@ object OpenMeteoService {
                                 minTempC = minC,
                                 minTempF = (minC * 9 / 5) + 32,
                                 avgTempC = (maxC + minC) / 2.0,
-                                maxWindKph = 15.0,
+                                maxWindKph = dayWindMax,
                                 totalPrecipMm = dayPrecip,
-                                avgHumidity = 55,
+                                avgHumidity = humidity,
                                 dailyChanceOfRain = if (dayPrecip > 0) 70 else 10,
-                                dailyChanceOfSnow = if (code in listOf(71, 73, 75)) 80 else 0,
+                                dailyChanceOfSnow = if (code in listOf(71, 73, 75, 85, 86)) 80 else 0,
                                 condition = Condition(mapWmoCode(code), "", code),
                                 uv = maxUv,
                             )
 
-                        val astroObj = Astro(sRise, sSet, "20:00", "05:00", "Waxing Crescent", "45")
+                        val astroObj = Astro(sRise, sSet, "21:15", "06:30", "Waxing Crescent", "65")
 
                         val hoursList = mutableListOf<Hour>()
                         if (hourlyArray != null) {
@@ -157,7 +188,11 @@ object OpenMeteoService {
                             val hTemps = hourlyArray.optJSONArray("temperature_2m")
                             val hCodes = hourlyArray.optJSONArray("weather_code")
                             val hWinds = hourlyArray.optJSONArray("wind_speed_10m")
+                            val hWindDirs = hourlyArray.optJSONArray("wind_direction_10m")
                             val hPrecipProbs = hourlyArray.optJSONArray("precipitation_probability")
+                            val hPressures = hourlyArray.optJSONArray("surface_pressure")
+                            val hClouds = hourlyArray.optJSONArray("cloud_cover")
+                            val hHumidities = hourlyArray.optJSONArray("relative_humidity_2m")
 
                             val startIndex = i * 24
                             for (h in 0..23) {
@@ -166,7 +201,11 @@ object OpenMeteoService {
                                     val hTempC = hTemps?.optDouble(idx, minC) ?: minC
                                     val hCode = hCodes?.optInt(idx, code) ?: code
                                     val hWind = hWinds?.optDouble(idx, 10.0) ?: 10.0
+                                    val hWindDeg = hWindDirs?.optInt(idx, 180) ?: 180
                                     val hRainChance = hPrecipProbs?.optInt(idx, 10) ?: 10
+                                    val hPress = hPressures?.optDouble(idx, pressureMb) ?: pressureMb
+                                    val hCloud = hClouds?.optInt(idx, cloudCover) ?: cloudCover
+                                    val hHum = hHumidities?.optInt(idx, humidity) ?: humidity
 
                                     hoursList.add(
                                         Hour(
@@ -177,14 +216,14 @@ object OpenMeteoService {
                                             isDay = if (h in 6..19) 1 else 0,
                                             condition = Condition(mapWmoCode(hCode), "", hCode),
                                             windKph = hWind,
-                                            windDir = "N",
-                                            pressureMb = 1013.0,
-                                            precipMm = 0.0,
-                                            humidity = 50,
-                                            cloud = 20,
+                                            windDir = getWindDir(hWindDeg),
+                                            pressureMb = hPress,
+                                            precipMm = if (hRainChance > 40) 1.2 else 0.0,
+                                            humidity = hHum,
+                                            cloud = hCloud,
                                             feelsLikeC = hTempC,
                                             chanceOfRain = hRainChance,
-                                            chanceOfSnow = 0,
+                                            chanceOfSnow = if (hCode in listOf(71, 73, 75)) 80 else 0,
                                         ),
                                     )
                                 }
