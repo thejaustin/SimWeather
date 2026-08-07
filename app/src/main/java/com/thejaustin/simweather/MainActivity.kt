@@ -37,13 +37,13 @@ import com.thejaustin.simweather.ui.util.ViewAnimations
 import com.thejaustin.simweather.ui.view.RciDemandView
 import com.thejaustin.simweather.ui.viewmodel.WeatherUiState
 import com.thejaustin.simweather.ui.viewmodel.WeatherViewModel
-import com.thejaustin.simweather.ui.weather_events.FogEffect
-import com.thejaustin.simweather.ui.weather_events.LightningEffect
-import com.thejaustin.simweather.ui.weather_events.MeteorEffect
-import com.thejaustin.simweather.ui.weather_events.RainEffect
-import com.thejaustin.simweather.ui.weather_events.SnowEffect
-import com.thejaustin.simweather.ui.weather_events.TornadoEffect
-import com.thejaustin.simweather.ui.weather_events.WindEffect
+import com.thejaustin.simweather.ui.weatherevents.FogEffect
+import com.thejaustin.simweather.ui.weatherevents.LightningEffect
+import com.thejaustin.simweather.ui.weatherevents.MeteorEffect
+import com.thejaustin.simweather.ui.weatherevents.RainEffect
+import com.thejaustin.simweather.ui.weatherevents.SnowEffect
+import com.thejaustin.simweather.ui.weatherevents.TornadoEffect
+import com.thejaustin.simweather.ui.weatherevents.WindEffect
 import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity() {

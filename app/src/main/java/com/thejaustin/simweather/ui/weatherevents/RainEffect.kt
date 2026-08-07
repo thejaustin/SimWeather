@@ -1,4 +1,4 @@
-package com.thejaustin.simweather.ui.weather_events
+package com.thejaustin.simweather.ui.weatherevents
 
 import android.content.Context
 import android.graphics.Canvas

@@ -203,7 +203,7 @@
     <!-- Actually, effects should overlay the content but be under the header/ticker if possible, or over everything. 
          Let's put them over everything except header/ticker for now. -->
     
-    <com.thejaustin.simweather.ui.weather_events.WindEffect
+    <com.thejaustin.simweather.ui.weatherevents.WindEffect
         android:id="@+id/windEffect"
         android:layout_width="0dp"
         android:layout_height="0dp"
@@ -213,7 +213,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/headerBar" />
 
-    <com.thejaustin.simweather.ui.weather_events.FogEffect
+    <com.thejaustin.simweather.ui.weatherevents.FogEffect
         android:id="@+id/fogEffect"
         android:layout_width="0dp"
         android:layout_height="0dp"
@@ -223,7 +223,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/headerBar" />
 
-    <com.thejaustin.simweather.ui.weather_events.SnowEffect
+    <com.thejaustin.simweather.ui.weatherevents.SnowEffect
         android:id="@+id/snowEffect"
         android:layout_width="0dp"
         android:layout_height="0dp"
@@ -233,7 +233,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/headerBar" />
 
-    <com.thejaustin.simweather.ui.weather_events.RainEffect
+    <com.thejaustin.simweather.ui.weatherevents.RainEffect
         android:id="@+id/rainEffect"
         android:layout_width="0dp"
         android:layout_height="0dp"
@@ -243,7 +243,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/headerBar" />
 
-    <com.thejaustin.simweather.ui.weather_events.LightningEffect
+    <com.thejaustin.simweather.ui.weatherevents.LightningEffect
         android:id="@+id/lightningEffect"
         android:layout_width="0dp"
         android:layout_height="0dp"
@@ -253,7 +253,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/headerBar" />
 
-    <com.thejaustin.simweather.ui.weather_events.MeteorEffect
+    <com.thejaustin.simweather.ui.weatherevents.MeteorEffect
         android:id="@+id/meteorEffect"
         android:layout_width="0dp"
         android:layout_height="0dp"
@@ -263,7 +263,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/headerBar" />
 
-    <com.thejaustin.simweather.ui.weather_events.TornadoEffect
+    <com.thejaustin.simweather.ui.weatherevents.TornadoEffect
         android:id="@+id/tornadoEffect"
         android:layout_width="0dp"
         android:layout_height="0dp"
