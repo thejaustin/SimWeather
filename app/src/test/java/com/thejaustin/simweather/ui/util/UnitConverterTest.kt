@@ -5,7 +5,6 @@ import org.junit.Assert.assertEquals
 import org.junit.Test
 
 class UnitConverterTest {
-
     @Test
     fun testTemperatureMetric() {
         val result = UnitConverter.temperature(25.0, Units.METRIC)

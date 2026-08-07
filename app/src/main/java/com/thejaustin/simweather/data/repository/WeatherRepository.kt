@@ -5,10 +5,12 @@ import com.thejaustin.simweather.data.api.RetrofitInstance
 import com.thejaustin.simweather.data.model.WeatherResponse
 
 class WeatherRepository {
-
     private val api = RetrofitInstance.weatherApi
 
-    suspend fun getWeatherForecast(apiKey: String, location: String): Result<WeatherResponse> {
+    suspend fun getWeatherForecast(
+        apiKey: String,
+        location: String,
+    ): Result<WeatherResponse> {
         if (apiKey.isBlank() || apiKey == "YOUR_API_KEY_HERE" || apiKey == "simweather_free") {
             return OpenMeteoService.fetchFreeForecast(location)
         }

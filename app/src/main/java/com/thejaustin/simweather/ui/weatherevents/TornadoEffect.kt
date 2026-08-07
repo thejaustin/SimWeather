@@ -7,24 +7,25 @@ import android.graphics.Paint
 import android.util.AttributeSet
 import android.view.View
 import kotlin.math.cos
-import kotlin.math.sin
 import kotlin.random.Random
 
 /**
  * SimCity classic disaster effect: Swirling Tornado Vortex & flying debris.
  */
 class TornadoEffect(context: Context, attrs: AttributeSet? = null) : View(context, attrs) {
-
     private val funnelParticles = mutableListOf<FunnelParticle>()
-    private val paint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-        color = Color.argb(180, 110, 110, 110)
-        style = Paint.Style.FILL
-    }
+    private val paint =
+        Paint(Paint.ANTI_ALIAS_FLAG).apply {
+            color = Color.argb(180, 110, 110, 110)
+            style = Paint.Style.FILL
+        }
+
     // Brown debris
-    private val debrisPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-        color = Color.parseColor("#8B4513")
-        style = Paint.Style.FILL
-    }
+    private val debrisPaint =
+        Paint(Paint.ANTI_ALIAS_FLAG).apply {
+            color = Color.parseColor("#8B4513")
+            style = Paint.Style.FILL
+        }
 
     private var tornadoX = 0f
     private var tornadoSpeed = 3f
@@ -48,7 +49,12 @@ class TornadoEffect(context: Context, attrs: AttributeSet? = null) : View(contex
         invalidate()
     }
 
-    override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
+    override fun onSizeChanged(
+        w: Int,
+        h: Int,
+        oldw: Int,
+        oldh: Int,
+    ) {
         super.onSizeChanged(w, h, oldw, oldh)
         funnelParticles.clear()
         if (w > 0 && h > 0) {
@@ -61,6 +67,7 @@ class TornadoEffect(context: Context, attrs: AttributeSet? = null) : View(contex
 
     private class FunnelParticle(val yProgress: Float, val totalHeight: Float) {
         val currentY = yProgress * totalHeight
+
         // Funnel gets wider at top (yProgress = 0) and narrow at ground (yProgress = 1)
         val maxRadius = (1.0f - yProgress) * 120f + 15f
         val radius = Random.nextFloat() * 6f + 3f

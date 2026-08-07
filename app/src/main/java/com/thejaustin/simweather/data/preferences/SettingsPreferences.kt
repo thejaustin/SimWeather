@@ -4,14 +4,15 @@ import android.content.Context
 import android.content.SharedPreferences
 
 class SettingsPreferences(context: Context) {
-
-    private val prefs: SharedPreferences = context.getSharedPreferences(
-        PREFS_NAME,
-        Context.MODE_PRIVATE
-    )
+    private val prefs: SharedPreferences =
+        context.getSharedPreferences(
+            PREFS_NAME,
+            Context.MODE_PRIVATE,
+        )
 
     enum class Units {
-        METRIC, IMPERIAL
+        METRIC,
+        IMPERIAL,
     }
 
     var units: Units

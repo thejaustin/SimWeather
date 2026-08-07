@@ -5,8 +5,10 @@ import android.view.animation.DecelerateInterpolator
 import android.view.animation.OvershootInterpolator
 
 object ViewAnimations {
-
-    fun fadeIn(view: View, delay: Long = 0) {
+    fun fadeIn(
+        view: View,
+        delay: Long = 0,
+    ) {
         view.alpha = 0f
         view.visibility = View.VISIBLE
         view.animate()
@@ -17,7 +19,10 @@ object ViewAnimations {
             .start()
     }
 
-    fun slideUp(view: View, delay: Long = 0) {
+    fun slideUp(
+        view: View,
+        delay: Long = 0,
+    ) {
         view.translationY = 100f
         view.alpha = 0f
         view.visibility = View.VISIBLE
@@ -30,7 +35,10 @@ object ViewAnimations {
             .start()
     }
 
-    fun slideInRight(view: View, delay: Long = 0) {
+    fun slideInRight(
+        view: View,
+        delay: Long = 0,
+    ) {
         view.translationX = 100f
         view.alpha = 0f
         view.visibility = View.VISIBLE
@@ -56,7 +64,10 @@ object ViewAnimations {
             .start()
     }
 
-    fun animateForecastItem(view: View, position: Int) {
+    fun animateForecastItem(
+        view: View,
+        position: Int,
+    ) {
         view.translationY = 50f
         view.alpha = 0f
         view.animate()
@@ -67,9 +78,12 @@ object ViewAnimations {
             .setInterpolator(DecelerateInterpolator())
             .start()
     }
-    
+
     // SimCity specific pop-up animation
-    fun popUp(view: View, delay: Long = 0) {
+    fun popUp(
+        view: View,
+        delay: Long = 0,
+    ) {
         view.scaleX = 0f
         view.scaleY = 0f
         view.visibility = View.VISIBLE

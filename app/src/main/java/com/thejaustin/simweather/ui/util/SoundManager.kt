@@ -15,7 +15,6 @@ import kotlin.math.sin
  * Operates without external asset dependencies and respects sound settings.
  */
 class SoundManager private constructor(context: Context) {
-
     private val settings = SettingsPreferences.getInstance(context)
     private val scope = CoroutineScope(Dispatchers.Default)
 
@@ -66,7 +65,11 @@ class SoundManager private constructor(context: Context) {
         }
     }
 
-    private fun generateTone(freq: Double, durationMs: Int, volume: Float) {
+    private fun generateTone(
+        freq: Double,
+        durationMs: Int,
+        volume: Float,
+    ) {
         try {
             val sampleRate = 22050
             val numSamples = (durationMs * sampleRate / 1000)
@@ -79,23 +82,24 @@ class SoundManager private constructor(context: Context) {
                 buffer[i] = sampleValue.toShort()
             }
 
-            val track = AudioTrack.Builder()
-                .setAudioAttributes(
-                    AudioAttributes.Builder()
-                        .setUsage(AudioAttributes.USAGE_GAME)
-                        .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
-                        .build()
-                )
-                .setAudioFormat(
-                    AudioFormat.Builder()
-                        .setEncoding(AudioFormat.ENCODING_PCM_16BIT)
-                        .setSampleRate(sampleRate)
-                        .setChannelMask(AudioFormat.CHANNEL_OUT_MONO)
-                        .build()
-                )
-                .setBufferSizeInBytes(buffer.size * 2)
-                .setTransferMode(AudioTrack.MODE_STATIC)
-                .build()
+            val track =
+                AudioTrack.Builder()
+                    .setAudioAttributes(
+                        AudioAttributes.Builder()
+                            .setUsage(AudioAttributes.USAGE_GAME)
+                            .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
+                            .build(),
+                    )
+                    .setAudioFormat(
+                        AudioFormat.Builder()
+                            .setEncoding(AudioFormat.ENCODING_PCM_16BIT)
+                            .setSampleRate(sampleRate)
+                            .setChannelMask(AudioFormat.CHANNEL_OUT_MONO)
+                            .build(),
+                    )
+                    .setBufferSizeInBytes(buffer.size * 2)
+                    .setTransferMode(AudioTrack.MODE_STATIC)
+                    .build()
 
             track.write(buffer, 0, buffer.size)
             track.play()
@@ -105,7 +109,12 @@ class SoundManager private constructor(context: Context) {
         }
     }
 
-    private fun generateSweep(startFreq: Double, endFreq: Double, durationMs: Int, volume: Float) {
+    private fun generateSweep(
+        startFreq: Double,
+        endFreq: Double,
+        durationMs: Int,
+        volume: Float,
+    ) {
         try {
             val sampleRate = 22050
             val numSamples = (durationMs * sampleRate / 1000)
@@ -119,23 +128,24 @@ class SoundManager private constructor(context: Context) {
                 buffer[i] = sampleValue.toShort()
             }
 
-            val track = AudioTrack.Builder()
-                .setAudioAttributes(
-                    AudioAttributes.Builder()
-                        .setUsage(AudioAttributes.USAGE_GAME)
-                        .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
-                        .build()
-                )
-                .setAudioFormat(
-                    AudioFormat.Builder()
-                        .setEncoding(AudioFormat.ENCODING_PCM_16BIT)
-                        .setSampleRate(sampleRate)
-                        .setChannelMask(AudioFormat.CHANNEL_OUT_MONO)
-                        .build()
-                )
-                .setBufferSizeInBytes(buffer.size * 2)
-                .setTransferMode(AudioTrack.MODE_STATIC)
-                .build()
+            val track =
+                AudioTrack.Builder()
+                    .setAudioAttributes(
+                        AudioAttributes.Builder()
+                            .setUsage(AudioAttributes.USAGE_GAME)
+                            .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
+                            .build(),
+                    )
+                    .setAudioFormat(
+                        AudioFormat.Builder()
+                            .setEncoding(AudioFormat.ENCODING_PCM_16BIT)
+                            .setSampleRate(sampleRate)
+                            .setChannelMask(AudioFormat.CHANNEL_OUT_MONO)
+                            .build(),
+                    )
+                    .setBufferSizeInBytes(buffer.size * 2)
+                    .setTransferMode(AudioTrack.MODE_STATIC)
+                    .build()
 
             track.write(buffer, 0, buffer.size)
             track.play()

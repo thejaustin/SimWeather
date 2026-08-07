@@ -6,7 +6,7 @@ data class WeatherResponse(
     val location: Location,
     val current: CurrentWeather,
     val forecast: Forecast,
-    val alerts: Alerts?
+    val alerts: Alerts?,
 )
 
 data class Location(
@@ -16,7 +16,7 @@ data class Location(
     val lat: Double,
     val lon: Double,
     @SerializedName("localtime")
-    val localTime: String
+    val localTime: String,
 )
 
 data class CurrentWeather(
@@ -48,7 +48,7 @@ data class CurrentWeather(
     val uv: Double,
     @SerializedName("air_quality")
     val airQuality: AirQuality?,
-    val pollen: Pollen?
+    val pollen: Pollen?,
 )
 
 data class AirQuality(
@@ -60,7 +60,7 @@ data class AirQuality(
     val pm2_5: Double,
     val pm10: Double,
     @SerializedName("us-epa-index")
-    val usEpaIndex: Int
+    val usEpaIndex: Int,
 )
 
 data class Pollen(
@@ -69,18 +69,18 @@ data class Pollen(
     @SerializedName("tree_pollen")
     val treePollen: Int,
     @SerializedName("weed_pollen")
-    val weedPollen: Int
+    val weedPollen: Int,
 )
 
 data class Condition(
     val text: String,
     val icon: String,
-    val code: Int
+    val code: Int,
 )
 
 data class Forecast(
     @SerializedName("forecastday")
-    val forecastDays: List<ForecastDay>
+    val forecastDays: List<ForecastDay>,
 )
 
 data class ForecastDay(
@@ -89,7 +89,7 @@ data class ForecastDay(
     val dateEpoch: Long,
     val day: Day,
     val astro: Astro,
-    val hour: List<Hour>
+    val hour: List<Hour>,
 )
 
 data class Day(
@@ -114,7 +114,7 @@ data class Day(
     @SerializedName("daily_chance_of_snow")
     val dailyChanceOfSnow: Int,
     val condition: Condition,
-    val uv: Double
+    val uv: Double,
 )
 
 data class Hour(
@@ -143,7 +143,7 @@ data class Hour(
     @SerializedName("chance_of_rain")
     val chanceOfRain: Int,
     @SerializedName("chance_of_snow")
-    val chanceOfSnow: Int
+    val chanceOfSnow: Int,
 )
 
 data class Astro(
@@ -154,11 +154,11 @@ data class Astro(
     @SerializedName("moon_phase")
     val moonPhase: String,
     @SerializedName("moon_illumination")
-    val moonIllumination: String
+    val moonIllumination: String,
 )
 
 data class Alerts(
-    val alert: List<Alert>
+    val alert: List<Alert>,
 )
 
 data class Alert(
@@ -175,5 +175,5 @@ data class Alert(
     val effective: String,
     val expires: String,
     val desc: String,
-    val instruction: String
+    val instruction: String,
 )

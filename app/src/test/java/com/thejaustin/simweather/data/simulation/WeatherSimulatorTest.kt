@@ -10,19 +10,20 @@ import org.junit.Assert.assertTrue
 import org.junit.Test
 
 class WeatherSimulatorTest {
-
     @Test
     fun testSimulateNextProducesValidWeather() {
         val simulator = WeatherSimulator()
-        val initial = WeatherResponse(
-            location = Location("SimCity", "State", "Country", 0.0, 0.0, "2025-11-12 10:00"),
-            current = CurrentWeather(
-                20.0, 68.0, 1, Condition("Sunny", "", 1000), 10.0, 180, "S",
-                1013.0, 0.0, 50, 0, 20.0, 68.0, 10.0, 5.0, null, null
-            ),
-            forecast = Forecast(emptyList()),
-            alerts = null
-        )
+        val initial =
+            WeatherResponse(
+                location = Location("SimCity", "State", "Country", 0.0, 0.0, "2025-11-12 10:00"),
+                current =
+                    CurrentWeather(
+                        20.0, 68.0, 1, Condition("Sunny", "", 1000), 10.0, 180, "S",
+                        1013.0, 0.0, 50, 0, 20.0, 68.0, 10.0, 5.0, null, null,
+                    ),
+                forecast = Forecast(emptyList()),
+                alerts = null,
+            )
 
         val nextState = simulator.simulateNext(initial)
         assertNotNull(nextState)

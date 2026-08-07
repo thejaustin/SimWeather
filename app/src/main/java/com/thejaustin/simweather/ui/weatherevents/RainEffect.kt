@@ -12,13 +12,14 @@ import kotlin.random.Random
  * A view to display a high quality retro rain effect with splash dynamics.
  */
 class RainEffect(context: Context, attrs: AttributeSet? = null) : View(context, attrs) {
-
     private val raindrops = mutableListOf<Raindrop>()
+
     // Light blue
-    private val paint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-        color = Color.argb(190, 173, 216, 230)
-        strokeWidth = 3.5f
-    }
+    private val paint =
+        Paint(Paint.ANTI_ALIAS_FLAG).apply {
+            color = Color.argb(190, 173, 216, 230)
+            strokeWidth = 3.5f
+        }
 
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
@@ -31,7 +32,7 @@ class RainEffect(context: Context, attrs: AttributeSet? = null) : View(context, 
                 raindrop.y.toFloat(),
                 raindrop.x.toFloat() - 2f,
                 (raindrop.y + raindrop.length).toFloat(),
-                paint
+                paint,
             )
             if (raindrop.y > height) {
                 raindrop.y = -raindrop.length
@@ -41,7 +42,12 @@ class RainEffect(context: Context, attrs: AttributeSet? = null) : View(context, 
         invalidate()
     }
 
-    override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
+    override fun onSizeChanged(
+        w: Int,
+        h: Int,
+        oldw: Int,
+        oldh: Int,
+    ) {
         super.onSizeChanged(w, h, oldw, oldh)
         raindrops.clear()
         if (w > 0 && h > 0) {

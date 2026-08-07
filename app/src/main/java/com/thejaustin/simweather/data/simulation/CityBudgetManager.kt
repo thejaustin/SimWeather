@@ -8,11 +8,10 @@ data class BudgetReport(
     val totalOrdinanceCost: Int,
     val weatherEmergencyCost: Int,
     val netMonthlyCashflow: Int,
-    val currentTreasury: Int
+    val currentTreasury: Int,
 )
 
 class CityBudgetManager(private val settings: SettingsPreferences) {
-
     fun calculateMonthlyBudget(weather: CurrentWeather): BudgetReport {
         return calculate(
             taxRate = settings.taxRate,
@@ -21,7 +20,7 @@ class CityBudgetManager(private val settings: SettingsPreferences) {
             ordSnow = settings.ordinanceSnowPlows,
             ordCooling = settings.ordinanceCoolingShelters,
             ordSunscreen = settings.ordinanceSunscreen,
-            weather = weather
+            weather = weather,
         ).also { report ->
             settings.funds = report.currentTreasury
         }
@@ -35,7 +34,7 @@ class CityBudgetManager(private val settings: SettingsPreferences) {
             ordSnow: Boolean,
             ordCooling: Boolean,
             ordSunscreen: Boolean,
-            weather: CurrentWeather
+            weather: CurrentWeather,
         ): BudgetReport {
             val baseMultiplier = 2500
             var weatherFactor = 1.0
@@ -72,7 +71,7 @@ class CityBudgetManager(private val settings: SettingsPreferences) {
                 totalOrdinanceCost = ordinanceCost,
                 weatherEmergencyCost = emergencyCost,
                 netMonthlyCashflow = netCashflow,
-                currentTreasury = updatedFunds
+                currentTreasury = updatedFunds,
             )
         }
     }

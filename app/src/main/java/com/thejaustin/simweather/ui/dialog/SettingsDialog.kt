@@ -14,9 +14,8 @@ import com.thejaustin.simweather.data.preferences.SettingsPreferences
 
 class SettingsDialog(
     context: Context,
-    private val onSettingsChanged: () -> Unit
+    private val onSettingsChanged: () -> Unit,
 ) : Dialog(context) {
-
     private lateinit var rgUnits: RadioGroup
     private lateinit var rbMetric: RadioButton
     private lateinit var rbImperial: RadioButton
@@ -80,10 +79,11 @@ class SettingsDialog(
     }
 
     private fun saveSettings() {
-        settings.units = when (rgUnits.checkedRadioButtonId) {
-            R.id.rbImperial -> SettingsPreferences.Units.IMPERIAL
-            else -> SettingsPreferences.Units.METRIC
-        }
+        settings.units =
+            when (rgUnits.checkedRadioButtonId) {
+                R.id.rbImperial -> SettingsPreferences.Units.IMPERIAL
+                else -> SettingsPreferences.Units.METRIC
+            }
         settings.disastersEnabled = swDisasters.isChecked
         settings.soundEnabled = swSound.isChecked
         settings.simulationSpeed = sbSimSpeed.progress

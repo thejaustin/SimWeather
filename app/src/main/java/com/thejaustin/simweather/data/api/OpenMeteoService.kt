@@ -11,25 +11,29 @@ import com.thejaustin.simweather.data.model.Hour
 import com.thejaustin.simweather.data.model.Location
 import com.thejaustin.simweather.data.model.Pollen
 import com.thejaustin.simweather.data.model.WeatherResponse
-import java.net.HttpURLConnection
-import java.net.URL
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.json.JSONObject
+import java.net.HttpURLConnection
+import java.net.URL
 
 /**
  * 100% Free Weather Provider utilizing the Open-Meteo REST API.
  * Requires NO API key and provides worldwide forecasts.
  */
 object OpenMeteoService {
-
-    suspend fun fetchFreeForecast(cityName: String, lat: Double = 40.71, lon: Double = -74.00): Result<WeatherResponse> {
+    suspend fun fetchFreeForecast(
+        cityName: String,
+        lat: Double = 40.71,
+        lon: Double = -74.00,
+    ): Result<WeatherResponse> {
         return withContext(Dispatchers.IO) {
             try {
-                val urlString = "https://api.open-meteo.com/v1/forecast?latitude=$lat&longitude=$lon" +
-                    "&current_weather=true&hourly=temperature_2m,relativehumidity_2m," +
-                    "precipitation_probability,weathercode,windspeed_10m&daily=weathercode," +
-                    "temperature_2m_max,temperature_2m_min,sunrise,sunset,uv_index_max&timezone=auto"
+                val urlString =
+                    "https://api.open-meteo.com/v1/forecast?latitude=$lat&longitude=$lon" +
+                        "&current_weather=true&hourly=temperature_2m,relativehumidity_2m," +
+                        "precipitation_probability,weathercode,windspeed_10m&daily=weathercode," +
+                        "temperature_2m_max,temperature_2m_min,sunrise,sunset,uv_index_max&timezone=auto"
 
                 val url = URL(urlString)
                 val connection = url.openConnection() as HttpURLConnection
@@ -51,25 +55,26 @@ object OpenMeteoService {
 
                     val conditionText = mapWmoCode(weatherCode)
 
-                    val currentWeather = CurrentWeather(
-                        tempC = tempC,
-                        tempF = tempF,
-                        isDay = isDay,
-                        condition = Condition(conditionText, "", weatherCode),
-                        windKph = windKph,
-                        windDegree = windDegree,
-                        windDir = getWindDir(windDegree),
-                        pressureMb = 1013.2,
-                        precipMm = 0.0,
-                        humidity = 55,
-                        cloud = 20,
-                        feelsLikeC = tempC,
-                        feelsLikeF = tempF,
-                        visibilityKm = 10.0,
-                        uv = 5.0,
-                        airQuality = AirQuality(12.0, 15.0, 45.0, 2.0, 8.5, 14.2, 1),
-                        pollen = Pollen(2, 1, 1)
-                    )
+                    val currentWeather =
+                        CurrentWeather(
+                            tempC = tempC,
+                            tempF = tempF,
+                            isDay = isDay,
+                            condition = Condition(conditionText, "", weatherCode),
+                            windKph = windKph,
+                            windDegree = windDegree,
+                            windDir = getWindDir(windDegree),
+                            pressureMb = 1013.2,
+                            precipMm = 0.0,
+                            humidity = 55,
+                            cloud = 20,
+                            feelsLikeC = tempC,
+                            feelsLikeF = tempF,
+                            visibilityKm = 10.0,
+                            uv = 5.0,
+                            airQuality = AirQuality(12.0, 15.0, 45.0, 2.0, 8.5, 14.2, 1),
+                            pollen = Pollen(2, 1, 1),
+                        )
 
                     val location = Location(cityName, "Open-Meteo Free API", "Global", lat, lon, "2026-08-07 12:00")
 
@@ -95,20 +100,21 @@ object OpenMeteoService {
                             val sSet = sunsets?.optString(i)?.takeLast(5) ?: "19:00"
                             val maxUv = uvs?.optDouble(i, 5.0) ?: 5.0
 
-                            val dayObj = Day(
-                                maxTempC = maxC,
-                                maxTempF = (maxC * 9 / 5) + 32,
-                                minTempC = minC,
-                                minTempF = (minC * 9 / 5) + 32,
-                                avgTempC = (maxC + minC) / 2.0,
-                                maxWindKph = 15.0,
-                                totalPrecipMm = 0.0,
-                                avgHumidity = 55,
-                                dailyChanceOfRain = 20,
-                                dailyChanceOfSnow = 0,
-                                condition = Condition(mapWmoCode(code), "", code),
-                                uv = maxUv
-                            )
+                            val dayObj =
+                                Day(
+                                    maxTempC = maxC,
+                                    maxTempF = (maxC * 9 / 5) + 32,
+                                    minTempC = minC,
+                                    minTempF = (minC * 9 / 5) + 32,
+                                    avgTempC = (maxC + minC) / 2.0,
+                                    maxWindKph = 15.0,
+                                    totalPrecipMm = 0.0,
+                                    avgHumidity = 55,
+                                    dailyChanceOfRain = 20,
+                                    dailyChanceOfSnow = 0,
+                                    condition = Condition(mapWmoCode(code), "", code),
+                                    uv = maxUv,
+                                )
 
                             val astroObj = Astro(sRise, sSet, "20:00", "05:00", "Waxing Crescent", "45")
 
@@ -131,8 +137,8 @@ object OpenMeteoService {
                                         cloud = 20,
                                         feelsLikeC = hTemp,
                                         chanceOfRain = 10,
-                                        chanceOfSnow = 0
-                                    )
+                                        chanceOfSnow = 0,
+                                    ),
                                 )
                             }
 
@@ -142,8 +148,8 @@ object OpenMeteoService {
                                     dateEpoch = System.currentTimeMillis() / 1000,
                                     day = dayObj,
                                     astro = astroObj,
-                                    hour = hoursList
-                                )
+                                    hour = hoursList,
+                                ),
                             )
                         }
                     }

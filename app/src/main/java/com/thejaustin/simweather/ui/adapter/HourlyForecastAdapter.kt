@@ -14,9 +14,8 @@ import java.util.Date
 import java.util.Locale
 
 class HourlyForecastAdapter(
-    private val settings: SettingsPreferences
+    private val settings: SettingsPreferences,
 ) : RecyclerView.Adapter<HourlyForecastAdapter.HourViewHolder>() {
-
     private var hourlyData: List<Hour> = emptyList()
 
     fun submitList(hours: List<Hour>) {
@@ -24,13 +23,20 @@ class HourlyForecastAdapter(
         notifyDataSetChanged()
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): HourViewHolder {
-        val view = LayoutInflater.from(parent.context)
-            .inflate(R.layout.item_hourly_forecast, parent, false)
+    override fun onCreateViewHolder(
+        parent: ViewGroup,
+        viewType: Int,
+    ): HourViewHolder {
+        val view =
+            LayoutInflater.from(parent.context)
+                .inflate(R.layout.item_hourly_forecast, parent, false)
         return HourViewHolder(view)
     }
 
-    override fun onBindViewHolder(holder: HourViewHolder, position: Int) {
+    override fun onBindViewHolder(
+        holder: HourViewHolder,
+        position: Int,
+    ) {
         holder.bind(hourlyData[position], settings.units)
     }
 
@@ -42,7 +48,10 @@ class HourlyForecastAdapter(
         private val tvTemp: TextView = itemView.findViewById(R.id.tvTemp)
         private val tvRain: TextView = itemView.findViewById(R.id.tvPrecipChance)
 
-        fun bind(hour: Hour, units: SettingsPreferences.Units) {
+        fun bind(
+            hour: Hour,
+            units: SettingsPreferences.Units,
+        ) {
             // Format time
             val timeFormat = SimpleDateFormat("HH:mm", Locale.getDefault())
             val date = Date(hour.timeEpoch * 1000)
@@ -58,7 +67,10 @@ class HourlyForecastAdapter(
             tvRain.text = "💧 ${hour.chanceOfRain}%"
         }
 
-        private fun getWeatherEmoji(code: Int, isDay: Int): String {
+        private fun getWeatherEmoji(
+            code: Int,
+            isDay: Int,
+        ): String {
             return when {
                 code == 1000 -> if (isDay == 1) "☀" else "🌙"
                 code in 1003..1009 -> "☁"

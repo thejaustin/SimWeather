@@ -11,9 +11,8 @@ import com.thejaustin.simweather.ui.util.SoundManager
 
 class LocationSearchDialog(
     context: Context,
-    private val onLocationSelected: (String) -> Unit
+    private val onLocationSelected: (String) -> Unit,
 ) : Dialog(context) {
-
     private lateinit var etCitySearch: EditText
     private lateinit var btnCancel: Button
     private lateinit var btnSubmit: Button
@@ -44,14 +43,15 @@ class LocationSearchDialog(
         }
 
         // Preset button listeners
-        val presets = mapOf(
-            R.id.btnCityTokyo to "Tokyo",
-            R.id.btnCityLondon to "London",
-            R.id.btnCityNY to "New York",
-            R.id.btnCityParis to "Paris",
-            R.id.btnCitySydney to "Sydney",
-            R.id.btnCitySimCity to "SimCity"
-        )
+        val presets =
+            mapOf(
+                R.id.btnCityTokyo to "Tokyo",
+                R.id.btnCityLondon to "London",
+                R.id.btnCityNY to "New York",
+                R.id.btnCityParis to "Paris",
+                R.id.btnCitySydney to "Sydney",
+                R.id.btnCitySimCity to "SimCity",
+            )
 
         for ((id, cityName) in presets) {
             findViewById<Button>(id)?.setOnClickListener {

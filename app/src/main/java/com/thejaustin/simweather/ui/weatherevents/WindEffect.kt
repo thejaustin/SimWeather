@@ -12,13 +12,14 @@ import kotlin.random.Random
  * A view to display a wind effect.
  */
 class WindEffect(context: Context, attrs: AttributeSet? = null) : View(context, attrs) {
-
     private val windLines = mutableListOf<WindLine>()
+
     // Light gray, semi-transparent
-    private val paint = Paint().apply {
-        color = Color.argb(100, 200, 200, 200)
-        strokeWidth = 2f
-    }
+    private val paint =
+        Paint().apply {
+            color = Color.argb(100, 200, 200, 200)
+            strokeWidth = 2f
+        }
 
     // windLines will be initialized in onSizeChanged when view has proper dimensions
 
@@ -36,7 +37,12 @@ class WindEffect(context: Context, attrs: AttributeSet? = null) : View(context, 
         invalidate()
     }
 
-    override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
+    override fun onSizeChanged(
+        w: Int,
+        h: Int,
+        oldw: Int,
+        oldh: Int,
+    ) {
         super.onSizeChanged(w, h, oldw, oldh)
         windLines.clear()
         if (w > 0 && h > 0) {

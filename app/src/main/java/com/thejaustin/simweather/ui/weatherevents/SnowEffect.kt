@@ -13,12 +13,12 @@ import kotlin.random.Random
  * A view to display a high-quality snow effect with swaying motion.
  */
 class SnowEffect(context: Context, attrs: AttributeSet? = null) : View(context, attrs) {
-
     private val snowflakes = mutableListOf<Snowflake>()
-    private val paint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-        color = Color.WHITE
-        style = Paint.Style.FILL
-    }
+    private val paint =
+        Paint(Paint.ANTI_ALIAS_FLAG).apply {
+            color = Color.WHITE
+            style = Paint.Style.FILL
+        }
 
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
@@ -35,7 +35,12 @@ class SnowEffect(context: Context, attrs: AttributeSet? = null) : View(context, 
         invalidate()
     }
 
-    override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
+    override fun onSizeChanged(
+        w: Int,
+        h: Int,
+        oldw: Int,
+        oldh: Int,
+    ) {
         super.onSizeChanged(w, h, oldw, oldh)
         snowflakes.clear()
         if (w > 0 && h > 0) {

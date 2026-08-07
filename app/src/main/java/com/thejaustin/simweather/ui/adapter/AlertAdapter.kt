@@ -9,10 +9,8 @@ import com.thejaustin.simweather.R
 import com.thejaustin.simweather.data.model.Alert
 import java.text.SimpleDateFormat
 import java.util.Locale
-import java.util.TimeZone
 
 class AlertAdapter : RecyclerView.Adapter<AlertAdapter.AlertViewHolder>() {
-
     private var alerts: List<Alert> = emptyList()
 
     fun submitList(alertList: List<Alert>) {
@@ -20,13 +18,20 @@ class AlertAdapter : RecyclerView.Adapter<AlertAdapter.AlertViewHolder>() {
         notifyDataSetChanged()
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AlertViewHolder {
-        val view = LayoutInflater.from(parent.context)
-            .inflate(R.layout.item_alert, parent, false)
+    override fun onCreateViewHolder(
+        parent: ViewGroup,
+        viewType: Int,
+    ): AlertViewHolder {
+        val view =
+            LayoutInflater.from(parent.context)
+                .inflate(R.layout.item_alert, parent, false)
         return AlertViewHolder(view)
     }
 
-    override fun onBindViewHolder(holder: AlertViewHolder, position: Int) {
+    override fun onBindViewHolder(
+        holder: AlertViewHolder,
+        position: Int,
+    ) {
         holder.bind(alerts[position])
     }
 

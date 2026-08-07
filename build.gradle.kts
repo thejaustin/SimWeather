@@ -16,5 +16,3 @@ spotless {
         ktlint()
     }
 }
-
-

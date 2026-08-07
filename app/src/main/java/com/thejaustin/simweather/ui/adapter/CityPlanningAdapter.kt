@@ -10,14 +10,20 @@ import java.util.Collections
 
 class CityPlanningAdapter(private val weatherCards: MutableList<String>) :
     RecyclerView.Adapter<CityPlanningAdapter.ViewHolder>() {
-
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val view = LayoutInflater.from(parent.context)
-            .inflate(R.layout.item_city_planning, parent, false)
+    override fun onCreateViewHolder(
+        parent: ViewGroup,
+        viewType: Int,
+    ): ViewHolder {
+        val view =
+            LayoutInflater.from(parent.context)
+                .inflate(R.layout.item_city_planning, parent, false)
         return ViewHolder(view)
     }
 
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+    override fun onBindViewHolder(
+        holder: ViewHolder,
+        position: Int,
+    ) {
         holder.tvCardName.text = weatherCards[position]
     }
 
@@ -25,7 +31,10 @@ class CityPlanningAdapter(private val weatherCards: MutableList<String>) :
         return weatherCards.size
     }
 
-    fun onItemMove(fromPosition: Int, toPosition: Int) {
+    fun onItemMove(
+        fromPosition: Int,
+        toPosition: Int,
+    ) {
         Collections.swap(weatherCards, fromPosition, toPosition)
         notifyItemMoved(fromPosition, toPosition)
     }

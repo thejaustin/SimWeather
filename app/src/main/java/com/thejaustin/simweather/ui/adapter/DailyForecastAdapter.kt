@@ -14,9 +14,8 @@ import java.util.Date
 import java.util.Locale
 
 class DailyForecastAdapter(
-    private val settings: SettingsPreferences
+    private val settings: SettingsPreferences,
 ) : RecyclerView.Adapter<DailyForecastAdapter.DayViewHolder>() {
-
     private var dailyData: List<ForecastDay> = emptyList()
 
     fun submitList(days: List<ForecastDay>) {
@@ -24,13 +23,20 @@ class DailyForecastAdapter(
         notifyDataSetChanged()
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DayViewHolder {
-        val view = LayoutInflater.from(parent.context)
-            .inflate(R.layout.item_daily_forecast, parent, false)
+    override fun onCreateViewHolder(
+        parent: ViewGroup,
+        viewType: Int,
+    ): DayViewHolder {
+        val view =
+            LayoutInflater.from(parent.context)
+                .inflate(R.layout.item_daily_forecast, parent, false)
         return DayViewHolder(view)
     }
 
-    override fun onBindViewHolder(holder: DayViewHolder, position: Int) {
+    override fun onBindViewHolder(
+        holder: DayViewHolder,
+        position: Int,
+    ) {
         holder.bind(dailyData[position], position, settings.units)
     }
 
@@ -45,17 +51,22 @@ class DailyForecastAdapter(
         private val tvRain: TextView = itemView.findViewById(R.id.tvDayRain)
         private val tvWind: TextView = itemView.findViewById(R.id.tvDayWind)
 
-        fun bind(forecastDay: ForecastDay, position: Int, units: SettingsPreferences.Units) {
+        fun bind(
+            forecastDay: ForecastDay,
+            position: Int,
+            units: SettingsPreferences.Units,
+        ) {
             val day = forecastDay.day
 
             // Day name
             val dateFormat = SimpleDateFormat("EEEE", Locale.getDefault())
             val date = Date(forecastDay.dateEpoch * 1000)
-            tvDayName.text = if (position == 0) {
-                "TODAY"
-            } else {
-                dateFormat.format(date).uppercase()
-            }
+            tvDayName.text =
+                if (position == 0) {
+                    "TODAY"
+                } else {
+                    dateFormat.format(date).uppercase()
+                }
 
             // Condition
             tvCondition.text = day.condition.text

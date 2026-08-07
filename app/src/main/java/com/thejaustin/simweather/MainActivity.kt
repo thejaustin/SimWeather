@@ -47,7 +47,6 @@ import com.thejaustin.simweather.ui.weatherevents.WindEffect
 import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity() {
-
     private val viewModel: WeatherViewModel by viewModels()
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private lateinit var settings: SettingsPreferences
@@ -83,55 +82,59 @@ class MainActivity : AppCompatActivity() {
     private var cachedWeather: WeatherResponse? = null
 
     private var loadingJob: kotlinx.coroutines.Job? = null
-    private val loadingMessages = listOf(
-        "Reticulating Splines...",
-        "Adjusting Ozone Levels...",
-        "Calibrating Wind Sensors...",
-        "Downloading Cloud Patterns...",
-        "Simulating Traffic...",
-        "Generating Terrain...",
-        "Calculating Humidity...",
-        "Triangulating Satellites..."
-    )
+    private val loadingMessages =
+        listOf(
+            "Reticulating Splines...",
+            "Adjusting Ozone Levels...",
+            "Calibrating Wind Sensors...",
+            "Downloading Cloud Patterns...",
+            "Simulating Traffic...",
+            "Generating Terrain...",
+            "Calculating Humidity...",
+            "Triangulating Satellites...",
+        )
 
-    private val simNews = listOf(
-        "Traffic reporting heavy delays on Main St.",
-        "Llama spotted near City Hall.",
-        "Citizens demand more parks!",
-        "Power plant output stable.",
-        "RCI demand for Residential is soaring.",
-        "Mayor approval rating at 95%.",
-        "Alien spaceship sighting unconfirmed.",
-        "New weather satellite deployed successfully.",
-        "Sims enjoying the nice weather.",
-        "Construction complete on new stadium."
-    )
+    private val simNews =
+        listOf(
+            "Traffic reporting heavy delays on Main St.",
+            "Llama spotted near City Hall.",
+            "Citizens demand more parks!",
+            "Power plant output stable.",
+            "RCI demand for Residential is soaring.",
+            "Mayor approval rating at 95%.",
+            "Alien spaceship sighting unconfirmed.",
+            "New weather satellite deployed successfully.",
+            "Sims enjoying the nice weather.",
+            "Construction complete on new stadium.",
+        )
 
-    private val defaultCards = listOf(
-        "Current Weather",
-        "Hourly Forecast",
-        "Daily Forecast",
-        "Astronomy & Moon",
-        "Wind & Pressure",
-        "Precipitation & Dew Point",
-        "UV & Solar Safety",
-        "Air Quality (AQI)",
-        "Weather Alerts",
-        "Clothing Advisor",
-        "Pollen"
-    )
+    private val defaultCards =
+        listOf(
+            "Current Weather",
+            "Hourly Forecast",
+            "Daily Forecast",
+            "Astronomy & Moon",
+            "Wind & Pressure",
+            "Precipitation & Dew Point",
+            "UV & Solar Safety",
+            "Air Quality (AQI)",
+            "Weather Alerts",
+            "Clothing Advisor",
+            "Pollen",
+        )
 
     private val apiKey by lazy { getString(R.string.weather_api_key) }
 
-    private val locationPermissionRequest = registerForActivityResult(
-        ActivityResultContracts.RequestMultiplePermissions()
-    ) { permissions ->
-        when {
-            permissions[Manifest.permission.ACCESS_FINE_LOCATION] == true -> fetchCurrentLocation()
-            permissions[Manifest.permission.ACCESS_COARSE_LOCATION] == true -> fetchCurrentLocation()
-            else -> viewModel.fetchWeather(apiKey, "New York")
+    private val locationPermissionRequest =
+        registerForActivityResult(
+            ActivityResultContracts.RequestMultiplePermissions(),
+        ) { permissions ->
+            when {
+                permissions[Manifest.permission.ACCESS_FINE_LOCATION] == true -> fetchCurrentLocation()
+                permissions[Manifest.permission.ACCESS_COARSE_LOCATION] == true -> fetchCurrentLocation()
+                else -> viewModel.fetchWeather(apiKey, "New York")
+            }
         }
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -162,20 +165,21 @@ class MainActivity : AppCompatActivity() {
         weatherCardContainer.removeAllViews()
 
         for (cardName in weatherCards) {
-            val layoutId = when (cardName) {
-                "Current Weather" -> R.layout.item_current_weather
-                "Hourly Forecast" -> R.layout.item_hourly_forecast_section
-                "Daily Forecast" -> R.layout.item_daily_forecast_section
-                "Astronomy & Moon" -> R.layout.item_astronomy_section
-                "Wind & Pressure" -> R.layout.item_wind_details_section
-                "Precipitation & Dew Point" -> R.layout.item_precipitation_section
-                "UV & Solar Safety" -> R.layout.item_uv_section
-                "Air Quality (AQI)" -> R.layout.item_aqi_section
-                "Weather Alerts" -> R.layout.item_alerts_section
-                "Clothing Advisor" -> R.layout.item_clothing_advisor_section
-                "Pollen" -> R.layout.item_pollen_section
-                else -> 0
-            }
+            val layoutId =
+                when (cardName) {
+                    "Current Weather" -> R.layout.item_current_weather
+                    "Hourly Forecast" -> R.layout.item_hourly_forecast_section
+                    "Daily Forecast" -> R.layout.item_daily_forecast_section
+                    "Astronomy & Moon" -> R.layout.item_astronomy_section
+                    "Wind & Pressure" -> R.layout.item_wind_details_section
+                    "Precipitation & Dew Point" -> R.layout.item_precipitation_section
+                    "UV & Solar Safety" -> R.layout.item_uv_section
+                    "Air Quality (AQI)" -> R.layout.item_aqi_section
+                    "Weather Alerts" -> R.layout.item_alerts_section
+                    "Clothing Advisor" -> R.layout.item_clothing_advisor_section
+                    "Pollen" -> R.layout.item_pollen_section
+                    else -> 0
+                }
             if (layoutId != 0) {
                 val view = layoutInflater.inflate(layoutId, weatherCardContainer, false)
                 weatherCardContainer.addView(view)
@@ -296,12 +300,13 @@ class MainActivity : AppCompatActivity() {
                         loadingOverlay.visibility = View.VISIBLE
                         tvError.visibility = View.GONE
                         loadingJob?.cancel()
-                        loadingJob = lifecycleScope.launch {
-                            while (true) {
-                                tvLoadingStatus.text = loadingMessages.random()
-                                kotlinx.coroutines.delay(800)
+                        loadingJob =
+                            lifecycleScope.launch {
+                                while (true) {
+                                    tvLoadingStatus.text = loadingMessages.random()
+                                    kotlinx.coroutines.delay(800)
+                                }
                             }
-                        }
                     }
                     is WeatherUiState.Success -> {
                         loadingJob?.cancel()
@@ -442,11 +447,12 @@ class MainActivity : AppCompatActivity() {
         weatherCardContainer.findViewById<TextView>(R.id.tvWindBearing)?.text = windBearingText
         weatherCardContainer.findViewById<TextView>(R.id.tvPressureValue)?.text = UnitConverter.pressure(weather.current.pressureMb, units)
         val pressureMb = weather.current.pressureMb
-        val pressureTrendText = when {
-            pressureMb > 1015.0 -> "Rising (High Pressure)"
-            pressureMb < 1005.0 -> "Falling (Low Pressure)"
-            else -> "Steady"
-        }
+        val pressureTrendText =
+            when {
+                pressureMb > 1015.0 -> "Rising (High Pressure)"
+                pressureMb < 1005.0 -> "Falling (Low Pressure)"
+                else -> "Steady"
+            }
         weatherCardContainer.findViewById<TextView>(R.id.tvPressureTrend)?.text = pressureTrendText
 
         val dewPointC = (weather.current.tempC - ((100 - weather.current.humidity) / 5.0)).toInt()
@@ -456,45 +462,49 @@ class MainActivity : AppCompatActivity() {
         weatherCardContainer.findViewById<TextView>(R.id.tvCloudCover)?.text = "${weather.current.cloud}%"
 
         val uv = weather.current.uv
-        val uvRiskText = when {
-            uv >= 11.0 -> "${uv.toInt()} (Extreme)"
-            uv >= 8.0 -> "${uv.toInt()} (Very High)"
-            uv >= 6.0 -> "${uv.toInt()} (High)"
-            uv >= 3.0 -> "${uv.toInt()} (Moderate)"
-            else -> "${uv.toInt()} (Low)"
-        }
+        val uvRiskText =
+            when {
+                uv >= 11.0 -> "${uv.toInt()} (Extreme)"
+                uv >= 8.0 -> "${uv.toInt()} (Very High)"
+                uv >= 6.0 -> "${uv.toInt()} (High)"
+                uv >= 3.0 -> "${uv.toInt()} (Moderate)"
+                else -> "${uv.toInt()} (Low)"
+            }
         weatherCardContainer.findViewById<TextView>(R.id.tvUvIndexDetail)?.text = uvRiskText
         weatherCardContainer.findViewById<TextView>(R.id.tvUvPeakTime)?.text = "1:00 PM (Peak)"
-        val sunAdvice = when {
-            uv >= 8.0 -> "Avoid direct sunlight. Wear hats, sunglasses & SPF 50+."
-            uv >= 5.0 -> "Apply SPF 30+ sunscreen and seek shade during noon hours."
-            else -> "Low solar risk. Minimal sun protection required."
-        }
+        val sunAdvice =
+            when {
+                uv >= 8.0 -> "Avoid direct sunlight. Wear hats, sunglasses & SPF 50+."
+                uv >= 5.0 -> "Apply SPF 30+ sunscreen and seek shade during noon hours."
+                else -> "Low solar risk. Minimal sun protection required."
+            }
         weatherCardContainer.findViewById<TextView>(R.id.tvSunProtectionAdvice)?.text = sunAdvice
 
         weather.current.airQuality?.let { aqi ->
             val epaIndex = aqi.usEpaIndex
-            val statusText = when (epaIndex) {
-                1 -> "GOOD (EPA 1)"
-                2 -> "MODERATE (EPA 2)"
-                3 -> "SENSITIVE (EPA 3)"
-                4 -> "UNHEALTHY (EPA 4)"
-                5 -> "VERY UNHEALTHY (EPA 5)"
-                else -> "HAZARDOUS (EPA 6)"
-            }
+            val statusText =
+                when (epaIndex) {
+                    1 -> "GOOD (EPA 1)"
+                    2 -> "MODERATE (EPA 2)"
+                    3 -> "SENSITIVE (EPA 3)"
+                    4 -> "UNHEALTHY (EPA 4)"
+                    5 -> "VERY UNHEALTHY (EPA 5)"
+                    else -> "HAZARDOUS (EPA 6)"
+                }
             weatherCardContainer.findViewById<TextView>(R.id.tvAqiStatusBadge)?.text = statusText
             weatherCardContainer.findViewById<TextView>(R.id.tvPm25)?.text = "${aqi.pm2_5} µg/m³"
             weatherCardContainer.findViewById<TextView>(R.id.tvPm10)?.text = "${aqi.pm10} µg/m³"
             weatherCardContainer.findViewById<TextView>(R.id.tvOzone)?.text = "${aqi.o3} ppb"
             weatherCardContainer.findViewById<TextView>(R.id.tvNo2)?.text = "${aqi.no2} ppb"
 
-            val healthAdvText = when (epaIndex) {
-                1 -> "Air quality is satisfactory. Ideal for outdoor activities and city strolls."
-                2 -> "Acceptable air quality; unusually sensitive Sims should reduce outdoor exertion."
-                3 -> "Sensitive groups may experience health effects. General public less affected."
-                4 -> "Everyone may begin to experience health effects; sensitive groups stay indoors."
-                else -> "Emergency health warning: All citizens should avoid outdoor exertion!"
-            }
+            val healthAdvText =
+                when (epaIndex) {
+                    1 -> "Air quality is satisfactory. Ideal for outdoor activities and city strolls."
+                    2 -> "Acceptable air quality; unusually sensitive Sims should reduce outdoor exertion."
+                    3 -> "Sensitive groups may experience health effects. General public less affected."
+                    4 -> "Everyone may begin to experience health effects; sensitive groups stay indoors."
+                    else -> "Emergency health warning: All citizens should avoid outdoor exertion!"
+                }
             weatherCardContainer.findViewById<TextView>(R.id.tvAqiHealthAdvice)?.text = healthAdvText
         }
     }
@@ -504,13 +514,14 @@ class MainActivity : AppCompatActivity() {
         val tvAdviceText = weatherCardContainer.findViewById<TextView>(R.id.tvClothingAdvice) ?: return
         val rciGauge = weatherCardContainer.findViewById<RciDemandView>(R.id.rciDemandGauge)
 
-        val opinion = when (selectedAdvisorIndex) {
-            0 -> SimAdvisorManager.getFinancialAdvice(weather.current)
-            1 -> SimAdvisorManager.getEnvironmentalAdvice(weather.current)
-            2 -> SimAdvisorManager.getSafetyAdvice(weather)
-            3 -> SimAdvisorManager.getTransportationAdvice(weather.current)
-            else -> SimAdvisorManager.getHealthAdvice(weather.current)
-        }
+        val opinion =
+            when (selectedAdvisorIndex) {
+                0 -> SimAdvisorManager.getFinancialAdvice(weather.current)
+                1 -> SimAdvisorManager.getEnvironmentalAdvice(weather.current)
+                2 -> SimAdvisorManager.getSafetyAdvice(weather)
+                3 -> SimAdvisorManager.getTransportationAdvice(weather.current)
+                else -> SimAdvisorManager.getHealthAdvice(weather.current)
+            }
 
         tvAdvisorTitle.text = opinion.advisorName
         tvAdviceText.text = "${opinion.title}: ${opinion.advice}"
@@ -523,7 +534,10 @@ class MainActivity : AppCompatActivity() {
         rciGauge?.updateDemand(rDemand, cDemand, iDemand)
     }
 
-    private fun updateTicker(weather: WeatherResponse, budgetReport: BudgetReport) {
+    private fun updateTicker(
+        weather: WeatherResponse,
+        budgetReport: BudgetReport,
+    ) {
         val sb = StringBuilder()
         sb.append(" *** CURRENT WEATHER: ${weather.current.condition.text}, ${weather.current.tempC}°C *** ")
         sb.append(" [TOWN BUDGET: Tax Rate ${settings.taxRate}%, Monthly Cashflow: §${budgetReport.netMonthlyCashflow}] ")
@@ -540,7 +554,11 @@ class MainActivity : AppCompatActivity() {
         tickerBar.isSelected = true
     }
 
-    private fun setStat(view: View, label: String, value: String) {
+    private fun setStat(
+        view: View,
+        label: String,
+        value: String,
+    ) {
         view.findViewById<TextView>(R.id.tvStatLabel).text = label
         view.findViewById<TextView>(R.id.tvStatValue).text = value
     }
@@ -549,21 +567,22 @@ class MainActivity : AppCompatActivity() {
         when {
             ContextCompat.checkSelfPermission(
                 this,
-                Manifest.permission.ACCESS_FINE_LOCATION
+                Manifest.permission.ACCESS_FINE_LOCATION,
             ) == PackageManager.PERMISSION_GRANTED -> fetchCurrentLocation()
-            else -> locationPermissionRequest.launch(
-                arrayOf(
-                    Manifest.permission.ACCESS_FINE_LOCATION,
-                    Manifest.permission.ACCESS_COARSE_LOCATION
+            else ->
+                locationPermissionRequest.launch(
+                    arrayOf(
+                        Manifest.permission.ACCESS_FINE_LOCATION,
+                        Manifest.permission.ACCESS_COARSE_LOCATION,
+                    ),
                 )
-            )
         }
     }
 
     private fun fetchCurrentLocation() {
         if (ContextCompat.checkSelfPermission(
                 this,
-                Manifest.permission.ACCESS_FINE_LOCATION
+                Manifest.permission.ACCESS_FINE_LOCATION,
             ) != PackageManager.PERMISSION_GRANTED
         ) {
             viewModel.fetchWeather(apiKey, "New York")
@@ -574,7 +593,7 @@ class MainActivity : AppCompatActivity() {
             val cancellationTokenSource = CancellationTokenSource()
             fusedLocationClient.getCurrentLocation(
                 Priority.PRIORITY_HIGH_ACCURACY,
-                cancellationTokenSource.token
+                cancellationTokenSource.token,
             ).addOnSuccessListener { location: Location? ->
                 if (location != null) {
                     val locationString = "${location.latitude},${location.longitude}"

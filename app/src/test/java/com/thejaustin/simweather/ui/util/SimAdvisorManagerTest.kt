@@ -14,7 +14,6 @@ import org.junit.Assert.assertTrue
 import org.junit.Test
 
 class SimAdvisorManagerTest {
-
     private fun createBaseWeather(
         tempC: Double = 20.0,
         windKph: Double = 10.0,
@@ -22,7 +21,7 @@ class SimAdvisorManagerTest {
         precipMm: Double = 0.0,
         uv: Double = 3.0,
         aqi: Int = 1,
-        pollen: Int = 1
+        pollen: Int = 1,
     ): CurrentWeather {
         return CurrentWeather(
             tempC = tempC,
@@ -41,7 +40,7 @@ class SimAdvisorManagerTest {
             visibilityKm = 10.0,
             uv = uv,
             airQuality = AirQuality(0.0, 0.0, 0.0, 0.0, 0.0, 0.0, aqi),
-            pollen = Pollen(pollen, pollen, pollen)
+            pollen = Pollen(pollen, pollen, pollen),
         )
     }
 
@@ -74,19 +73,21 @@ class SimAdvisorManagerTest {
     @Test
     fun testSafetyAdviceAlerts() {
         val weather = createBaseWeather()
-        val response = WeatherResponse(
-            location = Location("SimCity", "State", "Country", 0.0, 0.0, ""),
-            current = weather,
-            forecast = Forecast(emptyList()),
-            alerts = Alerts(
-                listOf(
-                    Alert(
-                        "Tornado Warning", "Severe", "Immediate", "Expected", "City", "Met", "Observed",
-                        "Tornado", "Take shelter", "", "", "Tornado spotted", "Take shelter immediately"
-                    )
-                )
+        val response =
+            WeatherResponse(
+                location = Location("SimCity", "State", "Country", 0.0, 0.0, ""),
+                current = weather,
+                forecast = Forecast(emptyList()),
+                alerts =
+                    Alerts(
+                        listOf(
+                            Alert(
+                                "Tornado Warning", "Severe", "Immediate", "Expected", "City", "Met", "Observed",
+                                "Tornado", "Take shelter", "", "", "Tornado spotted", "Take shelter immediately",
+                            ),
+                        ),
+                    ),
             )
-        )
         val advice = SimAdvisorManager.getSafetyAdvice(response)
         assertEquals("Maria Luna (Public Safety)", advice.advisorName)
         assertEquals(AdvisorMood.URGENT, advice.mood)

@@ -3,7 +3,6 @@ package com.thejaustin.simweather.ui.util
 import com.thejaustin.simweather.data.model.CurrentWeather
 
 object ClothingAdvisor {
-
     fun getClothingAdvice(weather: CurrentWeather): String {
         val temp = weather.tempC
         val condition = weather.condition.text.lowercase()

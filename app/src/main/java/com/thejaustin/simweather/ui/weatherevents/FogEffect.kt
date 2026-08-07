@@ -11,12 +11,12 @@ import android.view.View
  * A view to display a fog effect.
  */
 class FogEffect(context: Context, attrs: AttributeSet? = null) : View(context, attrs) {
-
     // Semi-transparent gray
-    private val paint = Paint().apply {
-        color = Color.argb(100, 128, 128, 128)
-        style = Paint.Style.FILL
-    }
+    private val paint =
+        Paint().apply {
+            color = Color.argb(100, 128, 128, 128)
+            style = Paint.Style.FILL
+        }
     private var alphaValue = 100
     private var alphaDirection = 1
 

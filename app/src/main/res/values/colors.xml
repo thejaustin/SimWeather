@@ -18,6 +18,7 @@
     <color name="sc3k_blue_medium">#142846</color>
     <color name="sc3k_blue_light">#1E3A5F</color>
     <color name="sc3k_border_highlight">#1A2D4D</color>
+    <color name="sc3k_panel_dark">#0D1B2A</color>
     <color name="sc3k_green_accent">#66FF99</color>
 
     <!-- Accent Colors (Information Display) -->

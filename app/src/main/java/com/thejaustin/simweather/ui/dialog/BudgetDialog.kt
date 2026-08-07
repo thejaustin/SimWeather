@@ -14,9 +14,8 @@ import com.thejaustin.simweather.ui.util.SoundManager
 
 class BudgetDialog(
     context: Context,
-    private val onBudgetUpdated: () -> Unit
+    private val onBudgetUpdated: () -> Unit,
 ) : Dialog(context) {
-
     private lateinit var tvTreasuryHeader: TextView
     private lateinit var tvTaxLabel: TextView
     private lateinit var sbTaxRate: SeekBar
@@ -62,14 +61,22 @@ class BudgetDialog(
     }
 
     private fun setupListeners() {
-        sbTaxRate.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
-            override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
-                val rate = progress.coerceAtLeast(1)
-                tvTaxLabel.text = "Municipal Tax Rate: $rate%"
-            }
-            override fun onStartTrackingTouch(seekBar: SeekBar?) {}
-            override fun onStopTrackingTouch(seekBar: SeekBar?) {}
-        })
+        sbTaxRate.setOnSeekBarChangeListener(
+            object : SeekBar.OnSeekBarChangeListener {
+                override fun onProgressChanged(
+                    seekBar: SeekBar?,
+                    progress: Int,
+                    fromUser: Boolean,
+                ) {
+                    val rate = progress.coerceAtLeast(1)
+                    tvTaxLabel.text = "Municipal Tax Rate: $rate%"
+                }
+
+                override fun onStartTrackingTouch(seekBar: SeekBar?) {}
+
+                override fun onStopTrackingTouch(seekBar: SeekBar?) {}
+            },
+        )
 
         btnClose.setOnClickListener {
             soundManager.playClick()

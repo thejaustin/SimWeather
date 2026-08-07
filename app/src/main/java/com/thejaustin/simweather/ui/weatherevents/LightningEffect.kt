@@ -13,17 +13,18 @@ import kotlin.random.Random
  * SimCity style disaster effect: Thunderstorm & Lightning bolts across screen.
  */
 class LightningEffect(context: Context, attrs: AttributeSet? = null) : View(context, attrs) {
+    private val paint =
+        Paint(Paint.ANTI_ALIAS_FLAG).apply {
+            color = Color.parseColor("#FFFFE0")
+            strokeWidth = 5f
+            style = Paint.Style.STROKE
+        }
 
-    private val paint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-        color = Color.parseColor("#FFFFE0")
-        strokeWidth = 5f
-        style = Paint.Style.STROKE
-    }
-
-    private val flashPaint = Paint().apply {
-        color = Color.argb(120, 255, 255, 255)
-        style = Paint.Style.FILL
-    }
+    private val flashPaint =
+        Paint().apply {
+            color = Color.argb(120, 255, 255, 255)
+            style = Paint.Style.FILL
+        }
 
     private var isFlashing = false
     private var flashTicks = 0
