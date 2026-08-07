@@ -6,6 +6,7 @@ import android.media.AudioFormat
 import android.media.AudioTrack
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlin.math.sin
 
@@ -64,7 +65,7 @@ class SoundManager private constructor(context: Context) {
         }
     }
 
-    private fun generateTone(
+    private suspend fun generateTone(
         freq: Double,
         durationMs: Int,
         volume: Float,
@@ -102,13 +103,13 @@ class SoundManager private constructor(context: Context) {
 
             track.write(buffer, 0, buffer.size)
             track.play()
-            Thread.sleep(durationMs.toLong())
+            delay(durationMs.toLong())
             track.release()
         } catch (_: Exception) {
         }
     }
 
-    private fun generateSweep(
+    private suspend fun generateSweep(
         startFreq: Double,
         endFreq: Double,
         durationMs: Int,
@@ -148,7 +149,7 @@ class SoundManager private constructor(context: Context) {
 
             track.write(buffer, 0, buffer.size)
             track.play()
-            Thread.sleep(durationMs.toLong())
+            delay(durationMs.toLong())
             track.release()
         } catch (_: Exception) {
         }

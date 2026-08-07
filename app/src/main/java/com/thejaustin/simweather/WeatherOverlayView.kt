@@ -121,7 +121,7 @@ class WeatherOverlayView
                 }
             }
 
-            invalidate()
+            if (isShown) invalidate()
         }
 
         private data class WeatherParticle(

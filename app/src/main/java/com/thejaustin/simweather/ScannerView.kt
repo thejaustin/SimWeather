@@ -35,6 +35,29 @@ class ScannerView
         private val scanSpeed = 15f
         private val gridSize = 100f
 
+        private var scanShader: LinearGradient? = null
+
+        override fun onSizeChanged(
+            w: Int,
+            h: Int,
+            oldw: Int,
+            oldh: Int,
+        ) {
+            super.onSizeChanged(w, h, oldw, oldh)
+            if (w > 0 && h > 0) {
+                scanShader =
+                    LinearGradient(
+                        0f,
+                        -100f,
+                        0f,
+                        0f,
+                        intArrayOf(Color.TRANSPARENT, Color.GREEN),
+                        null,
+                        Shader.TileMode.CLAMP,
+                    )
+            }
+        }
+
         override fun onDraw(canvas: Canvas) {
             super.onDraw(canvas)
 
@@ -51,20 +74,13 @@ class ScannerView
 
             // Draw Scanning Line
             // Add a gradient tail to the scan line
-            val shader =
-                LinearGradient(
-                    0f,
-                    scanY - 100,
-                    0f,
-                    scanY,
-                    intArrayOf(Color.TRANSPARENT, Color.GREEN),
-                    null,
-                    Shader.TileMode.CLAMP,
-                )
-            scanPaint.shader = shader
+            scanPaint.shader = scanShader
 
             // Draw a rect for the scan beam instead of just a line
-            canvas.drawRect(0f, scanY - 100, width, scanY, scanPaint)
+            canvas.save()
+            canvas.translate(0f, scanY)
+            canvas.drawRect(0f, -100f, width, 0f, scanPaint)
+            canvas.restore()
 
             // Reset shader for the sharp leading edge
             scanPaint.shader = null
@@ -78,6 +94,6 @@ class ScannerView
                 scanY = -100f
             }
 
-            invalidate()
+            if (isShown) invalidate()
         }
     }

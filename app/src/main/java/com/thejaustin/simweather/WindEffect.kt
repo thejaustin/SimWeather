@@ -34,7 +34,7 @@ class WindEffect(context: Context, attrs: AttributeSet? = null) : View(context, 
             }
         }
         // Redraw the view
-        invalidate()
+        if (isShown) invalidate()
     }
 
     override fun onSizeChanged(

@@ -32,6 +32,6 @@ class FogEffect(context: Context, attrs: AttributeSet? = null) : View(context, a
         }
 
         // Redraw the view
-        invalidate()
+        if (isShown) invalidate()
     }
 }

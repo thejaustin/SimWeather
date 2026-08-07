@@ -1,6 +1,5 @@
 package com.thejaustin.simweather
 
-
 data class AdvisorOpinion(
     val advisorName: String,
     val title: String,

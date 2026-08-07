@@ -1,6 +1,5 @@
 package com.thejaustin.simweather
 
-
 object UnitConverter {
     fun temperature(
         celsius: Double,

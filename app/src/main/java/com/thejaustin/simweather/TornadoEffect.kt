@@ -46,7 +46,7 @@ class TornadoEffect(context: Context, attrs: AttributeSet? = null) : View(contex
             val pPaint = if (p.isDebris) debrisPaint else paint
             canvas.drawCircle(p.currentX, p.currentY, p.radius, pPaint)
         }
-        invalidate()
+        if (isShown) invalidate()
     }
 
     override fun onSizeChanged(

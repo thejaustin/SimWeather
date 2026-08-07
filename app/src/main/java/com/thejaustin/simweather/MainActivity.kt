@@ -14,7 +14,9 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
@@ -270,37 +272,44 @@ class MainActivity : AppCompatActivity() {
 
     private fun observeWeatherData() {
         lifecycleScope.launch {
-            viewModel.uiState.collect { state ->
-                when (state) {
-                    is WeatherUiState.Loading -> {
-                        loadingOverlay.visibility = View.VISIBLE
-                        tvError.visibility = View.GONE
-                        loadingJob?.cancel()
-                        loadingJob =
-                            lifecycleScope.launch {
-                                while (true) {
-                                    tvLoadingStatus.text = loadingMessages.random()
-                                    kotlinx.coroutines.delay(800)
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.uiState.collect { state ->
+                    when (state) {
+                        is WeatherUiState.Loading -> {
+                            loadingOverlay.visibility = View.VISIBLE
+                            tvError.visibility = View.GONE
+                            loadingJob?.cancel()
+                            loadingJob =
+                                lifecycleScope.launch {
+                                    while (true) {
+                                        tvLoadingStatus.text = loadingMessages.random()
+                                        kotlinx.coroutines.delay(800)
+                                    }
                                 }
-                            }
-                    }
-                    is WeatherUiState.Success -> {
-                        loadingJob?.cancel()
-                        loadingOverlay.visibility = View.GONE
-                        tvError.visibility = View.GONE
-                        cachedWeather = state.weatherData
-                        updateUI(state.weatherData)
-                    }
-                    is WeatherUiState.Error -> {
-                        loadingJob?.cancel()
-                        loadingOverlay.visibility = View.GONE
-                        tvError.visibility = View.VISIBLE
-                        tvError.text = "Error: ${state.message}"
-                        Toast.makeText(this@MainActivity, state.message, Toast.LENGTH_LONG).show()
+                        }
+                        is WeatherUiState.Success -> {
+                            loadingJob?.cancel()
+                            loadingOverlay.visibility = View.GONE
+                            tvError.visibility = View.GONE
+                            cachedWeather = state.weatherData
+                            updateUI(state.weatherData)
+                        }
+                        is WeatherUiState.Error -> {
+                            loadingJob?.cancel()
+                            loadingOverlay.visibility = View.GONE
+                            tvError.visibility = View.VISIBLE
+                            tvError.text = "Error: ${state.message}"
+                            Toast.makeText(this@MainActivity, state.message, Toast.LENGTH_LONG).show()
+                        }
                     }
                 }
             }
         }
+    }
+
+    override fun onStop() {
+        super.onStop()
+        loadingJob?.cancel()
     }
 
     private fun updateUI(weather: WeatherResponse) {

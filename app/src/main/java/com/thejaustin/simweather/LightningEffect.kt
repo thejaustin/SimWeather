@@ -48,7 +48,7 @@ class LightningEffect(context: Context, attrs: AttributeSet? = null) : View(cont
                 flashTicks = 0
             }
         }
-        invalidate()
+        if (isShown) invalidate()
     }
 
     private fun triggerLightning() {

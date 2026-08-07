@@ -1,6 +1,5 @@
 package com.thejaustin.simweather
 
-
 object ClothingAdvisor {
     fun getClothingAdvice(weather: CurrentWeather): String {
         val temp = weather.tempC

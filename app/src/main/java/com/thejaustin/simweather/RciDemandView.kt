@@ -37,6 +37,12 @@ class RciDemandView
                 strokeWidth = 3f
             }
 
+        private val zeroPaint =
+            Paint().apply {
+                color = Color.parseColor("#446644")
+                strokeWidth = 2f
+            }
+
         private val textPaint =
             Paint(Paint.ANTI_ALIAS_FLAG).apply {
                 color = Color.WHITE
@@ -89,11 +95,6 @@ class RciDemandView
             val maxBarHeight = (h / 2f) - padding - 15f
 
             // Draw Center Zero Line
-            val zeroPaint =
-                Paint().apply {
-                    color = Color.parseColor("#446644")
-                    strokeWidth = 2f
-                }
             canvas.drawLine(padding, centerY, w - padding, centerY, zeroPaint)
 
             // Draw R Bar

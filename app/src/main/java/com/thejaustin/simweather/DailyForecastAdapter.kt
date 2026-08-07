@@ -55,8 +55,7 @@ class DailyForecastAdapter(
             val day = forecastDay.day
 
             // Day name
-            val dateFormat = SimpleDateFormat("EEEE", Locale.getDefault())
-            val date = Date(forecastDay.dateEpoch * 1000)
+            date.time = forecastDay.dateEpoch * 1000
             tvDayName.text =
                 if (position == 0) {
                     "TODAY"
@@ -92,5 +91,10 @@ class DailyForecastAdapter(
                 else -> "☀"
             }
         }
+    }
+
+    companion object {
+        private val dateFormat = SimpleDateFormat("EEEE", Locale.getDefault())
+        private val date = Date()
     }
 }

@@ -15,10 +15,22 @@ import kotlin.random.Random
  */
 class MeteorEffect(context: Context, attrs: AttributeSet? = null) : View(context, attrs) {
     private val meteors = mutableListOf<Meteor>()
+    private val meteorShader =
+        LinearGradient(
+            0f,
+            0f,
+            -100f,
+            -100f,
+            intArrayOf(Color.YELLOW, Color.RED, Color.TRANSPARENT),
+            null,
+            Shader.TileMode.CLAMP,
+        )
+
     private val paint =
         Paint(Paint.ANTI_ALIAS_FLAG).apply {
             strokeWidth = 6f
             style = Paint.Style.STROKE
+            shader = meteorShader
         }
 
     override fun onDraw(canvas: Canvas) {
@@ -27,30 +39,26 @@ class MeteorEffect(context: Context, attrs: AttributeSet? = null) : View(context
 
         meteors.forEach { meteor ->
             meteor.move()
-            val shader =
-                LinearGradient(
-                    meteor.x,
-                    meteor.y,
-                    meteor.x - meteor.length,
-                    meteor.y - meteor.length,
-                    intArrayOf(Color.YELLOW, Color.RED, Color.TRANSPARENT),
-                    null,
-                    Shader.TileMode.CLAMP,
-                )
-            paint.shader = shader
+
+            canvas.save()
+            canvas.translate(meteor.x, meteor.y)
+            val scale = meteor.length / 100f
+            canvas.scale(scale, scale)
+
             canvas.drawLine(
-                meteor.x,
-                meteor.y,
-                meteor.x - meteor.length,
-                meteor.y - meteor.length,
+                0f,
+                0f,
+                -100f,
+                -100f,
                 paint,
             )
+            canvas.restore()
 
             if (meteor.y > height || meteor.x > width) {
                 meteor.reset(width, height)
             }
         }
-        invalidate()
+        if (isShown) invalidate()
     }
 
     override fun onSizeChanged(

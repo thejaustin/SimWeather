@@ -32,7 +32,7 @@ class SnowEffect(context: Context, attrs: AttributeSet? = null) : View(context, 
                 snowflake.x = Random.nextInt(0, width)
             }
         }
-        invalidate()
+        if (isShown) invalidate()
     }
 
     override fun onSizeChanged(

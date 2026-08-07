@@ -49,8 +49,7 @@ class HourlyForecastAdapter(
             units: SettingsPreferences.Units,
         ) {
             // Format time
-            val timeFormat = SimpleDateFormat("HH:mm", Locale.getDefault())
-            val date = Date(hour.timeEpoch * 1000)
+            date.time = hour.timeEpoch * 1000
             tvTime.text = timeFormat.format(date)
 
             // Weather icon based on condition
@@ -77,5 +76,10 @@ class HourlyForecastAdapter(
                 else -> if (isDay == 1) "☀" else "🌙"
             }
         }
+    }
+
+    companion object {
+        private val timeFormat = SimpleDateFormat("HH:mm", Locale.getDefault())
+        private val date = Date()
     }
 }

@@ -1,6 +1,5 @@
 package com.thejaustin.simweather
 
-
 data class BudgetReport(
     val grossTaxIncome: Int,
     val totalOrdinanceCost: Int,
