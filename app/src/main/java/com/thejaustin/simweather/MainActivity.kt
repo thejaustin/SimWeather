@@ -362,12 +362,25 @@ class MainActivity : AppCompatActivity() {
 
         weatherCardContainer.findViewById<TextView>(R.id.tvCondition)?.text = weather.current.condition.text
 
-        weatherCardContainer.findViewById<View>(R.id.statFeelsLike)?.let { setStat(it, getString(R.string.feels_like), UnitConverter.temperature(weather.current.feelsLikeC, units)) }
-        weatherCardContainer.findViewById<View>(R.id.statWind)?.let { setStat(it, getString(R.string.wind), "${UnitConverter.speed(weather.current.windKph, units)} ${weather.current.windDir}") }
-        weatherCardContainer.findViewById<View>(R.id.statPressure)?.let { setStat(it, getString(R.string.pressure), UnitConverter.pressure(weather.current.pressureMb, units)) }
-        weatherCardContainer.findViewById<View>(R.id.statHumidity)?.let { setStat(it, getString(R.string.humidity), "${weather.current.humidity}%") }
-        weatherCardContainer.findViewById<View>(R.id.statVisibility)?.let { setStat(it, getString(R.string.visibility), UnitConverter.distance(weather.current.visibilityKm, units)) }
-        weatherCardContainer.findViewById<View>(R.id.statUV)?.let { setStat(it, getString(R.string.uv_index), weather.current.uv.toInt().toString()) }
+        val cur = weather.current
+        weatherCardContainer.findViewById<View>(R.id.statFeelsLike)?.let {
+            setStat(it, getString(R.string.feels_like), UnitConverter.temperature(cur.feelsLikeC, units))
+        }
+        weatherCardContainer.findViewById<View>(R.id.statWind)?.let {
+            setStat(it, getString(R.string.wind), "${UnitConverter.speed(cur.windKph, units)} ${cur.windDir}")
+        }
+        weatherCardContainer.findViewById<View>(R.id.statPressure)?.let {
+            setStat(it, getString(R.string.pressure), UnitConverter.pressure(cur.pressureMb, units))
+        }
+        weatherCardContainer.findViewById<View>(R.id.statHumidity)?.let {
+            setStat(it, getString(R.string.humidity), "${cur.humidity}%")
+        }
+        weatherCardContainer.findViewById<View>(R.id.statVisibility)?.let {
+            setStat(it, getString(R.string.visibility), UnitConverter.distance(cur.visibilityKm, units))
+        }
+        weatherCardContainer.findViewById<View>(R.id.statUV)?.let {
+            setStat(it, getString(R.string.uv_index), cur.uv.toInt().toString())
+        }
 
         val next24Hours = weather.forecast.forecastDays.flatMap { it.hour }.take(24)
         hourlyAdapter.submitList(next24Hours)
@@ -386,13 +399,15 @@ class MainActivity : AppCompatActivity() {
         }
 
         val condText = weather.current.condition.text.lowercase()
-        rainEffect.visibility = if (settings.disastersEnabled && condText.contains("rain")) View.VISIBLE else View.GONE
-        snowEffect.visibility = if (settings.disastersEnabled && condText.contains("snow")) View.VISIBLE else View.GONE
-        fogEffect.visibility = if (settings.disastersEnabled && condText.contains("fog")) View.VISIBLE else View.GONE
-        windEffect.visibility = if (settings.disastersEnabled && (condText.contains("wind") || weather.current.windKph > 35)) View.VISIBLE else View.GONE
-        lightningEffect.visibility = if (settings.disastersEnabled && (condText.contains("thunder") || condText.contains("storm"))) View.VISIBLE else View.GONE
-        meteorEffect.visibility = if (settings.disastersEnabled && condText.contains("meteor")) View.VISIBLE else View.GONE
-        tornadoEffect.visibility = if (settings.disastersEnabled && (condText.contains("tornado") || weather.current.windKph > 55)) View.VISIBLE else View.GONE
+        val isDisaster = settings.disastersEnabled
+        rainEffect.visibility = if (isDisaster && condText.contains("rain")) View.VISIBLE else View.GONE
+        snowEffect.visibility = if (isDisaster && condText.contains("snow")) View.VISIBLE else View.GONE
+        fogEffect.visibility = if (isDisaster && condText.contains("fog")) View.VISIBLE else View.GONE
+        windEffect.visibility = if (isDisaster && (condText.contains("wind") || cur.windKph > 35)) View.VISIBLE else View.GONE
+        val isStorm = condText.contains("thunder") || condText.contains("storm")
+        lightningEffect.visibility = if (isDisaster && isStorm) View.VISIBLE else View.GONE
+        meteorEffect.visibility = if (isDisaster && condText.contains("meteor")) View.VISIBLE else View.GONE
+        tornadoEffect.visibility = if (isDisaster && (condText.contains("tornado") || cur.windKph > 55)) View.VISIBLE else View.GONE
 
         weather.current.airQuality?.let {
             weatherCardContainer.findViewById<TextView>(R.id.tvAqiValue)?.text = it.usEpaIndex.toString()
@@ -419,10 +434,17 @@ class MainActivity : AppCompatActivity() {
         }
 
         val gustKph = (weather.current.windKph * 1.35).toInt()
-        weatherCardContainer.findViewById<TextView>(R.id.tvWindGusts)?.text = UnitConverter.speed(gustKph.toDouble(), units)
-        weatherCardContainer.findViewById<TextView>(R.id.tvWindBearing)?.text = "${weather.current.windDegree}° (${weather.current.windDir})"
+        val gustSpeed = UnitConverter.speed(gustKph.toDouble(), units)
+        weatherCardContainer.findViewById<TextView>(R.id.tvWindGusts)?.text = gustSpeed
+        val windBearingText = "${weather.current.windDegree}° (${weather.current.windDir})"
+        weatherCardContainer.findViewById<TextView>(R.id.tvWindBearing)?.text = windBearingText
         weatherCardContainer.findViewById<TextView>(R.id.tvPressureValue)?.text = UnitConverter.pressure(weather.current.pressureMb, units)
-        val pressureTrendText = if (weather.current.pressureMb > 1015.0) "Rising (High Pressure)" else if (weather.current.pressureMb < 1005.0) "Falling (Low Pressure)" else "Steady"
+        val pressureMb = weather.current.pressureMb
+        val pressureTrendText = when {
+            pressureMb > 1015.0 -> "Rising (High Pressure)"
+            pressureMb < 1005.0 -> "Falling (Low Pressure)"
+            else -> "Steady"
+        }
         weatherCardContainer.findViewById<TextView>(R.id.tvPressureTrend)?.text = pressureTrendText
 
         val dewPointC = (weather.current.tempC - ((100 - weather.current.humidity) / 5.0)).toInt()

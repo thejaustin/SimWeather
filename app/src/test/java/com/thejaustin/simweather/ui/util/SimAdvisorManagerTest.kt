@@ -78,7 +78,14 @@ class SimAdvisorManagerTest {
             location = Location("SimCity", "State", "Country", 0.0, 0.0, ""),
             current = weather,
             forecast = Forecast(emptyList()),
-            alerts = Alerts(listOf(Alert("Tornado Warning", "Severe", "Immediate", "Expected", "City", "Met", "Observed", "Tornado", "Take shelter", "", "", "Tornado spotted", "Take shelter immediately")))
+            alerts = Alerts(
+                listOf(
+                    Alert(
+                        "Tornado Warning", "Severe", "Immediate", "Expected", "City", "Met", "Observed",
+                        "Tornado", "Take shelter", "", "", "Tornado spotted", "Take shelter immediately"
+                    )
+                )
+            )
         )
         val advice = SimAdvisorManager.getSafetyAdvice(response)
         assertEquals("Maria Luna (Public Safety)", advice.advisorName)

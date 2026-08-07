@@ -48,8 +48,13 @@ class WeatherViewModel : ViewModel() {
                 val nextState = simulator.simulateNext(currentState)
                 _uiState.value = WeatherUiState.Success(nextState)
             } else {
-                // If there is no current state, start with a default simulated state
-                val initialState = simulator.simulateNext(WeatherResponse(Location("", "", "", 0.0, 0.0, ""), CurrentWeather(0.0, 0.0, 0, Condition("", "", 0), 0.0, 0, "", 0.0, 0.0, 0, 0, 0.0, 0.0, 0.0, 0.0, null, null), Forecast(listOf()), null))
+                val defaultResp = WeatherResponse(
+                    Location("", "", "", 0.0, 0.0, ""),
+                    CurrentWeather(0.0, 0.0, 0, Condition("", "", 0), 0.0, 0, "", 0.0, 0.0, 0, 0, 0.0, 0.0, 0.0, 0.0, null, null),
+                    Forecast(listOf()),
+                    null
+                )
+                val initialState = simulator.simulateNext(defaultResp)
                 _uiState.value = WeatherUiState.Success(initialState)
             }
         }
