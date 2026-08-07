@@ -5,18 +5,16 @@ plugins {
     id("com.diffplug.spotless") version "6.25.0"
 }
 
-subprojects {
-    apply(plugin = "com.diffplug.spotless")
-    configure<com.diffplug.spotless.SpotlessExtension> {
-        kotlin {
-            target("**/*.kt")
-            targetExclude("**/build/**")
-            ktlint()
-        }
-        kotlinGradle {
-            target("*.gradle.kts")
-            ktlint()
-        }
+spotless {
+    kotlin {
+        target("**/*.kt")
+        targetExclude("**/build/**")
+        ktlint()
+    }
+    kotlinGradle {
+        target("*.gradle.kts")
+        ktlint()
     }
 }
+
 
