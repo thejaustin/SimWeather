@@ -43,6 +43,30 @@ class SettingsPreferences(context: Context) {
         get() = prefs.getBoolean(KEY_REAL_TIME, false)
         set(value) = prefs.edit().putBoolean(KEY_REAL_TIME, value).apply()
 
+    var funds: Int
+        get() = prefs.getInt(KEY_FUNDS, 25000)
+        set(value) = prefs.edit().putInt(KEY_FUNDS, value.coerceAtLeast(0)).apply()
+
+    var taxRate: Int
+        get() = prefs.getInt(KEY_TAX_RATE, 7)
+        set(value) = prefs.edit().putInt(KEY_TAX_RATE, value.coerceIn(1, 20)).apply()
+
+    var ordinanceSmogScrubbers: Boolean
+        get() = prefs.getBoolean(KEY_ORD_SMOG, false)
+        set(value) = prefs.edit().putBoolean(KEY_ORD_SMOG, value).apply()
+
+    var ordinanceSnowPlows: Boolean
+        get() = prefs.getBoolean(KEY_ORD_SNOW, true)
+        set(value) = prefs.edit().putBoolean(KEY_ORD_SNOW, value).apply()
+
+    var ordinanceCoolingShelters: Boolean
+        get() = prefs.getBoolean(KEY_ORD_COOLING, false)
+        set(value) = prefs.edit().putBoolean(KEY_ORD_COOLING, value).apply()
+
+    var ordinanceSunscreen: Boolean
+        get() = prefs.getBoolean(KEY_ORD_SUNSCREEN, false)
+        set(value) = prefs.edit().putBoolean(KEY_ORD_SUNSCREEN, value).apply()
+
     companion object {
         private const val PREFS_NAME = "simweather_prefs"
         private const val KEY_UNITS = "units"
@@ -51,6 +75,12 @@ class SettingsPreferences(context: Context) {
         private const val KEY_SIM_SPEED = "sim_speed"
         private const val KEY_GAME_HUD = "game_hud"
         private const val KEY_REAL_TIME = "real_time"
+        private const val KEY_FUNDS = "city_funds"
+        private const val KEY_TAX_RATE = "tax_rate"
+        private const val KEY_ORD_SMOG = "ord_smog"
+        private const val KEY_ORD_SNOW = "ord_snow"
+        private const val KEY_ORD_COOLING = "ord_cooling"
+        private const val KEY_ORD_SUNSCREEN = "ord_sunscreen"
 
         @Volatile
         private var instance: SettingsPreferences? = null

@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/sc3k_concrete_bg_tiled"
+    android:orientation="vertical"
+    android:padding="0dp">
+
+    <!-- Header -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/sc3k_header_bg"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="monospace"
+            android:text="CITY BUDGET &amp; ORDINANCES"
+            android:textColor="@color/sim_cyan_bright"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/tvTreasuryHeader"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:fontFamily="monospace"
+            android:text="Treasury Balance: §25,000"
+            android:textColor="@color/sim_green"
+            android:textSize="14sp"
+            android:textStyle="bold" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="20dp">
+
+        <!-- Tax Rate Section -->
+        <TextView
+            android:id="@+id/tvTaxLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="monospace"
+            android:text="Municipal Tax Rate: 7%"
+            android:textColor="@color/sim_teal_primary"
+            android:textSize="14sp"
+            android:textStyle="bold" />
+
+        <SeekBar
+            android:id="@+id/sbTaxRate"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="16dp"
+            android:max="20"
+            android:progress="7"
+            android:progressTint="@color/sim_cyan_bright"
+            android:thumbTint="@color/sim_cyan_bright" />
+
+        <!-- Ordinances Section -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="monospace"
+            android:text="WEATHER ORDINANCES"
+            android:textColor="@color/sim_teal_primary"
+            android:textSize="14sp"
+            android:textStyle="bold" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="6dp"
+            android:layout_marginBottom="12dp"
+            android:background="@color/sc3k_border_highlight" />
+
+        <Switch
+            android:id="@+id/swOrdSmog"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:fontFamily="monospace"
+            android:text="Smog Scrubbers (§500/mo)"
+            android:textColor="@color/sim_text_primary"
+            android:textSize="13sp"
+            android:thumbTint="@color/sim_cyan_bright"
+            android:trackTint="@color/sim_teal_primary" />
+
+        <Switch
+            android:id="@+id/swOrdSnow"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:fontFamily="monospace"
+            android:text="Snowplow Taskforce (§600/mo)"
+            android:textColor="@color/sim_text_primary"
+            android:textSize="13sp"
+            android:thumbTint="@color/sim_cyan_bright"
+            android:trackTint="@color/sim_teal_primary" />
+
+        <Switch
+            android:id="@+id/swOrdCooling"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:fontFamily="monospace"
+            android:text="Cooling Shelters (§400/mo)"
+            android:textColor="@color/sim_text_primary"
+            android:textSize="13sp"
+            android:thumbTint="@color/sim_cyan_bright"
+            android:trackTint="@color/sim_teal_primary" />
+
+        <Switch
+            android:id="@+id/swOrdSunscreen"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:fontFamily="monospace"
+            android:text="Free Sunscreen Program (§300/mo)"
+            android:textColor="@color/sim_text_primary"
+            android:textSize="13sp"
+            android:thumbTint="@color/sim_cyan_bright"
+            android:trackTint="@color/sim_teal_primary" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="16dp">
+
+        <Button
+            android:id="@+id/btnBudgetClose"
+            android:layout_width="0dp"
+            android:layout_height="48dp"
+            android:layout_marginEnd="8dp"
+            android:layout_weight="1"
+            android:background="@drawable/sc3k_button_bg"
+            android:fontFamily="monospace"
+            android:text="CLOSE"
+            android:textColor="@color/sim_text_primary"
+            android:textSize="14sp"
+            android:textStyle="bold" />
+
+        <Button
+            android:id="@+id/btnBudgetApply"
+            android:layout_width="0dp"
+            android:layout_height="48dp"
+            android:layout_marginStart="8dp"
+            android:layout_weight="1"
+            android:background="@drawable/sc3k_button_bg"
+            android:fontFamily="monospace"
+            android:text="APPLY BUDGET"
+            android:textColor="@color/sim_green"
+            android:textSize="14sp"
+            android:textStyle="bold" />
+
+    </LinearLayout>
+
+</LinearLayout>

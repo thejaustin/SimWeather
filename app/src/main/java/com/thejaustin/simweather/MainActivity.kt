@@ -22,9 +22,11 @@ import com.google.android.gms.location.Priority
 import com.google.android.gms.tasks.CancellationTokenSource
 import com.thejaustin.simweather.data.model.WeatherResponse
 import com.thejaustin.simweather.data.preferences.SettingsPreferences
+import com.thejaustin.simweather.data.simulation.CityBudgetManager
 import com.thejaustin.simweather.ui.adapter.AlertAdapter
 import com.thejaustin.simweather.ui.adapter.DailyForecastAdapter
 import com.thejaustin.simweather.ui.adapter.HourlyForecastAdapter
+import com.thejaustin.simweather.ui.dialog.BudgetDialog
 import com.thejaustin.simweather.ui.dialog.LocationSearchDialog
 import com.thejaustin.simweather.ui.dialog.SettingsDialog
 import com.thejaustin.simweather.ui.util.SimAdvisorManager
@@ -39,6 +41,7 @@ import com.thejaustin.simweather.ui.weather_events.LightningEffect
 import com.thejaustin.simweather.ui.weather_events.MeteorEffect
 import com.thejaustin.simweather.ui.weather_events.RainEffect
 import com.thejaustin.simweather.ui.weather_events.SnowEffect
+import com.thejaustin.simweather.ui.weather_events.TornadoEffect
 import com.thejaustin.simweather.ui.weather_events.WindEffect
 import kotlinx.coroutines.launch
 
@@ -48,6 +51,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private lateinit var settings: SettingsPreferences
     private lateinit var soundManager: SoundManager
+    private lateinit var budgetManager: CityBudgetManager
 
     // Adapters
     private lateinit var hourlyAdapter: HourlyForecastAdapter
@@ -71,6 +75,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var windEffect: WindEffect
     private lateinit var lightningEffect: LightningEffect
     private lateinit var meteorEffect: MeteorEffect
+    private lateinit var tornadoEffect: TornadoEffect
     private lateinit var weatherCardContainer: LinearLayout
 
     private var selectedAdvisorIndex = 0 // 0: Fin, 1: Env, 2: Safe, 3: Tra, 4: Hlth
@@ -119,6 +124,7 @@ class MainActivity : AppCompatActivity() {
 
         settings = SettingsPreferences.getInstance(this)
         soundManager = SoundManager.getInstance(this)
+        budgetManager = CityBudgetManager(settings)
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
 
         initAdapters()
@@ -128,6 +134,7 @@ class MainActivity : AppCompatActivity() {
         setupSimulateButton()
         setupSettingsButton()
         setupLocationSearch()
+        setupBudgetClick()
         observeWeatherData()
         requestLocationPermission()
     }
@@ -179,6 +186,7 @@ class MainActivity : AppCompatActivity() {
         windEffect = findViewById(R.id.windEffect)
         lightningEffect = findViewById(R.id.lightningEffect)
         meteorEffect = findViewById(R.id.meteorEffect)
+        tornadoEffect = findViewById(R.id.tornadoEffect)
         weatherCardContainer = findViewById(R.id.weatherCardContainer)
     }
 
@@ -200,6 +208,15 @@ class MainActivity : AppCompatActivity() {
             LocationSearchDialog(this) { selectedCity ->
                 soundManager.playSplineReticulate()
                 viewModel.fetchWeather(API_KEY, selectedCity)
+            }.show()
+        }
+    }
+
+    private fun setupBudgetClick() {
+        tvFunds.setOnClickListener {
+            soundManager.playCashRegister()
+            BudgetDialog(this) {
+                cachedWeather?.let { updateUI(it) }
             }.show()
         }
     }
@@ -289,12 +306,13 @@ class MainActivity : AppCompatActivity() {
         ViewAnimations.fadeIn(tvLocation, 100)
         tvLocation.text = "${weather.location.name}, ${weather.location.region} (Tap to change)"
 
+        val budgetReport = budgetManager.calculateMonthlyBudget(weather.current)
+
         if (settings.gameHudEnabled) {
             tvFunds.visibility = View.VISIBLE
             tickerBar.visibility = View.VISIBLE
-            val randomFunds = (10000..50000).random()
-            tvFunds.text = "§ $randomFunds"
-            updateTicker(weather)
+            tvFunds.text = "§ ${budgetReport.currentTreasury}"
+            updateTicker(weather, budgetReport)
         } else {
             tvFunds.visibility = View.GONE
             tickerBar.visibility = View.GONE
@@ -354,6 +372,7 @@ class MainActivity : AppCompatActivity() {
         windEffect.visibility = if (settings.disastersEnabled && (condText.contains("wind") || weather.current.windKph > 35)) View.VISIBLE else View.GONE
         lightningEffect.visibility = if (settings.disastersEnabled && (condText.contains("thunder") || condText.contains("storm"))) View.VISIBLE else View.GONE
         meteorEffect.visibility = if (settings.disastersEnabled && condText.contains("meteor")) View.VISIBLE else View.GONE
+        tornadoEffect.visibility = if (settings.disastersEnabled && (condText.contains("tornado") || weather.current.windKph > 55)) View.VISIBLE else View.GONE
 
         weather.current.airQuality?.let {
             weatherCardContainer.findViewById<TextView>(R.id.tvAqiValue)?.text = it.usEpaIndex.toString()
@@ -384,7 +403,6 @@ class MainActivity : AppCompatActivity() {
         tvAdvisorTitle.text = opinion.advisorName
         tvAdviceText.text = "${opinion.title}: ${opinion.advice}"
 
-        // Calculate weather impact on RCI demand
         val temp = weather.current.tempC
         val rDemand = if (temp in 18.0..26.0) 0.9f else 0.3f
         val cDemand = if (weather.current.condition.text.lowercase().contains("rain")) 0.2f else 0.7f
@@ -393,9 +411,11 @@ class MainActivity : AppCompatActivity() {
         rciGauge?.updateDemand(rDemand, cDemand, iDemand)
     }
 
-    private fun updateTicker(weather: WeatherResponse) {
+    private fun updateTicker(weather: WeatherResponse, budgetReport: BudgetReport) {
         val sb = StringBuilder()
         sb.append(" *** CURRENT WEATHER: ${weather.current.condition.text}, ${weather.current.tempC}°C *** ")
+        sb.append(" [TOWN BUDGET: Tax Rate ${settings.taxRate}%, Monthly Cashflow: §${budgetReport.netMonthlyCashflow}] ")
+
         if (weather.alerts != null && weather.alerts.alert.isNotEmpty()) {
             weather.alerts.alert.forEach {
                 sb.append(" !!! ALERT: ${it.headline} !!! ")

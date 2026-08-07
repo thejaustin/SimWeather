@@ -9,7 +9,7 @@ Experience the nostalgia of 1999 with a fully themed user interface:
 - **Reticulating Splines**: Authentic loading sequences and status messages.
 - **Isometric UI**: Custom backgrounds, panels, and buttons inspired by SC3K.
 - **Monospace Fonts**: Clean, retro typography.
-- **Synthesized 8-Bit Sound Engine**: Real-time synthesized chiptune sound effects for buttons, reticulations, sirens, and speed toggles.
+- **Synthesized 8-Bit Sound Engine**: Real-time synthesized chiptune sound effects for buttons, reticulations, sirens, cash registers, and speed toggles.
 
 ### 🌤️ Real-Time & Simulated Weather
 - **Live Forecasts**: Powered by WeatherAPI for accurate current, hourly, and daily weather.
@@ -17,8 +17,14 @@ Experience the nostalgia of 1999 with a fully themed user interface:
 - **Natural Weather Scanner**: A high-tech satellite scanning visualizer for weather updates.
 - **Metropolis Search**: Search any city worldwide or select from metropolis presets (Tokyo, London, New York, Paris, Sydney, SimCity).
 
-### 🏗️ City Planning & Multi-Advisor System
+### 🏗️ City Planning, Budget & Multi-Advisor System
 - **Customizable Layout**: Drag and drop weather modules (Current, Hourly, Alerts, etc.) to design your perfect dashboard.
+- **City Treasury & Tax Economy**: Accumulate § Simoleons in real-time. Adjust municipal tax rates (1% to 20%) and manage emergency expenditures.
+- **Weather Ordinances**: Pass city-wide weather policies:
+  - Industrial Smog Scrubbers (§500/mo)
+  - Snowplow Taskforce (§600/mo)
+  - Public Cooling Shelters (§400/mo)
+  - Free Sunscreen Program (§300/mo)
 - **SimCity Mayor Advisors**: Interactive advice from 5 city advisors:
   - **Mortimer Green** (Financial): Utility expenses & heating/cooling budget impacts.
   - **Karen Landers** (Environment): Air quality (AQI) and pollen emissions.
@@ -35,6 +41,7 @@ Toggle visual weather effects in the Gameplay Settings:
 - Wind 💨
 - Thunderstorm & Lightning ⚡
 - Meteor Shower ☄️
+- Swirling Tornado Vortex 🌪️
 
 ### 🕹️ Gameplay & Interface Settings
 Customize your experience:
@@ -45,6 +52,15 @@ Customize your experience:
 - **Real-Time Clock**: Switch between game-style date (Dec 2025) and exact local time.
 
 ## Releases
+
+### v1.5.0 - The City Economy & Ordinances Update
+*Released: August 2026*
+
+- **City Budget Simulator**: Persistent Treasury accumulation based on municipal tax rates and weather prosperity factors.
+- **Weather Ordinances**: Interactive policy toggles for Smog Scrubbers, Snowplows, Cooling Shelters, and Sunscreen programs.
+- **Budget & Ordinance Dialog**: Retro SC3K financial statement dialog to adjust taxes and hear cash register sound effects (§ Simoleons).
+- **Swirling Tornado Disaster**: Isometric tornado vortex particle effect with flying debris.
+- **Expanded Audio Effects**: Cash register, disaster sirens, and tornado whistle sound synthesis.
 
 ### v1.4.0 - The Ultracode Mayor Update
 *Released: August 2026*

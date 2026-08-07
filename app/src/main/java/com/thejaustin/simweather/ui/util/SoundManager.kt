@@ -48,6 +48,24 @@ class SoundManager private constructor(context: Context) {
         }
     }
 
+    fun playCashRegister() {
+        if (!settings.soundEnabled) return
+        scope.launch {
+            generateTone(freq = 1200.0, durationMs = 40, volume = 0.5f)
+            generateTone(freq = 1800.0, durationMs = 90, volume = 0.6f)
+        }
+    }
+
+    fun playSiren() {
+        if (!settings.soundEnabled) return
+        scope.launch {
+            repeat(3) {
+                generateSweep(startFreq = 500.0, endFreq = 950.0, durationMs = 150, volume = 0.5f)
+                generateSweep(startFreq = 950.0, endFreq = 500.0, durationMs = 150, volume = 0.5f)
+            }
+        }
+    }
+
     private fun generateTone(freq: Double, durationMs: Int, volume: Float) {
         try {
             val sampleRate = 22050
@@ -56,7 +74,6 @@ class SoundManager private constructor(context: Context) {
 
             for (i in 0 until numSamples) {
                 val angle = 2.0 * Math.PI * i / (sampleRate / freq)
-                // Square wave / Sine hybrid for 8-bit texture
                 val sine = sin(angle)
                 val sampleValue = (sine * Short.MAX_VALUE * volume).toInt().coerceIn(Short.MIN_VALUE.toInt(), Short.MAX_VALUE.toInt())
                 buffer[i] = sampleValue.toShort()
@@ -85,7 +102,6 @@ class SoundManager private constructor(context: Context) {
             Thread.sleep(durationMs.toLong())
             track.release()
         } catch (_: Exception) {
-            // Ignore audio generation failures gracefully
         }
     }
 
@@ -126,7 +142,6 @@ class SoundManager private constructor(context: Context) {
             Thread.sleep(durationMs.toLong())
             track.release()
         } catch (_: Exception) {
-            // Ignore audio generation failures gracefully
         }
     }
 
