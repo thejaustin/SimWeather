@@ -20,6 +20,7 @@ class CityPlanningActivity : AppCompatActivity() {
         "Wind & Pressure",
         "Precipitation & Dew Point",
         "UV & Solar Safety",
+        "Air Quality (AQI)",
         "Weather Alerts",
         "Clothing Advisor",
         "Pollen"

@@ -115,6 +115,7 @@ class MainActivity : AppCompatActivity() {
         "Wind & Pressure",
         "Precipitation & Dew Point",
         "UV & Solar Safety",
+        "Air Quality (AQI)",
         "Weather Alerts",
         "Clothing Advisor",
         "Pollen"
@@ -169,6 +170,7 @@ class MainActivity : AppCompatActivity() {
                 "Wind & Pressure" -> R.layout.item_wind_details_section
                 "Precipitation & Dew Point" -> R.layout.item_precipitation_section
                 "UV & Solar Safety" -> R.layout.item_uv_section
+                "Air Quality (AQI)" -> R.layout.item_aqi_section
                 "Weather Alerts" -> R.layout.item_alerts_section
                 "Clothing Advisor" -> R.layout.item_clothing_advisor_section
                 "Pollen" -> R.layout.item_pollen_section
@@ -469,6 +471,32 @@ class MainActivity : AppCompatActivity() {
             else -> "Low solar risk. Minimal sun protection required."
         }
         weatherCardContainer.findViewById<TextView>(R.id.tvSunProtectionAdvice)?.text = sunAdvice
+
+        weather.current.airQuality?.let { aqi ->
+            val epaIndex = aqi.usEpaIndex
+            val statusText = when (epaIndex) {
+                1 -> "GOOD (EPA 1)"
+                2 -> "MODERATE (EPA 2)"
+                3 -> "SENSITIVE (EPA 3)"
+                4 -> "UNHEALTHY (EPA 4)"
+                5 -> "VERY UNHEALTHY (EPA 5)"
+                else -> "HAZARDOUS (EPA 6)"
+            }
+            weatherCardContainer.findViewById<TextView>(R.id.tvAqiStatusBadge)?.text = statusText
+            weatherCardContainer.findViewById<TextView>(R.id.tvPm25)?.text = "${aqi.pm2_5} µg/m³"
+            weatherCardContainer.findViewById<TextView>(R.id.tvPm10)?.text = "${aqi.pm10} µg/m³"
+            weatherCardContainer.findViewById<TextView>(R.id.tvOzone)?.text = "${aqi.o3} ppb"
+            weatherCardContainer.findViewById<TextView>(R.id.tvNo2)?.text = "${aqi.no2} ppb"
+
+            val healthAdvText = when (epaIndex) {
+                1 -> "Air quality is satisfactory. Ideal for outdoor activities and city strolls."
+                2 -> "Acceptable air quality; unusually sensitive Sims should reduce outdoor exertion."
+                3 -> "Sensitive groups may experience health effects. General public less affected."
+                4 -> "Everyone may begin to experience health effects; sensitive groups stay indoors."
+                else -> "Emergency health warning: All citizens should avoid outdoor exertion!"
+            }
+            weatherCardContainer.findViewById<TextView>(R.id.tvAqiHealthAdvice)?.text = healthAdvText
+        }
     }
 
     private fun updateAdvisorDisplay(weather: WeatherResponse) {

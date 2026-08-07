@@ -10,6 +10,7 @@ import com.thejaustin.simweather.data.model.Hour
 import com.thejaustin.simweather.data.preferences.SettingsPreferences
 import com.thejaustin.simweather.ui.util.UnitConverter
 import java.text.SimpleDateFormat
+import java.util.Date
 import java.util.Locale
 
 class HourlyForecastAdapter(
