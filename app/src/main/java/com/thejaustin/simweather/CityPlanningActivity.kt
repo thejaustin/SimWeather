@@ -36,7 +36,11 @@ class CityPlanningActivity : AppCompatActivity() {
         val layout = sharedPreferences.getString("layout", defaultCards.joinToString(","))
         val weatherCards = layout?.split(",")?.toMutableList() ?: defaultCards.toMutableList()
 
-        adapter = CityPlanningAdapter(weatherCards)
+        val disabledSet =
+            sharedPreferences.getStringSet("disabled_cards", emptySet())?.toMutableSet()
+                ?: mutableSetOf()
+
+        adapter = CityPlanningAdapter(weatherCards, disabledSet)
         rvCityPlanning.adapter = adapter
 
         val itemTouchHelper =
@@ -72,6 +76,7 @@ class CityPlanningActivity : AppCompatActivity() {
         val sharedPreferences = getSharedPreferences("SimWeather", MODE_PRIVATE)
         val editor = sharedPreferences.edit()
         editor.putString("layout", adapter.getWeatherCards().joinToString(","))
+        editor.putStringSet("disabled_cards", adapter.getDisabledCards())
         editor.apply()
     }
 }

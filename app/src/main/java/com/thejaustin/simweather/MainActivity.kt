@@ -135,14 +135,23 @@ class MainActivity : AppCompatActivity() {
         requestLocationPermission()
     }
 
+    override fun onResume() {
+        super.onResume()
+        setupWeatherCards()
+        cachedWeather?.let { updateUI(it) }
+    }
+
     private fun setupWeatherCards() {
         val sharedPreferences = getSharedPreferences("SimWeather", MODE_PRIVATE)
         val layout = sharedPreferences.getString("layout", defaultCards.joinToString(","))
         val weatherCards = layout?.split(",") ?: defaultCards
+        val disabledCards = sharedPreferences.getStringSet("disabled_cards", emptySet()) ?: emptySet()
 
         weatherCardContainer.removeAllViews()
 
         for (cardName in weatherCards) {
+            if (disabledCards.contains(cardName)) continue
+
             val layoutId =
                 when (cardName) {
                     "Current Weather" -> R.layout.item_current_weather
