@@ -106,7 +106,7 @@ class MainActivity : AppCompatActivity() {
         "Construction complete on new stadium."
     )
 
-    private val API_KEY by lazy { getString(R.string.weather_api_key) }
+    private val apiKey by lazy { getString(R.string.weather_api_key) }
 
     private val locationPermissionRequest = registerForActivityResult(
         ActivityResultContracts.RequestMultiplePermissions()
@@ -114,7 +114,7 @@ class MainActivity : AppCompatActivity() {
         when {
             permissions[Manifest.permission.ACCESS_FINE_LOCATION] == true -> fetchCurrentLocation()
             permissions[Manifest.permission.ACCESS_COARSE_LOCATION] == true -> fetchCurrentLocation()
-            else -> viewModel.fetchWeather(API_KEY, "New York")
+            else -> viewModel.fetchWeather(apiKey, "New York")
         }
     }
 
@@ -207,7 +207,7 @@ class MainActivity : AppCompatActivity() {
             soundManager.playClick()
             LocationSearchDialog(this) { selectedCity ->
                 soundManager.playSplineReticulate()
-                viewModel.fetchWeather(API_KEY, selectedCity)
+                viewModel.fetchWeather(apiKey, selectedCity)
             }.show()
         }
     }
@@ -454,7 +454,7 @@ class MainActivity : AppCompatActivity() {
                 Manifest.permission.ACCESS_FINE_LOCATION
             ) != PackageManager.PERMISSION_GRANTED
         ) {
-            viewModel.fetchWeather(API_KEY, "New York")
+            viewModel.fetchWeather(apiKey, "New York")
             return
         }
 
@@ -466,15 +466,15 @@ class MainActivity : AppCompatActivity() {
             ).addOnSuccessListener { location: Location? ->
                 if (location != null) {
                     val locationString = "${location.latitude},${location.longitude}"
-                    viewModel.fetchWeather(API_KEY, locationString)
+                    viewModel.fetchWeather(apiKey, locationString)
                 } else {
-                    viewModel.fetchWeather(API_KEY, "New York")
+                    viewModel.fetchWeather(apiKey, "New York")
                 }
             }.addOnFailureListener {
-                viewModel.fetchWeather(API_KEY, "New York")
+                viewModel.fetchWeather(apiKey, "New York")
             }
         } catch (_: Exception) {
-            viewModel.fetchWeather(API_KEY, "New York")
+            viewModel.fetchWeather(apiKey, "New York")
         }
     }
 }
