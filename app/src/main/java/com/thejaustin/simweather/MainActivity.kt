@@ -22,6 +22,7 @@ import com.google.android.gms.location.Priority
 import com.google.android.gms.tasks.CancellationTokenSource
 import com.thejaustin.simweather.data.model.WeatherResponse
 import com.thejaustin.simweather.data.preferences.SettingsPreferences
+import com.thejaustin.simweather.data.simulation.BudgetReport
 import com.thejaustin.simweather.data.simulation.CityBudgetManager
 import com.thejaustin.simweather.ui.adapter.AlertAdapter
 import com.thejaustin.simweather.ui.adapter.DailyForecastAdapter
