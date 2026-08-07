@@ -63,9 +63,11 @@ class WeatherSimulator {
         val newTempF = (newTempC * 9/5) + 32
         
         // Create a copy with modified values
+        val roundedTempC = (newTempC * 10).toInt() / 10.0
+        val roundedTempF = (newTempF * 10).toInt() / 10.0
         val modifiedCurrent = nextState.current.copy(
-            tempC = (newTempC * 10).toInt() / 10.0, // Round to 1 decimal
-            tempF = (newTempF * 10).toInt() / 10.0
+            tempC = roundedTempC,
+            tempF = roundedTempF
         )
         
         return nextState.copy(current = modifiedCurrent)

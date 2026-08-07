@@ -75,12 +75,12 @@ class DailyForecastAdapter(
 
         private fun getWeatherEmoji(code: Int): String {
             return when {
-                code == 1000 -> "☀" // Clear
-                code in 1003..1009 -> "☁" // Cloudy
-                code in 1063..1072 || code in 1150..1201 -> "🌧" // Rain
-                code in 1210..1225 || code in 1237..1264 -> "❄" // Snow
-                code in 1273..1282 -> "⛈" // Thunderstorm
-                code in 1135..1147 -> "🌫" // Fog
+                code == 1000 -> "☀"
+                code in 1003..1009 -> "☁"
+                code in 1063..1072 || code in 1150..1201 -> "🌧"
+                code in 1210..1225 || code in 1237..1264 -> "❄"
+                code in 1273..1282 -> "⛈"
+                code in 1135..1147 -> "🌫"
                 else -> "☀"
             }
         }

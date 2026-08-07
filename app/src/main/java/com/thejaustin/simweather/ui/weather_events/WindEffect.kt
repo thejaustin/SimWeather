@@ -32,7 +32,8 @@ class WindEffect(context: Context, attrs: AttributeSet? = null) : View(context, 
                 windLine.y = if (height > 0) Random.nextInt(0, height) else 0
             }
         }
-        invalidate() // Redraw the view
+        // Redraw the view
+        invalidate()
     }
 
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {

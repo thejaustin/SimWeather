@@ -15,8 +15,9 @@ class ScannerView @JvmOverloads constructor(
     defStyleAttr: Int = 0
 ) : View(context, attrs, defStyleAttr) {
 
+    // Semi-transparent green
     private val gridPaint = Paint().apply {
-        color = Color.parseColor("#4000FF00") // Semi-transparent green
+        color = Color.parseColor("#4000FF00")
         strokeWidth = 2f
         style = Paint.Style.STROKE
     }
@@ -60,7 +61,8 @@ class ScannerView @JvmOverloads constructor(
         
         // Reset shader for the sharp leading edge
         scanPaint.shader = null
-        scanPaint.color = Color.parseColor("#CCFFCC") // Bright header
+        // Bright header
+        scanPaint.color = Color.parseColor("#CCFFCC")
         canvas.drawLine(0f, scanY, width, scanY, scanPaint)
 
         // Update position
