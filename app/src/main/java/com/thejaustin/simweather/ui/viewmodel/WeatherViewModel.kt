@@ -2,7 +2,11 @@ package com.thejaustin.simweather.ui.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.thejaustin.simweather.data.model.*
+import com.thejaustin.simweather.data.model.Condition
+import com.thejaustin.simweather.data.model.CurrentWeather
+import com.thejaustin.simweather.data.model.Forecast
+import com.thejaustin.simweather.data.model.Location
+import com.thejaustin.simweather.data.model.WeatherResponse
 import com.thejaustin.simweather.data.repository.WeatherRepository
 import com.thejaustin.simweather.data.simulation.WeatherSimulator
 import kotlinx.coroutines.flow.MutableStateFlow

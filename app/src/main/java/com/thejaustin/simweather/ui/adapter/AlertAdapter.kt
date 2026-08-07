@@ -8,7 +8,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.thejaustin.simweather.R
 import com.thejaustin.simweather.data.model.Alert
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Locale
+import java.util.TimeZone
 
 class AlertAdapter : RecyclerView.Adapter<AlertAdapter.AlertViewHolder>() {
 

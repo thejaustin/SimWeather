@@ -1,6 +1,12 @@
 package com.thejaustin.simweather.data.simulation
 
-import com.thejaustin.simweather.data.model.*
+import com.thejaustin.simweather.data.model.Alert
+import com.thejaustin.simweather.data.model.Alerts
+import com.thejaustin.simweather.data.model.Condition
+import com.thejaustin.simweather.data.model.CurrentWeather
+import com.thejaustin.simweather.data.model.Forecast
+import com.thejaustin.simweather.data.model.Location
+import com.thejaustin.simweather.data.model.WeatherResponse
 import kotlin.random.Random
 
 /**
