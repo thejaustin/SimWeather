@@ -20,30 +20,6 @@ import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.Priority
 import com.google.android.gms.tasks.CancellationTokenSource
-import com.thejaustin.simweather.data.model.WeatherResponse
-import com.thejaustin.simweather.data.preferences.SettingsPreferences
-import com.thejaustin.simweather.data.simulation.BudgetReport
-import com.thejaustin.simweather.data.simulation.CityBudgetManager
-import com.thejaustin.simweather.ui.adapter.AlertAdapter
-import com.thejaustin.simweather.ui.adapter.DailyForecastAdapter
-import com.thejaustin.simweather.ui.adapter.HourlyForecastAdapter
-import com.thejaustin.simweather.ui.dialog.BudgetDialog
-import com.thejaustin.simweather.ui.dialog.LocationSearchDialog
-import com.thejaustin.simweather.ui.dialog.SettingsDialog
-import com.thejaustin.simweather.ui.util.SimAdvisorManager
-import com.thejaustin.simweather.ui.util.SoundManager
-import com.thejaustin.simweather.ui.util.UnitConverter
-import com.thejaustin.simweather.ui.util.ViewAnimations
-import com.thejaustin.simweather.ui.view.RciDemandView
-import com.thejaustin.simweather.ui.viewmodel.WeatherUiState
-import com.thejaustin.simweather.ui.viewmodel.WeatherViewModel
-import com.thejaustin.simweather.ui.weatherevents.FogEffect
-import com.thejaustin.simweather.ui.weatherevents.LightningEffect
-import com.thejaustin.simweather.ui.weatherevents.MeteorEffect
-import com.thejaustin.simweather.ui.weatherevents.RainEffect
-import com.thejaustin.simweather.ui.weatherevents.SnowEffect
-import com.thejaustin.simweather.ui.weatherevents.TornadoEffect
-import com.thejaustin.simweather.ui.weatherevents.WindEffect
 import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity() {

@@ -130,7 +130,7 @@
         </LinearLayout>
 
         <!-- RCI Demand View -->
-        <com.thejaustin.simweather.ui.view.RciDemandView
+        <com.thejaustin.simweather.RciDemandView
             android:id="@+id/rciDemandGauge"
             android:layout_width="72dp"
             android:layout_height="64dp"
