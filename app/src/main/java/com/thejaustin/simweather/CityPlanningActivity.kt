@@ -12,6 +12,19 @@ class CityPlanningActivity : AppCompatActivity() {
     private lateinit var rvCityPlanning: RecyclerView
     private lateinit var adapter: CityPlanningAdapter
 
+    private val defaultCards = listOf(
+        "Current Weather",
+        "Hourly Forecast",
+        "Daily Forecast",
+        "Astronomy & Moon",
+        "Wind & Pressure",
+        "Precipitation & Dew Point",
+        "UV & Solar Safety",
+        "Weather Alerts",
+        "Clothing Advisor",
+        "Pollen"
+    )
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_city_planning)
@@ -20,8 +33,8 @@ class CityPlanningActivity : AppCompatActivity() {
         rvCityPlanning.layoutManager = LinearLayoutManager(this)
 
         val sharedPreferences = getSharedPreferences("SimWeather", MODE_PRIVATE)
-        val layout = sharedPreferences.getString("layout", "Current Weather,Hourly Forecast,Daily Forecast,Weather Alerts,Clothing Advisor,Pollen")
-        val weatherCards = layout?.split(",")?.toMutableList() ?: mutableListOf("Current Weather", "Hourly Forecast", "Daily Forecast", "Weather Alerts", "Clothing Advisor", "Pollen")
+        val layout = sharedPreferences.getString("layout", defaultCards.joinToString(","))
+        val weatherCards = layout?.split(",")?.toMutableList() ?: defaultCards.toMutableList()
 
         adapter = CityPlanningAdapter(weatherCards)
         rvCityPlanning.adapter = adapter
@@ -41,7 +54,6 @@ class CityPlanningActivity : AppCompatActivity() {
             }
 
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-                // No swipe action needed
             }
         })
 

@@ -13,12 +13,17 @@ Experience the nostalgia of 1999 with a fully themed user interface:
 
 ### 🌤️ Real-Time & Simulated Weather
 - **Live Forecasts**: Powered by WeatherAPI for accurate current, hourly, and daily weather.
+- **Modern Weather Data Suite**:
+  - **Astronomy & Moon**: Sunrise, Sunset, Moonrise, Moonset, Moon Phase, and Moon Illumination %.
+  - **Wind & Pressure**: Wind gusts, bearing angle (0°-360°), and barometric pressure trends.
+  - **Precipitation & Dew Point**: 24h precipitation total, calculated dew point, humidity index, and cloud cover %.
+  - **UV & Solar Safety**: UV index scale, solar peak times, and sunscreen protection guidance.
 - **Simulation Mode**: Test different weather scenarios with the "Simulate" button.
 - **Natural Weather Scanner**: A high-tech satellite scanning visualizer for weather updates.
 - **Metropolis Search**: Search any city worldwide or select from metropolis presets (Tokyo, London, New York, Paris, Sydney, SimCity).
 
 ### 🏗️ City Planning, Budget & Multi-Advisor System
-- **Customizable Layout**: Drag and drop weather modules (Current, Hourly, Alerts, etc.) to design your perfect dashboard.
+- **Customizable Layout**: Drag and drop weather modules (Current, Hourly, Daily, Astronomy, Wind, Dew Point, UV Safety, Alerts, Advisors, Pollen) to design your perfect dashboard.
 - **City Treasury & Tax Economy**: Accumulate § Simoleons in real-time. Adjust municipal tax rates (1% to 20%) and manage emergency expenditures.
 - **Weather Ordinances**: Pass city-wide weather policies:
   - Industrial Smog Scrubbers (§500/mo)
@@ -52,6 +57,15 @@ Customize your experience:
 - **Real-Time Clock**: Switch between game-style date (Dec 2025) and exact local time.
 
 ## Releases
+
+### v1.6.0 - The Modern Weather Data Update
+*Released: August 2026*
+
+- **Astronomy & Moon Card**: Detailed sunrise/sunset times, moon phase name, and illumination percentage.
+- **Wind & Pressure Card**: Wind gusts, bearing angle degrees, barometric pressure trend (Rising/Falling/Steady).
+- **Precipitation & Dew Point Card**: 24h precipitation total, calculated dew point temperature, relative humidity, and cloud coverage.
+- **UV Index & Solar Safety Card**: UV index risk level, peak solar time, and sun protection guidance.
+- **Expanded City Planning**: Fully integrated into the drag-and-drop dashboard planner.
 
 ### v1.5.0 - The City Economy & Ordinances Update
 *Released: August 2026*

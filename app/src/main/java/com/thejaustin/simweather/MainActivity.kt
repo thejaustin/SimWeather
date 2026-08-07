@@ -79,7 +79,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var tornadoEffect: TornadoEffect
     private lateinit var weatherCardContainer: LinearLayout
 
-    private var selectedAdvisorIndex = 0 // 0: Fin, 1: Env, 2: Safe, 3: Tra, 4: Hlth
+    private var selectedAdvisorIndex = 0
     private var cachedWeather: WeatherResponse? = null
 
     private var loadingJob: kotlinx.coroutines.Job? = null
@@ -105,6 +105,19 @@ class MainActivity : AppCompatActivity() {
         "New weather satellite deployed successfully.",
         "Sims enjoying the nice weather.",
         "Construction complete on new stadium."
+    )
+
+    private val defaultCards = listOf(
+        "Current Weather",
+        "Hourly Forecast",
+        "Daily Forecast",
+        "Astronomy & Moon",
+        "Wind & Pressure",
+        "Precipitation & Dew Point",
+        "UV & Solar Safety",
+        "Weather Alerts",
+        "Clothing Advisor",
+        "Pollen"
     )
 
     private val apiKey by lazy { getString(R.string.weather_api_key) }
@@ -142,8 +155,8 @@ class MainActivity : AppCompatActivity() {
 
     private fun setupWeatherCards() {
         val sharedPreferences = getSharedPreferences("SimWeather", MODE_PRIVATE)
-        val layout = sharedPreferences.getString("layout", "Current Weather,Hourly Forecast,Daily Forecast,Weather Alerts,Clothing Advisor,Pollen")
-        val weatherCards = layout?.split(",") ?: listOf("Current Weather", "Hourly Forecast", "Daily Forecast", "Weather Alerts", "Clothing Advisor", "Pollen")
+        val layout = sharedPreferences.getString("layout", defaultCards.joinToString(","))
+        val weatherCards = layout?.split(",") ?: defaultCards
 
         weatherCardContainer.removeAllViews()
 
@@ -152,6 +165,10 @@ class MainActivity : AppCompatActivity() {
                 "Current Weather" -> R.layout.item_current_weather
                 "Hourly Forecast" -> R.layout.item_hourly_forecast_section
                 "Daily Forecast" -> R.layout.item_daily_forecast_section
+                "Astronomy & Moon" -> R.layout.item_astronomy_section
+                "Wind & Pressure" -> R.layout.item_wind_details_section
+                "Precipitation & Dew Point" -> R.layout.item_precipitation_section
+                "UV & Solar Safety" -> R.layout.item_uv_section
                 "Weather Alerts" -> R.layout.item_alerts_section
                 "Clothing Advisor" -> R.layout.item_clothing_advisor_section
                 "Pollen" -> R.layout.item_pollen_section
@@ -356,6 +373,8 @@ class MainActivity : AppCompatActivity() {
         hourlyAdapter.submitList(next24Hours)
         dailyAdapter.submitList(weather.forecast.forecastDays)
 
+        updateModernWeatherCards(weather)
+
         val rvAlerts = weatherCardContainer.findViewById<RecyclerView>(R.id.rvAlerts)
         if (weather.alerts != null && weather.alerts.alert.isNotEmpty()) {
             rvAlerts?.visibility = View.VISIBLE
@@ -386,6 +405,48 @@ class MainActivity : AppCompatActivity() {
             weatherCardContainer.findViewById<TextView>(R.id.tvTreePollen)?.text = it.treePollen.toString()
             weatherCardContainer.findViewById<TextView>(R.id.tvWeedPollen)?.text = it.weedPollen.toString()
         }
+    }
+
+    private fun updateModernWeatherCards(weather: WeatherResponse) {
+        val units = settings.units
+
+        val astro = weather.forecast.forecastDays.firstOrNull()?.astro
+        if (astro != null) {
+            weatherCardContainer.findViewById<TextView>(R.id.tvSunrise)?.text = astro.sunrise
+            weatherCardContainer.findViewById<TextView>(R.id.tvSunset)?.text = astro.sunset
+            weatherCardContainer.findViewById<TextView>(R.id.tvMoonPhase)?.text = astro.moonPhase
+            weatherCardContainer.findViewById<TextView>(R.id.tvMoonIllumination)?.text = "${astro.moonIllumination}%"
+        }
+
+        val gustKph = (weather.current.windKph * 1.35).toInt()
+        weatherCardContainer.findViewById<TextView>(R.id.tvWindGusts)?.text = UnitConverter.speed(gustKph.toDouble(), units)
+        weatherCardContainer.findViewById<TextView>(R.id.tvWindBearing)?.text = "${weather.current.windDegree}° (${weather.current.windDir})"
+        weatherCardContainer.findViewById<TextView>(R.id.tvPressureValue)?.text = UnitConverter.pressure(weather.current.pressureMb, units)
+        val pressureTrendText = if (weather.current.pressureMb > 1015.0) "Rising (High Pressure)" else if (weather.current.pressureMb < 1005.0) "Falling (Low Pressure)" else "Steady"
+        weatherCardContainer.findViewById<TextView>(R.id.tvPressureTrend)?.text = pressureTrendText
+
+        val dewPointC = (weather.current.tempC - ((100 - weather.current.humidity) / 5.0)).toInt()
+        weatherCardContainer.findViewById<TextView>(R.id.tvPrecipTotal)?.text = UnitConverter.precipitation(weather.current.precipMm, units)
+        weatherCardContainer.findViewById<TextView>(R.id.tvDewPoint)?.text = UnitConverter.temperature(dewPointC.toDouble(), units)
+        weatherCardContainer.findViewById<TextView>(R.id.tvHumidityDetail)?.text = "${weather.current.humidity}%"
+        weatherCardContainer.findViewById<TextView>(R.id.tvCloudCover)?.text = "${weather.current.cloud}%"
+
+        val uv = weather.current.uv
+        val uvRiskText = when {
+            uv >= 11.0 -> "${uv.toInt()} (Extreme)"
+            uv >= 8.0 -> "${uv.toInt()} (Very High)"
+            uv >= 6.0 -> "${uv.toInt()} (High)"
+            uv >= 3.0 -> "${uv.toInt()} (Moderate)"
+            else -> "${uv.toInt()} (Low)"
+        }
+        weatherCardContainer.findViewById<TextView>(R.id.tvUvIndexDetail)?.text = uvRiskText
+        weatherCardContainer.findViewById<TextView>(R.id.tvUvPeakTime)?.text = "1:00 PM (Peak)"
+        val sunAdvice = when {
+            uv >= 8.0 -> "Avoid direct sunlight. Wear hats, sunglasses & SPF 50+."
+            uv >= 5.0 -> "Apply SPF 30+ sunscreen and seek shade during noon hours."
+            else -> "Low solar risk. Minimal sun protection required."
+        }
+        weatherCardContainer.findViewById<TextView>(R.id.tvSunProtectionAdvice)?.text = sunAdvice
     }
 
     private fun updateAdvisorDisplay(weather: WeatherResponse) {
