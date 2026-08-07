@@ -14,8 +14,9 @@ import kotlin.random.Random
 class RainEffect(context: Context, attrs: AttributeSet? = null) : View(context, attrs) {
 
     private val raindrops = mutableListOf<Raindrop>()
+    // Light blue
     private val paint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-        color = Color.argb(190, 173, 216, 230) // Light blue
+        color = Color.argb(190, 173, 216, 230)
         strokeWidth = 3.5f
     }
 

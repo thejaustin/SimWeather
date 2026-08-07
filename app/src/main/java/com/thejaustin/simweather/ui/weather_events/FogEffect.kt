@@ -12,8 +12,9 @@ import android.view.View
  */
 class FogEffect(context: Context, attrs: AttributeSet? = null) : View(context, attrs) {
 
+    // Semi-transparent gray
     private val paint = Paint().apply {
-        color = Color.argb(100, 128, 128, 128) // Semi-transparent gray
+        color = Color.argb(100, 128, 128, 128)
         style = Paint.Style.FILL
     }
     private var alphaValue = 100

@@ -78,7 +78,8 @@ object ViewAnimations {
             .scaleY(1f)
             .setDuration(400)
             .setStartDelay(delay)
-            .setInterpolator(OvershootInterpolator(1.5f)) // Bouncy pop
+            // Bouncy pop
+            .setInterpolator(OvershootInterpolator(1.5f))
             .start()
     }
 }

@@ -14,8 +14,9 @@ import kotlin.random.Random
 class WindEffect(context: Context, attrs: AttributeSet? = null) : View(context, attrs) {
 
     private val windLines = mutableListOf<WindLine>()
+    // Light gray, semi-transparent
     private val paint = Paint().apply {
-        color = Color.argb(100, 200, 200, 200) // Light gray, semi-transparent
+        color = Color.argb(100, 200, 200, 200)
         strokeWidth = 2f
     }
 

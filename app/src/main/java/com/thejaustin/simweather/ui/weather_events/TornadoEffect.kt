@@ -20,8 +20,9 @@ class TornadoEffect(context: Context, attrs: AttributeSet? = null) : View(contex
         color = Color.argb(180, 110, 110, 110)
         style = Paint.Style.FILL
     }
+    // Brown debris
     private val debrisPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-        color = Color.parseColor("#8B4513") // Brown debris
+        color = Color.parseColor("#8B4513")
         style = Paint.Style.FILL
     }
 
@@ -52,7 +53,7 @@ class TornadoEffect(context: Context, attrs: AttributeSet? = null) : View(contex
         funnelParticles.clear()
         if (w > 0 && h > 0) {
             for (i in 0..150) {
-                val yProgress = Random.nextFloat() // 0.0 at top, 1.0 at ground
+                val yProgress = Random.nextFloat()
                 funnelParticles.add(FunnelParticle(yProgress, h.toFloat()))
             }
         }

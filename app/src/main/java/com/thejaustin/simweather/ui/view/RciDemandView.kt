@@ -40,16 +40,19 @@ class RciDemandView @JvmOverloads constructor(
         isFakeBoldText = true
     }
 
+    // Sim Green (Residential)
     private val rPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-        color = Color.parseColor("#00FF66") // Sim Green (Residential)
+        color = Color.parseColor("#00FF66")
     }
 
+    // Sim Blue (Commercial)
     private val cPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-        color = Color.parseColor("#00AAFF") // Sim Blue (Commercial)
+        color = Color.parseColor("#00AAFF")
     }
 
+    // Sim Yellow (Industrial)
     private val iPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-        color = Color.parseColor("#FFCC00") // Sim Yellow (Industrial)
+        color = Color.parseColor("#FFCC00")
     }
 
     fun updateDemand(r: Float, c: Float, i: Float) {
