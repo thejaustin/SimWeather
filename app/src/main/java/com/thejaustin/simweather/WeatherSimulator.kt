@@ -3,119 +3,157 @@ package com.thejaustin.simweather
 import kotlin.random.Random
 
 /**
- * A class to simulate weather changes over time.
+ * Procedural offline weather simulation engine.
+ * Generates realistic current conditions, 7-day daily forecasts, 24-hour hourly forecasts,
+ * live AQI, pollen metrics, and sun/moon astronomy data when offline.
  */
 class WeatherSimulator {
-    private val sunnyWeather =
-        WeatherResponse(
-            location = Location("SimCity", "California", "USA", 34.05, -118.24, "2025-11-12 10:00"),
-            current =
-                CurrentWeather(
-                    25.0, 77.0, 1, Condition("Sunny", "//cdn.weatherapi.com/weather/64x64/day/113.png", 1000),
-                    5.0, 180, "S", 1012.0, 0.0, 40, 0, 26.0, 79.0, 10.0, 8.0, null, null,
-                ),
-            forecast = Forecast(listOf()),
-            alerts = null,
-        )
+    fun generateSimulatedForecast(cityName: String): WeatherResponse {
+        val name = cityName.ifBlank { "SimCity" }
+        val location = Location(name, "Atmospheric Simulation", "Simulated Region", 34.05, -118.24, "2026-08-08 12:00")
 
-    private val rainyWeather =
-        WeatherResponse(
-            location = Location("SimCity", "California", "USA", 34.05, -118.24, "2025-11-12 14:00"),
-            current =
-                CurrentWeather(
-                    18.0, 64.0, 1, Condition("Light rain", "//cdn.weatherapi.com/weather/64x64/day/296.png", 1183),
-                    15.0, 220, "SW", 1008.0, 2.5, 80, 75, 17.0, 63.0, 5.0, 4.0, null, null,
-                ),
-            forecast = Forecast(listOf()),
-            alerts =
-                Alerts(
-                    listOf(
-                        Alert(
-                            "Flood warning", "Minor", "Moderate", "Expected", "Low-lying areas", "Met",
-                            "Likely", "Heavy rain", "Stay indoors", "2025-11-12 14:00", "2025-11-12 18:00",
-                            "Heavy rain expected to cause minor flooding.", "Avoid low-lying areas and stay indoors if possible.",
-                        ),
+        val baseTempC = Random.nextDouble(15.0, 28.0)
+        val tempC = (baseTempC * 10).toInt() / 10.0
+        val tempF = ((tempC * 9 / 5) + 32 * 10).toInt() / 10.0
+        val humidity = Random.nextInt(40, 80)
+        val windKph = Random.nextDouble(5.0, 35.0)
+        val windDegree = Random.nextInt(0, 360)
+        val pressureMb = Random.nextDouble(1005.0, 1022.0)
+        val cloud = Random.nextInt(10, 85)
+        val uv = Random.nextDouble(1.0, 9.0)
+        val precipMm = if (humidity > 65) Random.nextDouble(0.5, 8.0) else 0.0
+
+        val weatherCode =
+            when {
+                precipMm > 4.0 -> 63 // Rain
+                precipMm > 0.0 -> 51 // Drizzle
+                cloud > 60 -> 3 // Partly cloudy
+                else -> 0 // Clear
+            }
+
+        val conditionText = mapWmoCode(weatherCode)
+
+        val airQuality =
+            AirQuality(
+                co = 180.0 + Random.nextDouble(0.0, 50.0),
+                no2 = 10.0 + Random.nextDouble(0.0, 15.0),
+                o3 = 35.0 + Random.nextDouble(0.0, 25.0),
+                so2 = 4.0 + Random.nextDouble(0.0, 5.0),
+                pm2_5 = 8.0 + Random.nextDouble(0.0, 15.0),
+                pm10 = 15.0 + Random.nextDouble(0.0, 20.0),
+                usEpaIndex = Random.nextInt(1, 3),
+            )
+
+        val pollen = Pollen(Random.nextInt(1, 4), Random.nextInt(1, 3), Random.nextInt(1, 3))
+
+        val currentWeather =
+            CurrentWeather(
+                tempC = tempC,
+                tempF = tempF,
+                isDay = 1,
+                condition = Condition(conditionText, "", weatherCode),
+                windKph = windKph,
+                windDegree = windDegree,
+                windDir = getWindDir(windDegree),
+                pressureMb = pressureMb,
+                precipMm = precipMm,
+                humidity = humidity,
+                cloud = cloud,
+                feelsLikeC = tempC + 1.2,
+                feelsLikeF = tempF + 2.0,
+                visibilityKm = 10.0,
+                uv = uv,
+                airQuality = airQuality,
+                pollen = pollen,
+            )
+
+        // 7-day forecast generation
+        val forecastDays = mutableListOf<ForecastDay>()
+        val currentEpoch = System.currentTimeMillis() / 1000
+
+        for (i in 0..6) {
+            val maxC = tempC + Random.nextDouble(-3.0, 5.0)
+            val minC = tempC - Random.nextDouble(4.0, 10.0)
+            val dayPrecip = if (Random.nextBoolean()) Random.nextDouble(0.0, 5.0) else 0.0
+            val dayCode = if (dayPrecip > 2.0) 61 else 1
+
+            val dayObj =
+                Day(
+                    maxTempC = maxC,
+                    maxTempF = (maxC * 9 / 5) + 32,
+                    minTempC = minC,
+                    minTempF = (minC * 9 / 5) + 32,
+                    avgTempC = (maxC + minC) / 2.0,
+                    maxWindKph = Random.nextDouble(10.0, 25.0),
+                    totalPrecipMm = dayPrecip,
+                    avgHumidity = Random.nextInt(45, 75),
+                    dailyChanceOfRain = if (dayPrecip > 0) 65 else 15,
+                    dailyChanceOfSnow = 0,
+                    condition = Condition(mapWmoCode(dayCode), "", dayCode),
+                    uv = Random.nextDouble(3.0, 8.0),
+                )
+
+            val astroObj = Astro("06:15 AM", "07:45 PM", "09:30 PM", "05:15 AM", "Waxing Crescent", "62")
+
+            val hoursList = mutableListOf<Hour>()
+            for (h in 0..23) {
+                val hTemp = minC + (maxC - minC) * (h / 24.0)
+                hoursList.add(
+                    Hour(
+                        timeEpoch = currentEpoch + (i * 86400) + (h * 3600),
+                        time = String.format("%02d:00", h),
+                        tempC = hTemp,
+                        tempF = (hTemp * 9 / 5) + 32,
+                        isDay = if (h in 6..19) 1 else 0,
+                        condition = Condition(mapWmoCode(dayCode), "", dayCode),
+                        windKph = Random.nextDouble(8.0, 18.0),
+                        windDir = "NW",
+                        pressureMb = pressureMb,
+                        precipMm = if (dayPrecip > 0 && h in 12..16) 1.0 else 0.0,
+                        humidity = Random.nextInt(40, 70),
+                        cloud = Random.nextInt(10, 50),
+                        feelsLikeC = hTemp,
+                        chanceOfRain = if (dayPrecip > 0) 60 else 10,
+                        chanceOfSnow = 0,
                     ),
-                ),
-        )
+                )
+            }
 
-    private val snowyWeather =
-        WeatherResponse(
-            location = Location("SimCity", "California", "USA", 34.05, -118.24, "2025-11-12 22:00"),
-            current =
-                CurrentWeather(
-                    -2.0, 28.0, 0, Condition("Heavy snow", "//cdn.weatherapi.com/weather/64x64/night/338.png", 1225),
-                    25.0, 300, "WNW", 1002.0, 10.0, 95, 100, -5.0, 23.0, 1.0, 1.0, null, null,
+            forecastDays.add(
+                ForecastDay(
+                    date = "Day ${i + 1}",
+                    dateEpoch = currentEpoch + (i * 86400),
+                    day = dayObj,
+                    astro = astroObj,
+                    hour = hoursList,
                 ),
-            forecast = Forecast(listOf()),
-            alerts =
-                Alerts(
-                    listOf(
-                        Alert(
-                            "Blizzard warning", "Severe", "High", "Immediate", "Entire region", "Met",
-                            "Observed", "Blizzard", "Seek shelter immediately", "2025-11-12 22:00", "2025-11-13 06:00",
-                            "Blizzard conditions with heavy snow and strong winds.", "Seek shelter immediately. Avoid travel.",
-                        ),
-                    ),
-                ),
-        )
+            )
+        }
 
-    private val foggyWeather =
-        WeatherResponse(
-            location = Location("SimCity", "California", "USA", 34.05, -118.24, "2025-11-13 06:00"),
-            current =
-                CurrentWeather(
-                    10.0, 50.0, 0, Condition("Fog", "//cdn.weatherapi.com/weather/64x64/day/248.png", 1135),
-                    2.0, 0, "N", 1015.0, 0.0, 98, 0, 10.0, 50.0, 0.2, 0.1, null, null,
-                ),
-            forecast = Forecast(listOf()),
-            alerts =
-                Alerts(
-                    listOf(
-                        Alert(
-                            "Dense Fog Advisory", "Moderate", "Moderate", "Expected", "Highways", "Met",
-                            "Likely", "Dense Fog", "Drive with caution", "2025-11-13 06:00", "2025-11-13 10:00",
-                            "Visibility less than 1/4 mile in dense fog.", "Slow down, use your headlights, and leave plenty of distance.",
-                        ),
-                    ),
-                ),
-        )
-
-    private val windyWeather =
-        WeatherResponse(
-            location = Location("SimCity", "California", "USA", 34.05, -118.24, "2025-11-13 15:00"),
-            current =
-                CurrentWeather(
-                    20.0, 68.0, 1, Condition("Windy", "//cdn.weatherapi.com/weather/64x64/day/113.png", 1000),
-                    45.0, 270, "W", 1005.0, 0.0, 30, 0, 18.0, 64.0, 10.0, 10.0, null, null,
-                ),
-            forecast = Forecast(listOf()),
-            alerts =
-                Alerts(
-                    listOf(
-                        Alert(
-                            "High Wind Warning", "Severe", "High", "Expected", "Coastal Areas", "Met",
-                            "Likely", "High Winds", "Secure loose objects", "2025-11-13 15:00", "2025-11-13 22:00",
-                            "Northwest winds 30 to 45 mph with gusts up to 60 mph.", "Damaging winds will blow down trees and power lines.",
-                        ),
-                    ),
-                ),
-        )
-
-    private val weatherStates = listOf(sunnyWeather, rainyWeather, snowyWeather, foggyWeather, windyWeather)
+        return WeatherResponse(location, currentWeather, Forecast(forecastDays), null)
+    }
 
     fun simulateNext(currentWeather: WeatherResponse): WeatherResponse {
-        val nextState = weatherStates.random()
-        val tempVariation = Random.nextDouble(-2.0, 2.0)
-        val newTempC = nextState.current.tempC + tempVariation
-        val newTempF = (newTempC * 9 / 5) + 32
-        val roundedTempC = (newTempC * 10).toInt() / 10.0
-        val roundedTempF = (newTempF * 10).toInt() / 10.0
-        val modifiedCurrent =
-            nextState.current.copy(
-                tempC = roundedTempC,
-                tempF = roundedTempF,
-            )
-        return nextState.copy(current = modifiedCurrent)
+        return generateSimulatedForecast(currentWeather.location.name)
+    }
+
+    private fun mapWmoCode(code: Int): String {
+        return when (code) {
+            0 -> "Clear Sky"
+            1, 2, 3 -> "Partly Cloudy"
+            45, 48 -> "Foggy"
+            51, 53, 55 -> "Drizzle"
+            61, 63, 65 -> "Rain"
+            71, 73, 75 -> "Snow"
+            80, 81, 82 -> "Rain Showers"
+            95, 96, 99 -> "Thunderstorm"
+            else -> "Sunny"
+        }
+    }
+
+    private fun getWindDir(degree: Int): String {
+        val dirs = arrayOf("N", "NE", "E", "SE", "S", "SW", "W", "NW")
+        val idx = ((degree + 22.5) / 45).toInt() % 8
+        return dirs[idx]
     }
 }

@@ -4,6 +4,7 @@ import java.util.concurrent.ConcurrentHashMap
 
 class WeatherRepository {
     private val api = RetrofitInstance.weatherApi
+    private val simulator = WeatherSimulator()
 
     private data class CachedForecast(
         val response: WeatherResponse,
@@ -29,13 +30,26 @@ class WeatherRepository {
 
         val result =
             if (apiKey.isBlank() || apiKey == "YOUR_API_KEY_HERE" || apiKey == "simweather_free") {
-                OpenMeteoService.fetchFreeForecast(location)
+                val openMeteoResult = OpenMeteoService.fetchFreeForecast(location)
+                if (openMeteoResult.isSuccess) {
+                    openMeteoResult
+                } else {
+                    // Offline mode fallback: generate realistic simulated weather data
+                    val simulated = simulator.generateSimulatedForecast(location)
+                    Result.success(simulated)
+                }
             } else {
                 try {
                     val response = api.getForecast(apiKey, location, days = 7, aqi = "yes", pollen = "yes", alerts = "yes")
                     Result.success(response)
                 } catch (e: Exception) {
-                    OpenMeteoService.fetchFreeForecast(location)
+                    val freeResult = OpenMeteoService.fetchFreeForecast(location)
+                    if (freeResult.isSuccess) {
+                        freeResult
+                    } else {
+                        val simulated = simulator.generateSimulatedForecast(location)
+                        Result.success(simulated)
+                    }
                 }
             }
 
