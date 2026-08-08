@@ -487,18 +487,24 @@ class MainActivity : AppCompatActivity() {
             val epaIndex = aqi.usEpaIndex
             val statusText =
                 when (epaIndex) {
-                    1 -> "GOOD (EPA 1)"
-                    2 -> "MODERATE (EPA 2)"
-                    3 -> "SENSITIVE (EPA 3)"
-                    4 -> "UNHEALTHY (EPA 4)"
-                    5 -> "VERY UNHEALTHY (EPA 5)"
-                    else -> "HAZARDOUS (EPA 6)"
+                    1 -> "EPA INDEX: 1 (GOOD)"
+                    2 -> "EPA INDEX: 2 (MODERATE)"
+                    3 -> "EPA INDEX: 3 (SENSITIVE)"
+                    4 -> "EPA INDEX: 4 (UNHEALTHY)"
+                    5 -> "EPA INDEX: 5 (VERY UNHEALTHY)"
+                    else -> "EPA INDEX: 6 (HAZARDOUS)"
                 }
-            weatherCardContainer.findViewById<TextView>(R.id.tvAqiStatusBadge)?.text = statusText
-            weatherCardContainer.findViewById<TextView>(R.id.tvPm25)?.text = "${aqi.pm2_5} µg/m³"
-            weatherCardContainer.findViewById<TextView>(R.id.tvPm10)?.text = "${aqi.pm10} µg/m³"
-            weatherCardContainer.findViewById<TextView>(R.id.tvOzone)?.text = "${aqi.o3} ppb"
-            weatherCardContainer.findViewById<TextView>(R.id.tvNo2)?.text = "${aqi.no2} ppb"
+
+            val tvAqiVal = weatherCardContainer.findViewById<TextView>(R.id.tvAqiValue)
+            tvAqiVal?.text = statusText
+            val aqiColor =
+                when (epaIndex) {
+                    1 -> ContextCompat.getColor(this, R.color.sim_green)
+                    2 -> ContextCompat.getColor(this, R.color.sim_yellow)
+                    3 -> ContextCompat.getColor(this, R.color.sim_orange)
+                    else -> ContextCompat.getColor(this, R.color.sim_red)
+                }
+            tvAqiVal?.setTextColor(aqiColor)
 
             val healthAdvText =
                 when (epaIndex) {
