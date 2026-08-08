@@ -507,6 +507,17 @@ class MainActivity : AppCompatActivity() {
             }
         weatherCardContainer.findViewById<TextView>(R.id.tvPressureTrend)?.text = pressureTrendText
 
+        val precipGauge = weatherCardContainer.findViewById<PrecipitationGaugeView>(R.id.precipGaugeView)
+        val rainChance = weather.forecast.forecastDays.firstOrNull()?.day?.dailyChanceOfRain ?: 0
+        val precipIntensity =
+            when {
+                weather.current.precipMm > 10.0 -> "Heavy Downpour"
+                weather.current.precipMm > 2.5 -> "Moderate Rain"
+                weather.current.precipMm > 0.0 -> "Light Drizzle"
+                else -> "None"
+            }
+        precipGauge?.updatePrecipitation(weather.current.precipMm, rainChance, precipIntensity)
+
         val dewPointC = (weather.current.tempC - ((100 - weather.current.humidity) / 5.0)).toInt()
         weatherCardContainer.findViewById<TextView>(R.id.tvPrecipTotal)?.text = UnitConverter.precipitation(weather.current.precipMm, units)
         weatherCardContainer.findViewById<TextView>(R.id.tvDewPoint)?.text = UnitConverter.temperature(dewPointC.toDouble(), units)
