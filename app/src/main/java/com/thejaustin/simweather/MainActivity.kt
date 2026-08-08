@@ -364,6 +364,11 @@ class MainActivity : AppCompatActivity() {
         weatherCardContainer.findViewById<TextView>(R.id.tvCondition)?.text = weather.current.condition.text
 
         val cur = weather.current
+        val analytics = WeatherAnalyticsManager.calculateAnalytics(cur)
+        weatherCardContainer.findViewById<TextView>(R.id.tvAnalyticsRating)?.text =
+            "CIVIC COMFORT INDEX: ${analytics.comfortScorePercent}% (${analytics.comfortRating})"
+        weatherCardContainer.findViewById<TextView>(R.id.tvEnergyStatus)?.text =
+            "POWER DEMAND: ${analytics.energyDemandStatus}"
         weatherCardContainer.findViewById<View>(R.id.statFeelsLike)?.let {
             setStat(it, getString(R.string.feels_like), UnitConverter.temperature(cur.feelsLikeC, units))
         }

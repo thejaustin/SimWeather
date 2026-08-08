@@ -36,11 +36,44 @@
             android:textColor="@color/sim_text_primary"
             android:textSize="18sp" />
 
+        <!-- SimCity Analytics Banner -->
+        <LinearLayout
+            android:id="@+id/analyticsBanner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:background="@drawable/sc3k_stat_pill_bg"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:padding="10dp">
+
+            <TextView
+                android:id="@+id/tvAnalyticsRating"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="monospace"
+                android:text="CIVIC COMFORT INDEX: 85% (OPTIMAL)"
+                android:textColor="@color/sim_cyan_bright"
+                android:textSize="12sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tvEnergyStatus"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:fontFamily="monospace"
+                android:text="POWER DEMAND: LOW HVAC"
+                android:textColor="@color/sim_text_secondary"
+                android:textSize="10sp" />
+
+        </LinearLayout>
+
         <!-- Weather Stats Grid -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
+            android:layout_marginTop="20dp"
             android:orientation="horizontal"
             android:weightSum="2">
 
