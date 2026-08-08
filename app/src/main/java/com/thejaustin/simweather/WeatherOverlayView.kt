@@ -88,7 +88,8 @@ class WeatherOverlayView
 
             if (!isAnimating || particles.isEmpty()) return
 
-            particles.forEach { particle ->
+            for (i in 0 until particles.size) {
+                val particle = particles[i]
                 when (weatherType) {
                     WeatherType.RAIN -> {
                         // Draw rain lines

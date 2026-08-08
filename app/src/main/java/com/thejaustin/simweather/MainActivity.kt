@@ -589,10 +589,13 @@ class MainActivity : AppCompatActivity() {
         }
 
         try {
-            val cancellationTokenSource = CancellationTokenSource()
+            locationCancellationTokenSource?.cancel()
+            val tokenSource = CancellationTokenSource()
+            locationCancellationTokenSource = tokenSource
+
             fusedLocationClient.getCurrentLocation(
                 Priority.PRIORITY_HIGH_ACCURACY,
-                cancellationTokenSource.token,
+                tokenSource.token,
             ).addOnSuccessListener { location: Location? ->
                 if (location != null) {
                     val locationString = "${location.latitude},${location.longitude}"
@@ -606,5 +609,11 @@ class MainActivity : AppCompatActivity() {
         } catch (_: Exception) {
             viewModel.fetchWeather(apiKey, "New York")
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        locationCancellationTokenSource?.cancel()
+        locationCancellationTokenSource = null
     }
 }
