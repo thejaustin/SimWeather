@@ -3,7 +3,7 @@
     android:layout_width="100dp"
     android:layout_height="wrap_content"
     android:layout_marginEnd="12dp"
-    android:background="@drawable/sc3k_brick_bg_tiled"
+    android:background="@drawable/sc3k_hourly_card_bg"
     android:orientation="vertical">
 
     <LinearLayout

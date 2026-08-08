@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Outer dark shadow border -->
+    <item>
+        <shape android:shape="rectangle">
+            <solid android:color="#040810" />
+            <corners android:radius="4dp" />
+        </shape>
+    </item>
+
+    <!-- Outer border highlight -->
+    <item
+        android:left="1dp"
+        android:top="1dp"
+        android:right="1dp"
+        android:bottom="1dp">
+        <shape android:shape="rectangle">
+            <solid android:color="#1A2D4D" />
+            <corners android:radius="3dp" />
+        </shape>
+    </item>
+
+    <!-- Card surface gradient -->
+    <item
+        android:left="2dp"
+        android:top="2dp"
+        android:right="2dp"
+        android:bottom="2dp">
+        <shape android:shape="rectangle">
+            <gradient
+                android:angle="270"
+                android:startColor="#142442"
+                android:centerColor="#0F1B33"
+                android:endColor="#081020" />
+            <corners android:radius="2dp" />
+        </shape>
+    </item>
+
+    <!-- Top cyan accent indicator -->
+    <item
+        android:left="3dp"
+        android:top="2dp"
+        android:right="3dp"
+        android:gravity="top">
+        <shape android:shape="rectangle">
+            <solid android:color="#00D9FF" />
+            <size android:height="2dp" />
+        </shape>
+    </item>
+</layer-list>
