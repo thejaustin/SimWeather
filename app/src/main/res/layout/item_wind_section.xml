@@ -29,7 +29,7 @@
         android:gravity="center_vertical"
         android:orientation="horizontal">
 
-        <!-- Animated Compass Canvas View -->
+        <!-- Compass Rose Canvas View -->
         <com.thejaustin.simweather.WindCompassView
             android:id="@+id/windCompassView"
             android:layout_width="110dp"
@@ -46,46 +46,36 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFamily="monospace"
-                android:text="BEARING &amp; GUSTS"
+                android:text="SPEED &amp; DIRECTION"
                 android:textColor="@color/sim_text_secondary"
                 android:textSize="11sp" />
 
             <TextView
-                android:id="@+id/tvWindBearing"
+                android:id="@+id/tvWindCompassSpeed"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFamily="monospace"
-                android:text="240° (WSW)"
+                android:text="18 km/h NW"
                 android:textColor="@color/sim_green"
-                android:textSize="14sp"
+                android:textSize="16sp"
                 android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/tvWindGusts"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="2dp"
-                android:fontFamily="monospace"
-                android:text="35 kph Gusts"
-                android:textColor="@color/sim_yellow"
-                android:textSize="12sp" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:fontFamily="monospace"
-                android:text="BAROMETER PRESSURE"
+                android:text="PEAK GUSTS"
                 android:textColor="@color/sim_text_secondary"
                 android:textSize="11sp" />
 
             <TextView
-                android:id="@+id/tvPressureValue"
+                android:id="@+id/tvWindCompassGusts"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFamily="monospace"
-                android:text="1013 mb (Steady)"
-                android:textColor="@color/sim_cyan_bright"
+                android:text="24 km/h"
+                android:textColor="@color/sim_yellow"
                 android:textSize="14sp"
                 android:textStyle="bold" />
 

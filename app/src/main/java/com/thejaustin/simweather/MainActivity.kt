@@ -483,9 +483,17 @@ class MainActivity : AppCompatActivity() {
             weatherCardContainer.findViewById<TextView>(R.id.tvMoonIllumination)?.text = "${astro.moonIllumination ?: "65"}%"
         }
 
+        val compass = weatherCardContainer.findViewById<WindCompassView>(R.id.windCompassView)
+        val curWindSpeed = UnitConverter.speed(weather.current.windKph, units)
+        compass?.updateWind(
+            weather.current.windDegree.toFloat(),
+            curWindSpeed,
+            weather.current.windDir,
+        )
+
         val gustKph = (weather.current.windKph * 1.35).toInt()
         val gustSpeed = UnitConverter.speed(gustKph.toDouble(), units)
-        weatherCardContainer.findViewById<TextView>(R.id.tvWindGusts)?.text = gustSpeed
+        weatherCardContainer.findViewById<TextView>(R.id.tvWindGusts)?.text = "$gustSpeed Gusts"
         val windBearingText = "${weather.current.windDegree}° (${weather.current.windDir})"
         weatherCardContainer.findViewById<TextView>(R.id.tvWindBearing)?.text = windBearingText
         weatherCardContainer.findViewById<TextView>(R.id.tvPressureValue)?.text = UnitConverter.pressure(weather.current.pressureMb, units)
