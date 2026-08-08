@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Outer red emergency glow -->
+    <item>
+        <shape android:shape="rectangle">
+            <solid android:color="#FF3344" />
+            <corners android:radius="4dp" />
+        </shape>
+    </item>
+
+    <!-- Inner dark frame -->
+    <item
+        android:left="2dp"
+        android:top="2dp"
+        android:right="2dp"
+        android:bottom="2dp">
+        <shape android:shape="rectangle">
+            <solid android:color="#1A080C" />
+            <corners android:radius="3dp" />
+        </shape>
+    </item>
+
+    <!-- Main alert surface gradient -->
+    <item
+        android:left="3dp"
+        android:top="3dp"
+        android:right="3dp"
+        android:bottom="3dp">
+        <shape android:shape="rectangle">
+            <gradient
+                android:angle="270"
+                android:startColor="#2A0B12"
+                android:centerColor="#1E070C"
+                android:endColor="#120407" />
+            <corners android:radius="2dp" />
+        </shape>
+    </item>
+
+    <!-- Left red warning micro-bar -->
+    <item
+        android:left="3dp"
+        android:top="3dp"
+        android:bottom="3dp"
+        android:gravity="left">
+        <shape android:shape="rectangle">
+            <solid android:color="#FF3344" />
+            <size android:width="4dp" />
+        </shape>
+    </item>
+</layer-list>

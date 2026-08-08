@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginBottom="8dp"
-    android:background="@drawable/sc3k_panel_bg"
+    android:background="@drawable/sc3k_alert_card_bg"
     android:orientation="vertical">
 
     <LinearLayout
