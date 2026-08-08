@@ -368,6 +368,15 @@ class MainActivity : AppCompatActivity() {
         weatherCardContainer.findViewById<TextView>(R.id.tvCondition)?.text = weather.current.condition.text
 
         val cur = weather.current
+        val approval = SimMayorApprovalManager.calculateApproval(cur, settings.taxRate, 25000)
+        val tvApproval = weatherCardContainer.findViewById<TextView>(R.id.tvMayorApproval)
+        tvApproval?.text = "${approval.emoji} MAYOR APPROVAL: ${approval.ratingPercent}% (${approval.title})"
+        tvApproval?.setOnClickListener {
+            val msg = "${approval.emoji} ${approval.title}\n${approval.summary}"
+            android.widget.Toast.makeText(this, msg, android.widget.Toast.LENGTH_LONG).show()
+            soundManager.playClick()
+        }
+
         val analytics = WeatherAnalyticsManager.calculateAnalytics(cur)
         weatherCardContainer.findViewById<TextView>(R.id.tvAnalyticsRating)?.text =
             "CIVIC COMFORT INDEX: ${analytics.comfortScorePercent}% (${analytics.comfortRating})"

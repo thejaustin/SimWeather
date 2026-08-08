@@ -60,13 +60,24 @@
             android:padding="12dp">
 
             <TextView
-                android:id="@+id/tvAnalyticsRating"
+                android:id="@+id/tvMayorApproval"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFamily="monospace"
+                android:text="😊 MAYOR APPROVAL: 88% (BELOVED)"
+                android:textColor="@color/sim_yellow"
+                android:textSize="13sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tvAnalyticsRating"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="3dp"
+                android:fontFamily="monospace"
                 android:text="CIVIC COMFORT INDEX: 85% (OPTIMAL)"
                 android:textColor="@color/sim_cyan_bright"
-                android:textSize="12sp"
+                android:textSize="11sp"
                 android:textStyle="bold" />
 
             <TextView
