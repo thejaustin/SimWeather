@@ -16,7 +16,7 @@ import kotlin.math.sin
  */
 class SoundManager private constructor(context: Context) {
     private val settings = SettingsPreferences.getInstance(context)
-    private val scope = CoroutineScope(Dispatchers.Default)
+    private val scope = CoroutineScope(Dispatchers.IO)
 
     fun playClick() {
         if (!settings.soundEnabled) return

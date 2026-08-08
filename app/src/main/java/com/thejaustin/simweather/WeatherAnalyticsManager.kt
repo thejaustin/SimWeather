@@ -38,7 +38,7 @@ object WeatherAnalyticsManager {
 
         val rating =
             when {
-                totalScore >= 85 -> "IDEAL CIVIC COMFORT (90%+)"
+                totalScore >= 85 -> "IDEAL CIVIC COMFORT (85%+)"
                 totalScore >= 70 -> "GOOD CIVIC COMFORT"
                 totalScore >= 50 -> "MODERATE WEATHER STRESS"
                 totalScore >= 30 -> "POOR CIVIC COMFORT"

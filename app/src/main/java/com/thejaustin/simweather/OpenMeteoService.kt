@@ -25,10 +25,11 @@ object OpenMeteoService {
                 var country = "Global"
                 var adminRegion = "Region"
 
-                // 1. If coordinates are not provided, geocode locationQuery using Open-Meteo Geocoding API
+                // 1. Geocode locationQuery if coordinates not explicitly passed
                 if (inputLat == null || inputLon == null) {
                     val encodedCity = URLEncoder.encode(cityName, "UTF-8")
-                    val geocodeUrl = "https://geocoding-api.open-meteo.com/v1/search?name=$encodedCity&count=1&language=en&format=json"
+                    val geocodeUrl =
+                        "https://geocoding-api.open-meteo.com/v1/search?name=$encodedCity&count=1&language=en&format=json"
                     try {
                         val geoJson = fetchJsonObject(geocodeUrl)
                         val results = geoJson.optJSONArray("results")
@@ -48,12 +49,12 @@ object OpenMeteoService {
                 // 2. Fetch live weather forecast with full current, hourly, and daily metrics
                 val weatherUrlString =
                     "https://api.open-meteo.com/v1/forecast?latitude=$lat&longitude=$lon" +
-                        "&current=temperature_2m,relative_humidity_2m,is_day,precipitation,weather_code," +
-                        "surface_pressure,wind_speed_10m,wind_direction_10m,cloud_cover,uv_index" +
+                        "&current=temperature_2m,relative_humidity_2m,apparent_temperature,is_day,precipitation,weather_code," +
+                        "surface_pressure,wind_speed_10m,wind_direction_10m,cloud_cover,uv_index,visibility" +
                         "&hourly=temperature_2m,relative_humidity_2m,dew_point_2m,apparent_temperature," +
                         "precipitation_probability,precipitation,weather_code,surface_pressure,cloud_cover," +
                         "wind_speed_10m,wind_direction_10m&daily=weather_code,temperature_2m_max,temperature_2m_min," +
-                        "sunrise,sunset,uv_index_max,precipitation_sum,wind_speed_10m_max&timezone=auto"
+                        "sunrise,sunset,uv_index_max,precipitation_sum,precipitation_probability_max,wind_speed_10m_max&timezone=auto"
 
                 val weatherJson = fetchJsonObject(weatherUrlString)
 
@@ -64,7 +65,7 @@ object OpenMeteoService {
                 val aqiJson =
                     try {
                         fetchJsonObject(aqiUrlString)
-                    } catch (e: Exception) {
+                    } catch (_: Exception) {
                         null
                     }
 
@@ -75,6 +76,8 @@ object OpenMeteoService {
 
                 val tempC = currentObj.optDouble("temperature_2m", currentObj.optDouble("temperature", 20.0))
                 val tempF = (tempC * 9 / 5) + 32
+                val feelsLikeC = currentObj.optDouble("apparent_temperature", tempC)
+                val feelsLikeF = (feelsLikeC * 9 / 5) + 32
                 val windKph = currentObj.optDouble("wind_speed_10m", currentObj.optDouble("windspeed", 10.0))
                 val windDegree = currentObj.optInt("wind_direction_10m", currentObj.optInt("winddirection", 180))
                 val weatherCode = currentObj.optInt("weather_code", currentObj.optInt("weathercode", 0))
@@ -84,6 +87,8 @@ object OpenMeteoService {
                 val precipMm = currentObj.optDouble("precipitation", 0.0)
                 val cloudCover = currentObj.optInt("cloud_cover", 20)
                 val uvIndex = currentObj.optDouble("uv_index", 3.0)
+                val visibilityMeters = currentObj.optDouble("visibility", 10000.0)
+                val visibilityKm = (visibilityMeters / 1000.0 * 10).toInt() / 10.0
 
                 val conditionText = mapWmoCode(weatherCode)
 
@@ -111,7 +116,7 @@ object OpenMeteoService {
                             usEpaIndex = usEpaIndex,
                         )
                     } else {
-                        AirQuality(210.0, 12.0, 42.0, 4.5, 11.5, 18.0, 1)
+                        null
                     }
 
                 val currentWeather =
@@ -127,15 +132,15 @@ object OpenMeteoService {
                         precipMm = precipMm,
                         humidity = humidity,
                         cloud = cloudCover,
-                        feelsLikeC = tempC,
-                        feelsLikeF = tempF,
-                        visibilityKm = 10.0,
+                        feelsLikeC = feelsLikeC,
+                        feelsLikeF = feelsLikeF,
+                        visibilityKm = visibilityKm,
                         uv = uvIndex,
                         airQuality = airQuality,
-                        pollen = Pollen(2, 1, 1),
+                        pollen = null,
                     )
 
-                val location = Location(cityName, adminRegion, country, lat, lon, "2026-08-07 12:00")
+                val location = Location(cityName, adminRegion, country, lat, lon, "2026-08-08 12:00")
 
                 val dailyArray = weatherJson.optJSONObject("daily")
                 val hourlyArray = weatherJson.optJSONObject("hourly")
@@ -150,6 +155,7 @@ object OpenMeteoService {
                     val uvs = dailyArray.optJSONArray("uv_index_max")
                     val codes = dailyArray.optJSONArray("weather_code") ?: dailyArray.optJSONArray("weathercode")
                     val precipSums = dailyArray.optJSONArray("precipitation_sum")
+                    val precipProbsMax = dailyArray.optJSONArray("precipitation_probability_max")
                     val maxWinds = dailyArray.optJSONArray("wind_speed_10m_max")
 
                     val count = times?.length() ?: 0
@@ -162,6 +168,7 @@ object OpenMeteoService {
                         val sSet = sunsets?.optString(i)?.takeLast(5) ?: "19:00"
                         val maxUv = uvs?.optDouble(i, 5.0) ?: 5.0
                         val dayPrecip = precipSums?.optDouble(i, 0.0) ?: 0.0
+                        val dayRainChance = precipProbsMax?.optInt(i, if (dayPrecip > 0) 70 else 10) ?: 10
                         val dayWindMax = maxWinds?.optDouble(i, 15.0) ?: 15.0
 
                         val dayObj =
@@ -174,18 +181,19 @@ object OpenMeteoService {
                                 maxWindKph = dayWindMax,
                                 totalPrecipMm = dayPrecip,
                                 avgHumidity = humidity,
-                                dailyChanceOfRain = if (dayPrecip > 0) 70 else 10,
+                                dailyChanceOfRain = dayRainChance,
                                 dailyChanceOfSnow = if (code in listOf(71, 73, 75, 85, 86)) 80 else 0,
                                 condition = Condition(mapWmoCode(code), "", code),
                                 uv = maxUv,
                             )
 
-                        val astroObj = Astro(sRise, sSet, "21:15", "06:30", "Waxing Crescent", "65")
+                        val astroObj = Astro(sRise, sSet, null, null, null, null)
 
                         val hoursList = mutableListOf<Hour>()
                         if (hourlyArray != null) {
                             val hTimes = hourlyArray.optJSONArray("time")
                             val hTemps = hourlyArray.optJSONArray("temperature_2m")
+                            val hApparentTemps = hourlyArray.optJSONArray("apparent_temperature")
                             val hCodes = hourlyArray.optJSONArray("weather_code")
                             val hWinds = hourlyArray.optJSONArray("wind_speed_10m")
                             val hWindDirs = hourlyArray.optJSONArray("wind_direction_10m")
@@ -199,6 +207,7 @@ object OpenMeteoService {
                                 val idx = startIndex + h
                                 if (idx < (hTimes?.length() ?: 0)) {
                                     val hTempC = hTemps?.optDouble(idx, minC) ?: minC
+                                    val hFeelsLikeC = hApparentTemps?.optDouble(idx, hTempC) ?: hTempC
                                     val hCode = hCodes?.optInt(idx, code) ?: code
                                     val hWind = hWinds?.optDouble(idx, 10.0) ?: 10.0
                                     val hWindDeg = hWindDirs?.optInt(idx, 180) ?: 180
@@ -221,7 +230,7 @@ object OpenMeteoService {
                                             precipMm = if (hRainChance > 40) 1.2 else 0.0,
                                             humidity = hHum,
                                             cloud = hCloud,
-                                            feelsLikeC = hTempC,
+                                            feelsLikeC = hFeelsLikeC,
                                             chanceOfRain = hRainChance,
                                             chanceOfSnow = if (hCode in listOf(71, 73, 75)) 80 else 0,
                                         ),
@@ -282,8 +291,8 @@ object OpenMeteoService {
     }
 
     private fun getWindDir(degree: Int): String {
-        val dirs = arrayOf("N", "NE", "E", "SE", "S", "SW", "W", "NW")
-        val idx = ((degree + 22.5) / 45).toInt() % 8
+        val dirs = arrayOf("N", "NNE", "NE", "ENE", "E", "ESE", "SE", "SSE", "S", "SSW", "SW", "WSW", "W", "WNW", "NW", "NNW")
+        val idx = ((degree + 11.25) / 22.5).toInt() % 16
         return dirs[idx]
     }
 }

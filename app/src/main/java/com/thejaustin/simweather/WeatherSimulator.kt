@@ -14,7 +14,7 @@ class WeatherSimulator {
 
         val baseTempC = Random.nextDouble(15.0, 28.0)
         val tempC = (baseTempC * 10).toInt() / 10.0
-        val tempF = ((tempC * 9 / 5) + 32 * 10).toInt() / 10.0
+        val tempF = (((tempC * 9 / 5) + 32) * 10).toInt() / 10.0
         val humidity = Random.nextInt(40, 80)
         val windKph = Random.nextDouble(5.0, 35.0)
         val windDegree = Random.nextInt(0, 360)
