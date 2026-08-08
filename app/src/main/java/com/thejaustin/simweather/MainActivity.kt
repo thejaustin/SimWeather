@@ -413,27 +413,41 @@ class MainActivity : AppCompatActivity() {
         }
 
         val condText = weather.current.condition.text.lowercase()
+        val code = weather.current.condition.code
         val isDisaster = settings.disastersEnabled
-        rainEffect.visibility = if (isDisaster && condText.contains("rain")) View.VISIBLE else View.GONE
-        snowEffect.visibility = if (isDisaster && condText.contains("snow")) View.VISIBLE else View.GONE
-        fogEffect.visibility = if (isDisaster && condText.contains("fog")) View.VISIBLE else View.GONE
-        windEffect.visibility = if (isDisaster && (condText.contains("wind") || cur.windKph > 35)) View.VISIBLE else View.GONE
-        val isStorm = condText.contains("thunder") || condText.contains("storm")
-        lightningEffect.visibility = if (isDisaster && isStorm) View.VISIBLE else View.GONE
-        meteorEffect.visibility = if (isDisaster && condText.contains("meteor")) View.VISIBLE else View.GONE
-        tornadoEffect.visibility = if (isDisaster && (condText.contains("tornado") || cur.windKph > 55)) View.VISIBLE else View.GONE
 
-        weather.current.airQuality?.let {
-            weatherCardContainer.findViewById<TextView>(R.id.tvAqiValue)?.text = it.usEpaIndex.toString()
-        }
+        val isRain =
+            isDisaster && (
+                condText.contains("rain") || condText.contains("drizzle") || condText.contains("shower") ||
+                    code in 51..65 || code in 80..82
+            )
+        val isSnow =
+            isDisaster && (
+                condText.contains("snow") || condText.contains("blizzard") || condText.contains("sleet") ||
+                    code in 71..86
+            )
+        val isFog =
+            isDisaster && (
+                condText.contains("fog") || condText.contains("mist") || condText.contains("haze") ||
+                    code in 45..48
+            )
+        val isWind = isDisaster && (condText.contains("wind") || cur.windKph > 30.0)
+        val isStorm =
+            isDisaster && (
+                condText.contains("thunder") || condText.contains("storm") || code in 95..99
+            )
+        val isMeteor = isDisaster && condText.contains("meteor")
+        val isTornado = isDisaster && (condText.contains("tornado") || cur.windKph > 50.0)
+
+        rainEffect.visibility = if (isRain) View.VISIBLE else View.GONE
+        snowEffect.visibility = if (isSnow) View.VISIBLE else View.GONE
+        fogEffect.visibility = if (isFog) View.VISIBLE else View.GONE
+        windEffect.visibility = if (isWind) View.VISIBLE else View.GONE
+        lightningEffect.visibility = if (isStorm) View.VISIBLE else View.GONE
+        meteorEffect.visibility = if (isMeteor) View.VISIBLE else View.GONE
+        tornadoEffect.visibility = if (isTornado) View.VISIBLE else View.GONE
 
         updateAdvisorDisplay(weather)
-
-        weather.current.pollen?.let {
-            weatherCardContainer.findViewById<TextView>(R.id.tvGrassPollen)?.text = it.grassPollen.toString()
-            weatherCardContainer.findViewById<TextView>(R.id.tvTreePollen)?.text = it.treePollen.toString()
-            weatherCardContainer.findViewById<TextView>(R.id.tvWeedPollen)?.text = it.weedPollen.toString()
-        }
     }
 
     private fun updateModernWeatherCards(weather: WeatherResponse) {
@@ -443,8 +457,21 @@ class MainActivity : AppCompatActivity() {
         if (astro != null) {
             weatherCardContainer.findViewById<TextView>(R.id.tvSunrise)?.text = astro.sunrise
             weatherCardContainer.findViewById<TextView>(R.id.tvSunset)?.text = astro.sunset
-            weatherCardContainer.findViewById<TextView>(R.id.tvMoonPhase)?.text = astro.moonPhase
-            weatherCardContainer.findViewById<TextView>(R.id.tvMoonIllumination)?.text = "${astro.moonIllumination}%"
+            val moonPhaseStr = astro.moonPhase ?: "Waxing Crescent"
+            val moonEmoji =
+                when (moonPhaseStr.lowercase()) {
+                    "new moon" -> "🌑 New Moon"
+                    "waxing crescent" -> "🌒 Waxing Crescent"
+                    "first quarter" -> "🌓 First Quarter"
+                    "waxing gibbous" -> "🌔 Waxing Gibbous"
+                    "full moon" -> "🌕 Full Moon"
+                    "waning gibbous" -> "🌖 Waning Gibbous"
+                    "last quarter" -> "🌗 Last Quarter"
+                    "waning crescent" -> "🌘 Waning Crescent"
+                    else -> "🌙 $moonPhaseStr"
+                }
+            weatherCardContainer.findViewById<TextView>(R.id.tvMoonPhase)?.text = moonEmoji
+            weatherCardContainer.findViewById<TextView>(R.id.tvMoonIllumination)?.text = "${astro.moonIllumination ?: "65"}%"
         }
 
         val gustKph = (weather.current.windKph * 1.35).toInt()
