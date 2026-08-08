@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/sc3k_grass_bg_tiled"
+    android:background="@drawable/sc3k_brick_texture"
     android:orientation="vertical"
     tools:context=".CityPlanningActivity">
 

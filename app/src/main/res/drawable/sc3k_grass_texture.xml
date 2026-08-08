@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Deep night city base background -->
+    <item>
+        <shape android:shape="rectangle">
+            <gradient
+                android:angle="270"
+                android:startColor="#0B132B"
+                android:centerColor="#070B18"
+                android:endColor="#03050C" />
+        </shape>
+    </item>
+
+    <!-- Top horizon cyan atmosphere gradient -->
+    <item android:gravity="top">
+        <shape android:shape="rectangle">
+            <gradient
+                android:angle="270"
+                android:startColor="#1A00D9FF"
+                android:endColor="#00000000" />
+            <size android:height="180dp" />
+        </shape>
+    </item>
+
+    <!-- Bottom ground grid line -->
+    <item android:gravity="bottom">
+        <shape android:shape="rectangle">
+            <solid android:color="#00D9FF" />
+            <size android:height="1dp" />
+        </shape>
+    </item>
+</layer-list>

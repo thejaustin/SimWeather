@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Deep urban slate background -->
+    <item>
+        <shape android:shape="rectangle">
+            <gradient
+                android:angle="270"
+                android:startColor="#1A1226"
+                android:centerColor="#100B1A"
+                android:endColor="#08050D" />
+        </shape>
+    </item>
+
+    <!-- Top cyan atmosphere accent -->
+    <item android:gravity="top">
+        <shape android:shape="rectangle">
+            <gradient
+                android:angle="270"
+                android:startColor="#1A00D9FF"
+                android:endColor="#00000000" />
+            <size android:height="160dp" />
+        </shape>
+    </item>
+</layer-list>

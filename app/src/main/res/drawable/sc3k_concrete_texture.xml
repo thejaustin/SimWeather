@@ -1,38 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
-    <!-- Outer cyan border glow -->
+    <!-- Outer dark border -->
     <item>
         <shape android:shape="rectangle">
-            <solid android:color="#00FFCC" />
+            <solid android:color="#040812" />
             <corners android:radius="4dp" />
         </shape>
     </item>
 
-    <!-- Dark shadow frame -->
+    <!-- Outer neon cyan highlight frame -->
     <item
         android:left="1dp"
         android:top="1dp"
         android:right="1dp"
         android:bottom="1dp">
         <shape android:shape="rectangle">
-            <solid android:color="#080E1C" />
+            <solid android:color="#00D9FF" />
             <corners android:radius="3dp" />
         </shape>
     </item>
 
-    <!-- Elevated bevel edge -->
+    <!-- Inner dark bevel -->
     <item
         android:left="2dp"
         android:top="2dp"
         android:right="2dp"
         android:bottom="2dp">
         <shape android:shape="rectangle">
-            <solid android:color="#1E3254" />
+            <solid android:color="#091326" />
             <corners android:radius="2dp" />
         </shape>
     </item>
 
-    <!-- Main elevated surface gradient -->
+    <!-- Industrial slate gradient surface -->
     <item
         android:left="3dp"
         android:top="3dp"
@@ -41,22 +41,22 @@
         <shape android:shape="rectangle">
             <gradient
                 android:angle="270"
-                android:startColor="#1B2E4E"
-                android:centerColor="#14233D"
-                android:endColor="#0C1628" />
+                android:startColor="#182A4A"
+                android:centerColor="#101D36"
+                android:endColor="#091224" />
             <corners android:radius="2dp" />
         </shape>
     </item>
 
-    <!-- Top gold indicator line -->
+    <!-- Top cyan accent bar -->
     <item
         android:left="4dp"
         android:top="3dp"
         android:right="4dp"
         android:gravity="top">
         <shape android:shape="rectangle">
-            <solid android:color="#FFE600" />
-            <size android:height="2dp" />
+            <solid android:color="#00D9FF" />
+            <size android:height="3dp" />
         </shape>
     </item>
 </layer-list>
