@@ -357,6 +357,10 @@ class MainActivity : AppCompatActivity() {
         val currentCard = weatherCardContainer.findViewById<View>(R.id.currentWeatherCard)
         currentCard?.let { ViewAnimations.animateWeatherCard(it) }
 
+        val iconTv = weatherCardContainer.findViewById<TextView>(R.id.tvConditionIcon)
+        iconTv?.text = getWeatherEmoji(weather.current.condition.code, weather.current.condition.text)
+        iconTv?.let { ViewAnimations.popUp(it, 150) }
+
         val tvTemp = weatherCardContainer.findViewById<TextView>(R.id.tvTemperature)
         tvTemp?.text = UnitConverter.temperature(weather.current.tempC, units)
         tvTemp?.let { ViewAnimations.popUp(it, 200) }
@@ -562,6 +566,25 @@ class MainActivity : AppCompatActivity() {
         }
         tickerBar.text = sb.toString()
         tickerBar.isSelected = true
+    }
+
+    private fun getWeatherEmoji(
+        code: Int,
+        text: String,
+    ): String {
+        val lowerText = text.lowercase()
+        return when {
+            code == 0 || lowerText.contains("clear") || lowerText.contains("sunny") -> "☀️"
+            code in listOf(1, 2, 3) || lowerText.contains("partly") -> "⛅"
+            lowerText.contains("cloud") || lowerText.contains("overcast") -> "☁️"
+            code in listOf(45, 48) || lowerText.contains("fog") -> "🌫️"
+            code in listOf(51, 53, 55) || lowerText.contains("drizzle") -> "🌦️"
+            code in listOf(61, 63, 65, 80, 81, 82) || lowerText.contains("rain") -> "🌧️"
+            code in listOf(71, 73, 75, 85, 86) || lowerText.contains("snow") || lowerText.contains("blizzard") -> "❄️"
+            code in listOf(95, 96, 99) || lowerText.contains("thunder") || lowerText.contains("storm") -> "🌩️"
+            lowerText.contains("wind") -> "🌬️"
+            else -> "☀️"
+        }
     }
 
     private fun setStat(
