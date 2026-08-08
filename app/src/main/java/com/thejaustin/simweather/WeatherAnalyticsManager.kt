@@ -3,13 +3,16 @@ package com.thejaustin.simweather
 import kotlin.math.abs
 
 /**
- * Calculates city livability, civic comfort analytics, and energy demand metrics based on live weather data.
+ * Calculates city livability, civic comfort analytics, barometric pressure trends,
+ * dew point comfort classifications, and energy demand metrics based on live weather data.
  */
 object WeatherAnalyticsManager {
     data class CityAnalytics(
         val comfortScorePercent: Int,
         val comfortRating: String,
         val energyDemandStatus: String,
+        val pressureTrendStatus: String,
+        val dewPointStatus: String,
     )
 
     fun calculateAnalytics(current: CurrentWeather): CityAnalytics {
@@ -52,6 +55,23 @@ object WeatherAnalyticsManager {
                 else -> "OPTIMAL ENERGY CONSUMPTION (LOW HVAC)"
             }
 
-        return CityAnalytics(totalScore, rating, energy)
+        val pressureStatus =
+            when {
+                current.pressureMb >= 1020.0 -> "HIGH PRESSURE (STABLE FAIR ATMOSPHERE)"
+                current.pressureMb >= 1008.0 -> "STEADY PRESSURE (BALANCED AIR MASS)"
+                else -> "LOW PRESSURE (STORM / CYCLONIC SYSTEM)"
+            }
+
+        // Dew Point approximation: Tdp = T - ((100 - RH) / 5)
+        val dewPointC = current.tempC - ((100 - current.humidity) / 5.0)
+        val dewPointStatus =
+            when {
+                dewPointC < 10.0 -> "DRY & CRISP (DEW POINT ${dewPointC.toInt()}°C)"
+                dewPointC <= 16.0 -> "COMFORTABLE (DEW POINT ${dewPointC.toInt()}°C)"
+                dewPointC <= 20.0 -> "HUMID & MUGGY (DEW POINT ${dewPointC.toInt()}°C)"
+                else -> "OPPRESSIVE TROPICAL MOISTURE (${dewPointC.toInt()}°C)"
+            }
+
+        return CityAnalytics(totalScore, rating, energy, pressureStatus, dewPointStatus)
     }
 }

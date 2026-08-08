@@ -373,6 +373,10 @@ class MainActivity : AppCompatActivity() {
             "CIVIC COMFORT INDEX: ${analytics.comfortScorePercent}% (${analytics.comfortRating})"
         weatherCardContainer.findViewById<TextView>(R.id.tvEnergyStatus)?.text =
             "POWER DEMAND: ${analytics.energyDemandStatus}"
+        weatherCardContainer.findViewById<TextView>(R.id.tvPressureTrend)?.text =
+            "BAROMETER: ${analytics.pressureTrendStatus}"
+        weatherCardContainer.findViewById<TextView>(R.id.tvDewPoint)?.text =
+            "HUMIDITY COMFORT: ${analytics.dewPointStatus}"
         weatherCardContainer.findViewById<View>(R.id.statFeelsLike)?.let {
             setStat(it, getString(R.string.feels_like), UnitConverter.temperature(cur.feelsLikeC, units))
         }

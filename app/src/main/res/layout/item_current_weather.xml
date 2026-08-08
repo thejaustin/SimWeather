@@ -57,7 +57,7 @@
             android:background="@drawable/sc3k_stat_pill_bg"
             android:gravity="center"
             android:orientation="vertical"
-            android:padding="10dp">
+            android:padding="12dp">
 
             <TextView
                 android:id="@+id/tvAnalyticsRating"
@@ -73,10 +73,30 @@
                 android:id="@+id/tvEnergyStatus"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="2dp"
+                android:layout_marginTop="3dp"
                 android:fontFamily="monospace"
                 android:text="POWER DEMAND: LOW HVAC"
                 android:textColor="@color/sim_text_secondary"
+                android:textSize="10sp" />
+
+            <TextView
+                android:id="@+id/tvPressureTrend"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="3dp"
+                android:fontFamily="monospace"
+                android:text="BAROMETER: STEADY PRESSURE"
+                android:textColor="@color/sim_green"
+                android:textSize="10sp" />
+
+            <TextView
+                android:id="@+id/tvDewPoint"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="3dp"
+                android:fontFamily="monospace"
+                android:text="HUMIDITY COMFORT: COMFORTABLE"
+                android:textColor="@color/sim_teal_primary"
                 android:textSize="10sp" />
 
         </LinearLayout>
