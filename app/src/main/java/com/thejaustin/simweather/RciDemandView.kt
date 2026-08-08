@@ -20,9 +20,14 @@ class RciDemandView
         defStyleAttr: Int = 0,
     ) : View(context, attrs, defStyleAttr) {
         // Demand levels from -1.0 to 1.0 (0.0 is neutral)
-        private var rDemand = 0.8f
-        private var cDemand = 0.6f
-        private var iDemand = 0.4f
+        var rDemand = 0.8f
+            private set
+        var cDemand = 0.6f
+            private set
+        var iDemand = 0.4f
+            private set
+
+        private val barRect = RectF()
 
         private val bgPaint =
             Paint(Paint.ANTI_ALIAS_FLAG).apply {
@@ -118,13 +123,12 @@ class RciDemandView
             label: String,
         ) {
             val barH = value * maxHeight
-            val rect =
-                if (value >= 0) {
-                    RectF(x, centerY - barH, x + barWidth, centerY)
-                } else {
-                    RectF(x, centerY, x + barWidth, centerY - barH)
-                }
-            canvas.drawRect(rect, paint)
+            if (value >= 0) {
+                barRect.set(x, centerY - barH, x + barWidth, centerY)
+            } else {
+                barRect.set(x, centerY, x + barWidth, centerY - barH)
+            }
+            canvas.drawRect(barRect, paint)
 
             // Label
             textPaint.color = paint.color

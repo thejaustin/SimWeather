@@ -99,5 +99,9 @@
     <string name="epa_index_label">US - EPA Index</string>
     <string name="air_quality_value_placeholder">--</string>
     <string name="clothing_advisor_header">CLOTHING ADVISOR</string>
-    <string name="pollen_count_header">POLLEN COUNT</string>
+    <string name="astronomy_header">SUN &amp; MOON ASTRONOMY</string>
+    <string name="label_sunrise">SUNRISE</string>
+    <string name="label_sunset">SUNSET</string>
+    <string name="label_moon_phase">MOON PHASE</string>
+    <string name="label_illumination">ILLUMINATION</string>
 </resources>

@@ -531,6 +531,17 @@ class MainActivity : AppCompatActivity() {
         val iDemand = if (temp < 10 || temp > 30) 0.8f else 0.4f
 
         rciGauge?.updateDemand(rDemand, cDemand, iDemand)
+        rciGauge?.setOnClickListener {
+            val rPct = (rDemand * 100).toInt()
+            val cPct = (cDemand * 100).toInt()
+            val iPct = (iDemand * 100).toInt()
+            android.widget.Toast.makeText(
+                this,
+                "SimCity RCI Demand Index:\n• Residential: $rPct%\n• Commercial: $cPct%\n• Industrial: $iPct%",
+                android.widget.Toast.LENGTH_LONG,
+            ).show()
+            soundManager.playClick()
+        }
     }
 
     private fun updateTicker(

@@ -11,7 +11,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:fontFamily="monospace"
-        android:text="SUN &amp; MOON ASTRONOMY"
+        android:text="@string/astronomy_header"
         android:textColor="@color/sim_teal_primary"
         android:textSize="14sp"
         android:textStyle="bold" />
@@ -38,7 +38,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFamily="monospace"
-                android:text="SUNRISE"
+                android:text="@string/label_sunrise"
                 android:textColor="@color/sim_text_secondary"
                 android:textSize="11sp" />
 
@@ -47,7 +47,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFamily="monospace"
-                android:text="06:30 AM"
+                android:text="@string/placeholder_dash"
                 android:textColor="@color/sim_yellow"
                 android:textSize="14sp"
                 android:textStyle="bold" />
@@ -57,7 +57,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="12dp"
                 android:fontFamily="monospace"
-                android:text="SUNSET"
+                android:text="@string/label_sunset"
                 android:textColor="@color/sim_text_secondary"
                 android:textSize="11sp" />
 
@@ -66,7 +66,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFamily="monospace"
-                android:text="07:45 PM"
+                android:text="@string/placeholder_dash"
                 android:textColor="@color/sim_yellow"
                 android:textSize="14sp"
                 android:textStyle="bold" />
@@ -83,7 +83,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFamily="monospace"
-                android:text="MOON PHASE"
+                android:text="@string/label_moon_phase"
                 android:textColor="@color/sim_text_secondary"
                 android:textSize="11sp" />
 
@@ -92,7 +92,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFamily="monospace"
-                android:text="Waxing Crescent"
+                android:text="@string/placeholder_dash"
                 android:textColor="@color/sim_cyan_bright"
                 android:textSize="14sp"
                 android:textStyle="bold" />
@@ -102,7 +102,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="12dp"
                 android:fontFamily="monospace"
-                android:text="ILLUMINATION"
+                android:text="@string/label_illumination"
                 android:textColor="@color/sim_text_secondary"
                 android:textSize="11sp" />
 
@@ -111,7 +111,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFamily="monospace"
-                android:text="45%"
+                android:text="@string/placeholder_dash"
                 android:textColor="@color/sim_cyan_bright"
                 android:textSize="14sp"
                 android:textStyle="bold" />
