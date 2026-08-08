@@ -149,12 +149,12 @@ data class Hour(
 data class Astro(
     val sunrise: String,
     val sunset: String,
-    val moonrise: String,
-    val moonset: String,
+    val moonrise: String? = null,
+    val moonset: String? = null,
     @SerializedName("moon_phase")
-    val moonPhase: String,
+    val moonPhase: String? = null,
     @SerializedName("moon_illumination")
-    val moonIllumination: String,
+    val moonIllumination: String? = null,
 )
 
 data class Alerts(

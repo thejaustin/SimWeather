@@ -12,8 +12,8 @@ android {
         applicationId = "com.thejaustin.simweather"
         minSdk = 24
         targetSdk = 35
-        versionCode = 25
-        versionName = "3.0.2"
+        versionCode = 26
+        versionName = "3.0.3"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }

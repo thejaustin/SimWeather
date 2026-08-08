@@ -58,6 +58,7 @@ class MainActivity : AppCompatActivity() {
 
     private var selectedAdvisorIndex = 0
     private var cachedWeather: WeatherResponse? = null
+    private var locationCancellationTokenSource: com.google.android.gms.tasks.CancellationTokenSource? = null
 
     private var loadingJob: kotlinx.coroutines.Job? = null
     private val loadingMessages =
