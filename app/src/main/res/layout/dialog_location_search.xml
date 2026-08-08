@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@drawable/sc3k_concrete_bg_tiled"
+    android:background="@drawable/sc3k_panel_elevated"
     android:orientation="vertical"
     android:padding="0dp">
 
@@ -44,7 +44,7 @@
             android:id="@+id/etCitySearch"
             android:layout_width="match_parent"
             android:layout_height="48dp"
-            android:background="@drawable/sc3k_brick_bg_tiled"
+            android:background="@drawable/sc3k_stat_pill_bg"
             android:fontFamily="monospace"
             android:hint="Enter city name (e.g. Tokyo)"
             android:inputType="text"

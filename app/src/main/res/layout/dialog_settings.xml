@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@drawable/sc3k_concrete_bg_tiled"
+    android:background="@drawable/sc3k_panel_elevated"
     android:orientation="vertical"
     android:padding="0dp">
 
@@ -70,7 +70,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="12dp"
-                android:background="@drawable/sc3k_brick_bg_tiled"
+                android:background="@drawable/sc3k_stat_pill_bg"
                 android:buttonTint="@color/sim_cyan_bright"
                 android:checked="true"
                 android:fontFamily="monospace"
@@ -84,7 +84,7 @@
                 android:id="@+id/rbImperial"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/sc3k_brick_bg_tiled"
+                android:background="@drawable/sc3k_stat_pill_bg"
                 android:buttonTint="@color/sim_cyan_bright"
                 android:fontFamily="monospace"
                 android:padding="12dp"
@@ -208,7 +208,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
-            android:background="@drawable/sc3k_brick_bg_tiled"
+            android:background="@drawable/sc3k_stat_pill_bg"
             android:orientation="horizontal"
             android:padding="12dp">
 
