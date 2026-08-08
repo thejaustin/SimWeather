@@ -104,4 +104,5 @@
     <string name="label_sunset">SUNSET</string>
     <string name="label_moon_phase">MOON PHASE</string>
     <string name="label_illumination">ILLUMINATION</string>
+    <string name="pollen_count_header">POLLEN COUNT</string>
 </resources>
